@@ -1,1 +1,195 @@
+/* ========================= 1. Tailwind ========================= */
+
 @import "tailwindcss";
+
+/* ========================= 2. Tailwind Theme ========================= */
+
+@theme {
+  --breakpoint-xs: 30rem;
+  --breakpoint-sm: 30.0625rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 100rem;
+
+  --container-xs: 100%;
+  --container-sm: 100%;
+  --container-md: 45rem;
+  --container-lg: 60rem;
+  --container-xl: 75rem;
+  --container-2xl: 87.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Helvetica Neue", sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "Cascadia Code", monospace;
+
+  --text-xs: clamp(0.625rem, 1.5vw, 0.75rem);
+  --text-sm: clamp(0.75rem, 1.8vw, 0.875rem);
+  --text-base: clamp(0.875rem, 2vw, 1rem);
+  --text-lg: clamp(1rem, 2.2vw, 1.125rem);
+  --text-xl: clamp(1.125rem, 2.5vw, 1.25rem);
+  --text-2xl: clamp(1.25rem, 3vw, 1.5rem);
+  --text-3xl: clamp(1.5rem, 3.5vw, 1.875rem);
+  --text-4xl: clamp(1.875rem, 4vw, 2.25rem);
+  --text-5xl: clamp(2.25rem, 5vw, 3rem);
+  --text-6xl: clamp(3rem, 6vw, 4rem);
+  --text-7xl: clamp(4rem, 8vw, 6rem);
+}
+
+/* ========================= 3. Design Tokens (Dark - default) ========================= */
+
+:root {
+  --background: #000000;
+  --foreground: #f5f5f7;
+  --secondary: #86868b;
+  --nav-bg: rgba(29, 29, 31, 0.72);
+  --card-bg: #1d1d1f;
+  --card-hover: #2a2a2c;
+  --border: rgba(255, 255, 255, 0.04);
+  --divider: rgba(255, 255, 255, 0.06);
+  --accent: #f5f5f7;
+  --shadow-sm: rgba(0, 0, 0, 0.4);
+  --shadow: rgba(0, 0, 0, 0.6);
+  --shadow-lg: rgba(0, 0, 0, 0.8);
+  --button-bg: rgba(255, 255, 255, 0.08);
+  --button-hover: rgba(255, 255, 255, 0.12);
+}
+
+/* ========================= 4. Design Tokens (Light) ========================= */
+
+[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --secondary: #86868b;
+  --nav-bg: rgba(251, 251, 253, 0.72);
+  --card-bg: #f5f5f7;
+  --card-hover: #ffffff;
+  --border: rgba(0, 0, 0, 0.04);
+  --divider: rgba(0, 0, 0, 0.06);
+  --accent: #1d1d1f;
+  --shadow-sm: rgba(0, 0, 0, 0.02);
+  --shadow: rgba(0, 0, 0, 0.04);
+  --shadow-lg: rgba(0, 0, 0, 0.08);
+  --button-bg: rgba(0, 0, 0, 0.03);
+  --button-hover: rgba(0, 0, 0, 0.06);
+}
+
+/* ========================= 5. Base ========================= */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  cursor: default;
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1;
+  font-variant-ligatures: common-ligatures;
+}
+
+a {
+  color: var(--accent);
+}
+
+p {
+  color: var(--secondary);
+}
+
+body.theme-ready {
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================= 6. Components - Theme Toggle ========================= */
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--button-bg);
+  color: var(--foreground);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.theme-toggle:hover {
+  background: var(--button-hover);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.theme-toggle__icon {
+  grid-area: 1 / 1;
+  display: inline-flex;
+}
+
+.theme-toggle__icon--sun {
+  opacity: 1;
+}
+
+.theme-toggle__icon--moon {
+  opacity: 0;
+}
+
+[data-theme="light"] .theme-toggle__icon--sun {
+  opacity: 0;
+}
+
+[data-theme="light"] .theme-toggle__icon--moon {
+  opacity: 1;
+}
+
+/* ========================= 7. Animation ========================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s cubic-bezier(0.28, 0, 0.2, 1);
+}
+
+/* ========================= 8. Accessibility ========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  body.theme-ready,
+  .theme-toggle {
+    transition: none;
+  }
+
+  .animate-fadeIn {
+    animation: none;
+  }
+}

@@ -1,14 +1,12 @@
 export type NavItem = {
   href: string;
-  label: string;
+  labelKey: string;
 };
 
 export const siteConfig = {
-  title: "My Blog",
-  description: "Personal blog focused on thoughts, projects, and notes.",
   navItems: [
-    { href: "/", label: "Home" },
-    { href: "/about", label: "About" },
-    { href: "/articles", label: "Articles" },
+    { href: "/", labelKey: "home" },
+    { href: "/about", labelKey: "about" },
+    { href: "/articles", labelKey: "articles" },
   ] satisfies NavItem[],
 } as const;

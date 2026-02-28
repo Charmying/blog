@@ -1,6 +1,7 @@
 "use client";
 
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import { siteConfig } from "@/config/site";
 import { useMobileMenu } from "./mobile-menu-context";
 
@@ -15,18 +16,19 @@ function CloseIcon() {
 
 export function MobileMenu() {
   const { open, close } = useMobileMenu();
+  const t = useTranslations("Nav");
 
   return (
     <div className={`xs:hidden fixed inset-0 z-[100] bg-[var(--background)] transition-[opacity,visibility] duration-300 ease-out ${ open ? "visible opacity-100" : "invisible opacity-0" }`}>
       <div className="flex h-[52px] items-center justify-end px-4">
-        <button type="button" className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--button-bg)] text-[var(--foreground)] cursor-pointer transition-colors duration-200 hover:bg-[var(--button-hover)]" onClick={close}>
+        <button type="button" onClick={close} className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-[var(--border)] bg-[var(--button-bg)] text-[var(--foreground)] cursor-pointer transition-colors duration-200 hover:bg-[var(--button-hover)]">
           <CloseIcon />
         </button>
       </div>
       <nav className="flex flex-col gap-1 px-4 py-2">
         {siteConfig.navItems.map((item) => (
           <Link key={item.href} href={item.href} onClick={close} className="block px-2 py-3 text-[16px] font-medium text-[var(--foreground)] no-underline border-b border-[var(--divider)] transition-opacity duration-200 hover:opacity-60">
-            {item.label}
+            {t(item.labelKey)}
           </Link>
         ))}
       </nav>

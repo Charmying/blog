@@ -1,0 +1,29 @@
+{
+  "Site": {
+    "title": "我的部落格",
+    "description": "專注於想法、專案與筆記的個人部落格。"
+  },
+  "Nav": {
+    "home": "首頁",
+    "about": "關於我",
+    "articles": "文章"
+  },
+  "HomePage": {
+    "title": "首頁",
+    "description": "部落格首頁。",
+    "heading": "首頁標題",
+    "content": "首頁內容"
+  },
+  "AboutPage": {
+    "title": "關於我",
+    "description": "關於這個部落格的作者。",
+    "heading": "關於標題",
+    "content": "關於內容"
+  },
+  "ArticlesPage": {
+    "title": "文章",
+    "description": "部落格文章列表。",
+    "heading": "文章標題",
+    "content": "文章內容"
+  }
+}

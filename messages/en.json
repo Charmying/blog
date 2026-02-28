@@ -1,0 +1,29 @@
+{
+  "Site": {
+    "title": "My Blog",
+    "description": "Personal blog focused on thoughts, projects, and notes."
+  },
+  "Nav": {
+    "home": "Home",
+    "about": "About",
+    "articles": "Articles"
+  },
+  "HomePage": {
+    "title": "Home",
+    "description": "Main landing page of the blog.",
+    "heading": "Home Title",
+    "content": "Home Content"
+  },
+  "AboutPage": {
+    "title": "About",
+    "description": "About the author of this blog.",
+    "heading": "About Title",
+    "content": "About Content"
+  },
+  "ArticlesPage": {
+    "title": "Articles",
+    "description": "A list of blog articles.",
+    "heading": "Articles Title",
+    "content": "Articles Content"
+  }
+}

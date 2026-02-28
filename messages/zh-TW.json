@@ -11,8 +11,21 @@
   "HomePage": {
     "title": "首頁",
     "description": "部落格首頁。",
-    "heading": "首頁標題",
-    "content": "首頁內容"
+    "heroTitle": "你好，我是 Charmy",
+    "heroSubtitle": "Frontend Developer & Digital Creator",
+    "introHeading": "打造精緻的",
+    "introHighlight": "網頁體驗",
+    "introDesc": "專注於前端開發，致力於創造直觀、優雅且高效能的使用者介面。",
+    "introSubDesc": "結合現代技術與設計美學，從概念到實現，每個細節都追求完美。",
+    "learnMore": "了解更多",
+    "philosophyTitle": "設計哲學",
+    "philosophySubtitle": "簡潔不是缺少，而是去除不必要，讓重要的內容得以突出",
+    "philSimpleTitle": "簡潔",
+    "philSimpleDesc": "去除冗餘，專注本質",
+    "philIntuitiveTitle": "直觀",
+    "philIntuitiveDesc": "用戶體驗至上",
+    "philCraftTitle": "精緻",
+    "philCraftDesc": "細節決定品質"
   },
   "AboutPage": {
     "title": "關於我",

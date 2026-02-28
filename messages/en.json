@@ -60,10 +60,26 @@
     "contactTitle": "Get in Touch",
     "contactSubtitle": "If you have questions, collaboration opportunities, or just want to say hi, feel free to reach out."
   },
+  "Search": {
+    "placeholder": "Search articles or tags...",
+    "tags": "Tags",
+    "articles": "Articles",
+    "noResults": "No results found"
+  },
+  "CodeBlock": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
   "ArticlesPage": {
     "title": "Articles",
     "description": "A list of blog articles.",
-    "heading": "Articles Title",
-    "content": "Articles Content"
+    "heroTitle": "Articles",
+    "heroSubtitle": "Exploring the world of frontend development",
+    "all": "All",
+    "articleCount": "{count} articles",
+    "tagCount": "{count} articles tagged \"{tag}\"",
+    "readingTime": "{time} min",
+    "backToArticles": "Back to articles",
+    "notFound": "Article not found"
   }
 }

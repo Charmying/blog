@@ -60,10 +60,26 @@
     "contactTitle": "與我聯繫",
     "contactSubtitle": "如果你有任何問題、合作機會或只是想說聲你好，歡迎隨時聯繫我。"
   },
+  "Search": {
+    "placeholder": "搜尋文章或標籤...",
+    "tags": "標籤",
+    "articles": "文章",
+    "noResults": "找不到相關結果"
+  },
+  "CodeBlock": {
+    "copy": "複製",
+    "copied": "已複製"
+  },
   "ArticlesPage": {
     "title": "文章",
     "description": "部落格文章列表。",
-    "heading": "文章標題",
-    "content": "文章內容"
+    "heroTitle": "技術文章",
+    "heroSubtitle": "探索前端開發的世界",
+    "all": "全部",
+    "articleCount": "共 {count} 篇文章",
+    "tagCount": "{count} 篇「{tag}」文章",
+    "readingTime": "{time} 分鐘",
+    "backToArticles": "返回文章列表",
+    "notFound": "文章不存在"
   }
 }

@@ -1,0 +1,44 @@
+export const metadata = {
+  title: '深入理解 Flexbox',
+  date: '2026/03/01',
+  excerpt: '學習 CSS Flexbox 的基礎觀念，掌握一維佈局的核心技巧。',
+  tags: ['CSS', 'Frontend'],
+};
+
+# 深入理解 Flexbox
+
+Flexbox 是一維佈局模型，讓你輕鬆對齊元素並分配空間。
+
+## 基本設定
+
+```css
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+```
+
+## 常見模式
+
+### 置中元素
+
+```css
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+```
+
+### 項目間距均分
+
+```css
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+```

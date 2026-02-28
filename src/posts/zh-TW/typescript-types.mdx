@@ -1,0 +1,44 @@
+export const metadata = {
+  title: 'TypeScript 型別入門',
+  date: '2026/03/01',
+  excerpt: '學習 TypeScript 的基礎型別系統，提升程式碼的可靠性。',
+  tags: ['TypeScript', 'Frontend'],
+};
+
+# TypeScript 型別入門
+
+TypeScript 為 JavaScript 加入了靜態型別檢查，幫助你在編譯時期就發現錯誤。
+
+## 基本型別
+
+```typescript
+const name: string = 'Charmy';
+const age: number = 25;
+const isActive: boolean = true;
+```
+
+## Interface
+
+Interface 用來定義物件的形狀。
+
+```typescript
+interface User {
+  name: string;
+  age: number;
+  email?: string;
+}
+
+function greet(user: User) {
+  return `Hello, ${user.name}!`;
+}
+```
+
+## Generics
+
+泛型讓你撰寫可重用的型別安全函式。
+
+```typescript
+function first<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+```

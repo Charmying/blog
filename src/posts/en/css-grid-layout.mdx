@@ -1,0 +1,32 @@
+export const metadata = {
+  title: 'CSS Grid Layout Tips',
+  date: '2026/03/01',
+  excerpt: 'Master the core concepts of CSS Grid to build complex page layouts with ease.',
+  tags: ['CSS', 'Frontend'],
+};
+
+# CSS Grid Layout Tips
+
+CSS Grid is a powerful two-dimensional layout system, perfect for building complex page structures.
+
+## Basic Usage
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+```
+
+## Responsive Design
+
+Combine `auto-fill` with `minmax` for effortless responsive grids.
+
+```css
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+```

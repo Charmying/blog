@@ -9,18 +9,29 @@ const localeLabels: Record<Locale, string> = {
   en: "EN",
 };
 
-export function LocaleSwitcher() {
+const ARTICLE_PATTERN = /^\/articles\/(.+)$/;
+
+export function LocaleSwitcher({ availableSlugs }: { availableSlugs?: Record<Locale, string[]>; }) {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
   const nextLocale: Locale = locale === "zh-TW" ? "en" : "zh-TW";
 
   function handleSwitch() {
+    const match = pathname.match(ARTICLE_PATTERN);
+    if (match && availableSlugs) {
+      const slug = decodeURIComponent(match[1]);
+      const existsInTarget = availableSlugs[nextLocale]?.includes(slug);
+      if (!existsInTarget) {
+        router.replace("/articles", { locale: nextLocale });
+        return;
+      }
+    }
     router.replace(pathname, { locale: nextLocale });
   }
 
   return (
-    <button type="button" onClick={handleSwitch} className="inline-flex items-center justify-center h-9 px-2.5 rounded-full border border-[var(--border)] bg-[var(--button-bg)] text-[13px] font-medium text-[var(--foreground)] cursor-pointer transition-colors duration-200 hover:bg-[var(--button-hover)]">
+    <button type="button" onClick={handleSwitch} className="inline-flex items-center justify-center h-9 px-2.5  text-[13px] font-medium text-[var(--foreground)] cursor-pointer transition-colors duration-200">
       {localeLabels[nextLocale]}
     </button>
   );

@@ -575,6 +575,12 @@ body.theme-ready {
 
 /* ========================= 11. Accessibility ========================= */
 
+.giscus {
+  color-scheme: light dark;
+}
+
+/* ========================= 12. Accessibility ========================= */
+
 @media (prefers-reduced-motion: reduce) {
   body.theme-ready,
   .theme-toggle {

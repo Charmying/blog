@@ -31,6 +31,7 @@ npm run dev
 - **閱讀優化** — 針對長文閱讀優化的排版與字體系統
 - **搜尋功能** — 即時搜尋文章與標籤
 - **閱讀時間** — 自動計算文章閱讀時間
+- **留言系統** — 基於 GitHub Discussions 的 Giscus 留言功能
 
 ---
 
@@ -78,6 +79,7 @@ blog/
 │   ├── components/                   # React 元件
 │   │   ├── article/                  # 文章相關元件
 │   │   │   ├── code-block.tsx        # 程式碼區塊
+│   │   │   ├── comments.tsx          # 留言元件
 │   │   │   └── mdx-components.tsx    # MDX 自訂元件
 │   │   ├── layout/                   # 佈局元件
 │   │   │   ├── main-nav.tsx          # 主導航列
@@ -302,4 +304,5 @@ npm run lint
 - ✅ 響應式設計
 - ✅ 深色模式
 - ✅ MDX 內容系統
+- ✅ 留言系統（Giscus）
 - 🚧 持續優化與新增功能

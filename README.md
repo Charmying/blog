@@ -31,6 +31,7 @@ npm run dev
 - **Reading Optimization** — Typography and font system optimized for long-form reading
 - **Search Functionality** — Real-time article and tag search
 - **Reading Time** — Automatic article reading time calculation
+- **Comments System** — Giscus-powered comments based on GitHub Discussions
 
 ---
 
@@ -78,6 +79,7 @@ blog/
 │   ├── components/                   # React components
 │   │   ├── article/                  # Article-related components
 │   │   │   ├── code-block.tsx        # Code block component
+│   │   │   ├── comments.tsx          # Comments component
 │   │   │   └── mdx-components.tsx    # Custom MDX components
 │   │   ├── layout/                   # Layout components
 │   │   │   ├── main-nav.tsx          # Main navigation
@@ -302,4 +304,5 @@ npm run lint
 - ✅ Responsive design
 - ✅ Dark mode
 - ✅ MDX content system
+- ✅ Comments system (Giscus)
 - 🚧 Continuous optimization and new features

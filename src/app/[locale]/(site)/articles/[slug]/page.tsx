@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { getAllPostSlugs, getPostMetadata, getPostContent } from "@/lib/posts";
 import { routing, type Locale } from "@/i18n/routing";
 import { mdxComponents } from "@/components/article/mdx-components";
+import { Comments } from "@/components/article/comments";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -101,6 +102,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
             },
           }}
         />
+      </div>
+      {/* Comments */}
+      <div className="mx-auto max-w-3xl px-4">
+        <Comments />
       </div>
       {/* Footer */}
       <footer className="mx-auto max-w-3xl px-4 pb-16 sm:pb-20">

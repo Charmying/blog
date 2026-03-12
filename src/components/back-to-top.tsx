@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useLayoutEffect, useEffect, useState, useRef } from "react";
 
 function ArrowUpIcon() {
   return (
@@ -18,10 +18,8 @@ export function BackToTop() {
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
 
-  useEffect(() => {
-    let scrollTimeout: NodeJS.Timeout;
-
-    const handleScroll = () => {
+  useLayoutEffect(() => {
+    const updateProgress = () => {
       const scrollTop = window.scrollY;
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
@@ -29,6 +27,14 @@ export function BackToTop() {
 
       setShow(scrollTop > 0);
       setProgress(clampedProgress);
+    };
+
+    updateProgress();
+
+    let scrollTimeout: NodeJS.Timeout;
+
+    const handleScroll = () => {
+      updateProgress();
 
       clearTimeout(scrollTimeout);
       isScrollingRef.current = true;

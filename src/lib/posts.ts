@@ -21,7 +21,18 @@ function calculateReadingTime(content: string): number {
   const text = content.replace(METADATA_REGEX, "").replace(/<[^>]*>/g, "");
   const words = text.trim().split(/\s+/).length;
   const chineseChars = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
-  return Math.max(1, Math.ceil((words * 0.5 + chineseChars) / 300));
+
+  const codeLines = (content.match(/```[\s\S]*?```/g) || []).join('\n').split('\n').length;
+  const headings = (content.match(/^#+\s/gm) || []).length;
+  const lists = (content.match(/^[-*+]\s/gm) || []).length;
+  const englishTime = words / 200;
+  const chineseTime = chineseChars / 400;
+  const baseTime = englishTime + chineseTime;
+  const codeComplexity = Math.min(codeLines * 0.5, baseTime * 0.5);
+  const structureBonus = (headings + lists) * 0.2;
+  const totalTime = baseTime + codeComplexity + structureBonus;
+
+  return Math.max(1, Math.ceil(totalTime));
 }
 
 function parseMetadata(content: string, slug: string): PostMetadata {

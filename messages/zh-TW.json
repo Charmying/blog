@@ -74,7 +74,7 @@
     "title": "文章",
     "description": "部落格文章列表。",
     "heroTitle": "技術文章",
-    "heroSubtitle": "探索前端開發的世界",
+    "heroSubtitle": "探索程式開發的世界",
     "all": "全部",
     "articleCount": "共 {count} 篇文章",
     "tagCount": "{count} 篇「{tag}」文章",

@@ -74,7 +74,7 @@
     "title": "Articles",
     "description": "A list of blog articles.",
     "heroTitle": "Articles",
-    "heroSubtitle": "Exploring the world of frontend development",
+    "heroSubtitle": "Exploring the world of programming and development",
     "all": "All",
     "articleCount": "{count} articles",
     "tagCount": "{count} articles tagged \"{tag}\"",

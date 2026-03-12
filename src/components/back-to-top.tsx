@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 function ArrowUpIcon() {
   return (
@@ -12,23 +12,70 @@ function ArrowUpIcon() {
 
 export function BackToTop() {
   const [show, setShow] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const progressRingRef = useRef<SVGCircleElement>(null);
+  const isScrollingRef = useRef(false);
+  const radius = 18;
+  const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
+    let scrollTimeout: NodeJS.Timeout;
+
     const handleScroll = () => {
-      setShow(window.scrollY > 0);
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      const clampedProgress = Math.min(100, Math.max(0, scrollPercent));
+
+      setShow(scrollTop > 0);
+      setProgress(clampedProgress);
+
+      clearTimeout(scrollTimeout);
+      isScrollingRef.current = true;
+
+      scrollTimeout = setTimeout(() => {
+        isScrollingRef.current = false;
+      }, 100);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
   }, []);
 
+  useEffect(() => {
+    if (progressRingRef.current) {
+      const offset = circumference - (progress / 100) * circumference;
+      progressRingRef.current.setAttribute("stroke-dashoffset", offset.toString());
+    }
+  }, [progress, circumference]);
+
   const scrollToTop = () => {
+    isScrollingRef.current = true;
+
+    setShow(false);
+    setProgress(0);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 600);
   };
+
+  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
     <button type="button" onClick={scrollToTop} className="back-to-top" data-visible={show}>
-      <ArrowUpIcon />
+      <svg className="back-to-top__progress" width="44" height="44" viewBox="0 0 44 44">
+        <circle cx="22" cy="22" r={radius} fill="none" stroke="var(--border)" strokeWidth="2" />
+        <circle ref={progressRingRef} cx="22" cy="22" r={radius} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} transform="rotate(-90 22 22)" className="back-to-top__progress-ring" />
+      </svg>
+      <div className="back-to-top__icon">
+        <ArrowUpIcon />
+      </div>
     </button>
   );
 }

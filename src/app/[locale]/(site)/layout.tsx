@@ -5,6 +5,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { SiteTitle } from "@/components/layout/site-title";
 import { SearchModal } from "@/components/layout/search-modal";
+import { BackToTop } from "@/components/back-to-top";
 import { getAllPosts, getAllTags, getAllPostSlugs } from "@/lib/posts";
 import { routing, type Locale } from "@/i18n/routing";
 
@@ -35,6 +36,7 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
         </header>
         <MobileMenu />
         <main className="mx-auto max-w-[1200px] px-4 py-6">{children}</main>
+        <BackToTop />
       </div>
     </MobileMenuProvider>
   );

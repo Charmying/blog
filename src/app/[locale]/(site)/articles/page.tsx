@@ -3,13 +3,26 @@ import { getTranslations } from "next-intl/server";
 import { getAllPosts, getAllTags } from "@/lib/posts";
 import type { Locale } from "@/i18n/routing";
 import { ArticleList } from "./article-list";
+import { getCanonicalUrl, getLocaleCode } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }>; }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ArticlesPage" });
+  const url = getCanonicalUrl("/articles", locale);
+
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: url,
+      languages: {
+        'zh-TW': getCanonicalUrl("/articles", "zh-TW"),
+        'en': getCanonicalUrl("/articles", "en"),
+      },
+    },
+    openGraph: {
+      locale: getLocaleCode(locale),
+    },
   };
 }
 

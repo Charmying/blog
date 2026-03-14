@@ -1,7 +1,7 @@
 {
   "Site": {
     "title": "Charmy's Lab",
-    "description": "專注於想法、專案與筆記的個人部落格。"
+    "description": "Charmy 部落格，專注於想法、專案、設計與筆記的個人部落格。"
   },
   "Nav": {
     "home": "首頁",
@@ -10,7 +10,7 @@
   },
   "HomePage": {
     "title": "首頁",
-    "description": "部落格首頁。",
+    "description": "Charmy 部落格，專注於前端、網頁、軟體開發。",
     "heroTitle": "你好，我是 Charmy",
     "heroSubtitle": "Frontend Developer & Digital Creator",
     "introHeading": "打造精緻的",
@@ -29,7 +29,7 @@
   },
   "AboutPage": {
     "title": "關於我",
-    "description": "關於這個部落格的作者。",
+    "description": "Charmy 部落格關於我頁面，包含個人簡介、技術能力、工作經驗、學習歷程與聯絡方式。",
     "heroTitle": "About Me",
     "heroSubtitle": "熱愛技術的前端開發者",
     "name": "曾韋翰",
@@ -72,7 +72,7 @@
   },
   "ArticlesPage": {
     "title": "文章",
-    "description": "部落格文章列表。",
+    "description": "Charmy 部落格文章列表。",
     "heroTitle": "技術文章",
     "heroSubtitle": "探索程式開發的世界",
     "all": "全部",

@@ -3,6 +3,7 @@ import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { getCanonicalUrl, getLocaleCode } from "@/lib/seo";
 
 function ArrowIcon() {
   return (
@@ -15,9 +16,21 @@ function ArrowIcon() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }>; }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
+  const url = getCanonicalUrl("/", locale);
+
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: url,
+      languages: {
+        'zh-TW': getCanonicalUrl("/", "zh-TW"),
+        'en': getCanonicalUrl("/", "en"),
+      },
+    },
+    openGraph: {
+      locale: getLocaleCode(locale),
+    },
   };
 }
 

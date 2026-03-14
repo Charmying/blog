@@ -1,7 +1,7 @@
 {
   "Site": {
     "title": "Charmy's Lab",
-    "description": "Personal blog focused on thoughts, projects, and notes."
+    "description": "Charmy's personal blog focused on ideas, projects, design, and notes."
   },
   "Nav": {
     "home": "Home",
@@ -10,7 +10,7 @@
   },
   "HomePage": {
     "title": "Home",
-    "description": "Main landing page of the blog.",
+    "description": "Charmy's personal blog focused on frontend, web, and software development.",
     "heroTitle": "Hello, I'm Charmy",
     "heroSubtitle": "Frontend Developer & Digital Creator",
     "introHeading": "Crafting refined ",
@@ -29,7 +29,7 @@
   },
   "AboutPage": {
     "title": "About",
-    "description": "About the author of this blog.",
+    "description": "Charmy's personal blog about page, including personal introduction, technical skills, work experience, learning journey, and contact information.",
     "heroTitle": "About Me",
     "heroSubtitle": "A passionate frontend developer",
     "name": "Charmy",
@@ -72,7 +72,7 @@
   },
   "ArticlesPage": {
     "title": "Articles",
-    "description": "A list of blog articles.",
+    "description": "Charmy's blog article list.",
     "heroTitle": "Articles",
     "heroSubtitle": "Exploring the world of programming and development",
     "all": "All",

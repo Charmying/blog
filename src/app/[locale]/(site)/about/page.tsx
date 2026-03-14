@@ -3,13 +3,26 @@ import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
+import { generatePersonSchema, getCanonicalUrl, getLocaleCode } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }>; }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "AboutPage" });
+  const url = getCanonicalUrl("/about", locale);
+
   return {
     title: t("title"),
     description: t("description"),
+    alternates: {
+      canonical: url,
+      languages: {
+        'zh-TW': getCanonicalUrl("/about", "zh-TW"),
+        'en': getCanonicalUrl("/about", "en"),
+      },
+    },
+    openGraph: {
+      locale: getLocaleCode(locale),
+    },
   };
 }
 
@@ -341,6 +354,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
 
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generatePersonSchema()) }} />
       {/* Hero */}
       <section className="px-4 pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-16 sm:pb-20 text-center">
         <div className="mx-auto max-w-4xl">
@@ -359,7 +373,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
             {/* Profile header */}
             <div className="flex flex-col sm:flex-row items-center gap-6">
               <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden flex-shrink-0 bg-[var(--button-bg)]">
-                <Image src="/Charmy.png" alt="" width={128} height={128} className="w-full h-full object-cover" priority />
+                <Image src="/Charmy.png" alt={t("name")} width={128} height={128} className="w-full h-full object-cover" priority />
               </div>
               <div className="flex-1 text-center sm:text-left">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-1">
@@ -456,7 +470,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
             {skills.map((skill) => (
               <div key={skill.name} className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4 text-center transition-all duration-300 hover:scale-[1.05] group">
                 <div className="flex justify-center mb-2">
-                  <Image src={skill.icon} alt="" width={32} height={32} className="group-hover:scale-110 transition-transform duration-300" />
+                  <Image src={skill.icon} alt={skill.name} width={32} height={32} loading="lazy" className="group-hover:scale-110 transition-transform duration-300" />
                 </div>
                 <h3 className="text-[13px] font-semibold tracking-tight">
                   {skill.name}

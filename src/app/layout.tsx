@@ -2,11 +2,21 @@ import { getLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import "./globals.css";
 import { THEME_STORAGE_KEY, THEME_DEFAULT } from "@/config/theme";
+import { generateOrganizationSchema, generateWebsiteSchema, getSEOConfig, getLocaleCode } from "@/lib/seo";
 
 const themeInitScript = `(function(){try{var s=localStorage.getItem("${THEME_STORAGE_KEY}");var t=s==="dark"||s==="light"?s:"${THEME_DEFAULT}";document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){}})();`;
+const seoConfig = getSEOConfig();
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  metadataBase: new URL(seoConfig.siteUrl),
+  title: {
+    default: seoConfig.siteName,
+    template: `%s | ${seoConfig.siteName}`,
+  },
+  description: seoConfig.siteDescription,
+  keywords: ['frontend', 'development', 'blog', 'react', 'next.js', 'typescript'],
+  authors: [{ name: seoConfig.authorName }],
+  creator: seoConfig.authorName,
   icons: {
     icon: [
       { url: "/favicon_io/favicon.ico" },
@@ -17,14 +27,41 @@ export const metadata: Metadata = {
   },
   manifest: "/favicon_io/site.webmanifest",
   openGraph: {
+    type: 'website',
+    url: seoConfig.siteUrl,
+    siteName: seoConfig.siteName,
+    title: seoConfig.siteName,
+    description: seoConfig.siteDescription,
     images: [
       {
-        url: "/og-image.png",
+        url: `${seoConfig.siteUrl}/og-image.png`,
         width: 1200,
         height: 630,
-        alt: "Blog preview",
+        alt: seoConfig.siteName,
+        type: 'image/png',
       },
     ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: seoConfig.siteName,
+    description: seoConfig.siteDescription,
+    images: [`${seoConfig.siteUrl}/og-image.png`],
+    creator: seoConfig.twitterHandle,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
   },
 };
 
@@ -35,6 +72,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang={locale} data-theme={THEME_DEFAULT} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <meta property="og:locale" content={getLocaleCode(locale)} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationSchema()) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebsiteSchema()) }} />
       </head>
       <body>{children}</body>
     </html>

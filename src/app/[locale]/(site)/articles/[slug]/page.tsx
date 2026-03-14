@@ -7,6 +7,7 @@ import { getAllPostSlugs, getPostMetadata, getPostContent } from "@/lib/posts";
 import { routing, type Locale } from "@/i18n/routing";
 import { mdxComponents } from "@/components/article/mdx-components";
 import { Comments } from "@/components/article/comments";
+import { generateArticleMetadata, generateArticleSchema, getLocaleCode, getSEOConfig } from "@/lib/seo";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -28,9 +29,23 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   try {
     const post = getPostMetadata(locale as Locale, decodedSlug);
-    return {
+    const { authorName } = getSEOConfig();
+    const metadata = generateArticleMetadata({
       title: post.title,
       description: post.excerpt,
+      slug: decodedSlug,
+      date: post.date,
+      tags: post.tags,
+      readingTime: post.readingTime,
+      locale,
+      authorName,
+    });
+    return {
+      ...metadata,
+      openGraph: {
+        ...metadata.openGraph,
+        locale: getLocaleCode(locale),
+      },
     };
   } catch {
     const t = await getTranslations({ locale, namespace: "ArticlesPage" });
@@ -62,8 +77,21 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
     notFound();
   }
 
+  const { authorName } = getSEOConfig();
+  const articleSchema = generateArticleSchema({
+    title: post.title,
+    description: post.excerpt,
+    slug: decodedSlug,
+    date: post.date,
+    tags: post.tags,
+    readingTime: post.readingTime,
+    locale,
+    authorName,
+  });
+
   return (
     <article>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       {/* Header */}
       <header className="pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-14 sm:pb-16 px-4 text-center">
         <div className="mx-auto max-w-3xl">
@@ -75,7 +103,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
             {post.title}
           </h1>
           <div className="flex flex-wrap justify-center items-center gap-4 text-xs sm:text-sm opacity-60 mb-6">
-            <time>{post.date}</time>
+            <time dateTime={post.date}>{post.date}</time>
             <span>{t("readingTime", { time: post.readingTime })}</span>
           </div>
           <div className="flex flex-wrap justify-center gap-1.5">

@@ -1,0 +1,267 @@
+export const metadata = {
+  title: 'JavaScript Arrow Function：ES6 箭頭函式',
+  date: '2026-03-15',
+  excerpt: '認識 ES6 箭頭函式的語法與特性，包含隱式回傳、this 的差異，以及不適合使用箭頭函式的情境。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Arrow Function：ES6 箭頭函式
+
+在 ES6 (ECMAScript 2015) 中，JavaScript 引入了一種更簡潔的函式寫法：Arrow Function (箭頭函式)。
+
+箭頭函式語法更精簡，但行為也有所不同，最明顯的是 `this` 的運作方式。
+
+```text
+箭頭函式
+├─ 基本語法
+├─ 隱式回傳
+├─ 單一參數省略括號
+├─ 與一般函式的差異
+└─ 不適合使用箭頭函式的情境
+```
+
+- [什麼是箭頭函式](#什麼是箭頭函式)
+- [基本語法](#基本語法)
+- [隱式回傳](#隱式回傳)
+- [單一參數省略括號](#單一參數省略括號)
+- [`this` 的差異](#this-的差異)
+- [不適合使用箭頭函式的情境](#不適合使用箭頭函式的情境)
+- [實務應用](#實務應用)
+
+---
+
+## 什麼是箭頭函式
+
+箭頭函式是 ES6 引入的一種函式語法。
+
+它使用 `=>` 來定義函式，因此被稱為箭頭函式。
+
+---
+
+## 基本語法
+
+一般函式寫法：
+
+```javascript
+function plus(a, b) {
+  return a + b;
+}
+```
+
+箭頭函式寫法：
+
+```javascript
+const plus = (a, b) => {
+  return a + b;
+};
+```
+
+可以看到箭頭函式使用：
+
+```text
+(參數) => { 函式內容 }
+```
+
+來定義函式。
+
+---
+
+## 隱式回傳
+
+如果函式只有一個表達式，可以省略 `return` 和大括號：
+
+```javascript
+const multiply = (a, b) => a * b;
+```
+
+這稱為隱式回傳 (Implicit Return)。
+
+JavaScript 會自動回傳該表達式的結果。
+
+---
+
+## 單一參數省略括號
+
+當函式只有一個參數時，可以省略括號：
+
+```javascript
+const square = x => x * x;
+```
+
+但如果：
+
+- 沒有參數
+- 有多個參數
+
+仍然需要括號：
+
+```javascript
+const sayHi = () => "Hi";
+
+const plus = (a, b) => a + b;
+```
+
+---
+
+## `this` 的差異
+
+箭頭函式與一般函式最大的不同之一就是 `this` 的行為。
+
+一般函式：
+
+```javascript
+const obj = {
+  value: 10,
+  show: function () {
+    console.log(this.value);
+  }
+};
+```
+
+`this` 會指向呼叫該函式的物件。
+
+箭頭函式：
+
+```javascript
+const obj = {
+  value: 10,
+  show: () => {
+    console.log(this.value);
+  }
+};
+```
+
+箭頭函式不會建立自己的 `this`。
+
+它會直接使用外層作用域的 `this` (這種行為稱為 lexical this)。
+
+因此在物件方法中通常不建議使用箭頭函式。
+
+---
+
+## 不適合使用箭頭函式的情境
+
+箭頭函式並不適用於所有情況。
+
+以下幾種情境通常應該使用一般函式：
+
+### 物件方法
+
+```javascript
+const user = {
+  name: "Charmy",
+  greet() {
+    console.log(this.name);
+  }
+};
+```
+
+如果使用箭頭函式：
+
+```javascript
+const user = {
+  name: "Charmy",
+  greet: () => {
+    console.log(this.name);
+  }
+};
+```
+
+`this` 不會指向 `user`。
+
+### 建構函式
+
+箭頭函式不能作為建構函式 (Constructor Function)，因為箭頭函式沒有 `prototype`，也不能使用 `new`。
+
+```javascript
+const Person = (name) => {
+  this.name = name;
+};
+```
+
+這樣會出現錯誤。
+
+建構函式必須使用一般函式：
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+```
+
+### `arguments` 物件
+
+箭頭函式沒有自己的 `arguments`，跟 `this` 的道理一樣，會往外層作用域找。
+
+```javascript
+function test() {
+  console.log(arguments);
+}
+```
+
+箭頭函式：
+
+```javascript
+const test = () => {
+  console.log(arguments); // 可能出錯
+};
+```
+
+通常應該改用：
+
+```javascript
+const test = (...args) => {
+  console.log(args);
+};
+```
+
+---
+
+## 實務應用
+
+箭頭函式在 JavaScript 中非常常見，特別是在陣列方法中。
+
+例如：
+
+```javascript
+const numbers = [1, 2, 3];
+
+const doubled = numbers.map(n => n * 2);
+```
+
+也常見於：
+
+### Promise
+
+```javascript
+fetch(url)
+  .then(response => response.json())
+  .then(data => console.log(data));
+```
+
+### Event Handler
+
+```javascript
+button.addEventListener("click", () => {
+  console.log("clicked");
+});
+```
+
+---
+
+## 總結
+
+箭頭函式是 ES6 才出現的寫法，主要特點包括：
+
+- 語法更精簡
+- 支援隱式回傳
+- `this` 使用外層作用域
+
+理解箭頭函式後，接下來通常會進一步學習：
+
+- 箭頭函式與 `this`
+- Closure
+- Execution Context
+- Prototype
+
+這些概念會幫助你更深入理解 JavaScript 函式的運作方式。

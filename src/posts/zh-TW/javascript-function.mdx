@@ -1,0 +1,495 @@
+export const metadata = {
+  title: 'JavaScript Function：從基礎理解函式',
+  date: '2026-03-15',
+  excerpt: '深入理解 JavaScript 函式的核心概念，涵蓋宣告、表達式、參數、回傳值、回呼函式、作用域、Hoisting 與高階函式。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Function：從基礎理解函式
+
+當程式中出現重複邏輯，通常就是該把它封裝成函式 (Function) 的時候了。
+
+函式可以讓你把程式拆成一個個小工具，每個只做一件事，整體就會更容易閱讀、維護與重用。
+
+本文會依序介紹 JavaScript 函式的幾個核心概念：
+
+```text
+函式
+├─ 函式宣告
+├─ 函式表達式
+├─ 函式的參數
+└─ 回傳值
+```
+
+- [什麼是函式](#什麼是函式)
+- [為什麼需要函式](#為什麼需要函式)
+- [函式宣告 (Function Declaration)](#函式宣告-function-declaration)
+- [函式表達式 (Function Expression)](#函式表達式-function-expression)
+- [函式的參數](#函式的參數)
+- [回傳值 (return)](#回傳值-return)
+- [JavaScript 函式的重要特性：一等公民](#javascript-函式的重要特性一等公民)
+- [回呼函式](#回呼函式)
+- [函式與作用域](#函式與作用域)
+- [函式與提升](#函式與提升)
+- [高階函式](#高階函式)
+- [實務應用](#實務應用)
+- [函式執行時發生什麼事](#函式執行時發生什麼事)
+
+---
+
+## 什麼是函式
+
+簡單來說：
+
+> 函式是一段可以被呼叫並執行的程式碼。在 JavaScript 中，函式同時也是一種特殊的物件。
+
+我們可以把函式想像成一個用來封裝邏輯的小工具。
+
+從概念上來看，一個函式通常包含三個部分：
+
+```text
+Input → Process → Output
+```
+
+- Input：函式接收的資料 (參數)
+- Process：函式內部執行的邏輯
+- Output：函式回傳的結果
+
+例如：
+
+```javascript
+function plus(a, b) {
+  return a + b;
+}
+```
+
+這個函式的流程可以理解為：
+
+```text
+輸入 (Input)     -> a, b
+處理 (Process)   -> a + b
+輸出 (Output)    -> 回傳結果
+```
+
+使用時只需要呼叫：
+
+```javascript
+plus(3, 5);
+```
+
+就可以得到計算結果。
+
+---
+
+## 為什麼需要函式
+
+如果沒有使用函式，程式碼通常會變得：
+
+- 重複
+- 難以維護
+- 不容易閱讀
+
+例如：
+
+```javascript
+let total1 = 100 + 200;
+let total2 = 300 + 400;
+let total3 = 500 + 600;
+```
+
+如果改成函式：
+
+```javascript
+function plus(a, b) {
+  return a + b;
+}
+
+plus(100, 200);
+plus(300, 400);
+plus(500, 600);
+```
+
+這樣做函式可以重複使用，不用每次都重寫相同的邏輯。
+
+好的函式名稱本身就是說明：
+
+```javascript
+createUser();
+sendEmail();
+validateForm();
+```
+
+光看名字就知道這段程式在做什麼。當程式規模變大，再把功能拆成多個函式，整體結構就會清晰很多。
+
+---
+
+## 函式宣告 (Function Declaration)
+
+函式最基本的寫法是函式宣告。
+
+語法：
+
+```javascript
+function 函式名稱(參數1, 參數2) {
+  // 函式邏輯
+}
+```
+
+例如：
+
+```javascript
+function greet() {
+  console.log("Hello");
+}
+```
+
+宣告函式之後，可以透過函式名稱來呼叫它：
+
+```javascript
+greet();
+```
+
+---
+
+## 函式表達式 (Function Expression)
+
+除了宣告方式之外，函式也可以被當作值 (value) 使用。
+
+例如：
+
+```javascript
+const greet = function () {
+  console.log("Hello");
+};
+```
+
+這種寫法稱為函式表達式。
+
+與函式宣告的差異：
+
+| | 函式宣告 | 函式表達式 |
+| - | - | - |
+| Hoisting | 函式會完整被提升 | 只有變數宣告被提升，函式本身不會 |
+| 宣告方式 | `function` | 變數 |
+| 使用時機 | 通常用於定義函式 | 常用於回呼或賦值 |
+
+如果使用 `let` 或 `const` 宣告，變數在初始化之前會處於暫時死區 (TDZ)，因此仍然無法在宣告前使用。
+
+---
+
+## 函式的參數
+
+函式可以接收輸入資料，這些輸入資料稱為參數 (Parameters)。
+
+參數是函式宣告時定義的變數，而呼叫函式時傳入的值稱為引數 (Argument)。
+
+例如：
+
+```javascript
+function greet(name) {
+  console.log("Hello " + name);
+}
+
+greet("Charmy");
+```
+
+在這個例子中：
+
+- `name` 是函式的參數
+- "Charmy" 是呼叫函式時傳入的值
+
+### 預設參數 (Default Parameters)
+
+在 ES6 之後，可以為參數設定預設值。
+
+```javascript
+function greet(name = "Guest") {
+  console.log("Hello " + name);
+}
+```
+
+如果呼叫函式時沒有傳入參數，就會使用預設值。
+
+### Rest Parameter
+
+當函式需要接收不固定數量的參數時，可以使用 Rest Parameter。
+
+```javascript
+function sum(...numbers) {
+  return numbers.reduce((a, b) => a + b, 0);
+}
+```
+
+Rest Parameter 會把多個參數收集成一個陣列。
+
+---
+
+## 回傳值 (return)
+
+函式可以透過 `return` 回傳結果。
+
+```javascript
+function add(a, b) {
+  return a + b;
+}
+```
+
+當函式執行到 `return` 時：
+
+- 會回傳指定的值
+- 函式的執行會立即結束
+
+例如：
+
+```javascript
+function test() {
+  console.log("A");
+  return;
+  console.log("B");
+}
+```
+
+結果只會輸出：
+
+```text
+A
+```
+
+---
+
+## JavaScript 函式的重要特性：一等公民
+
+在 JavaScript 中，函式其實是一種特殊的物件 (object)。
+
+```javascript
+function greet() {}
+
+console.log(typeof greet); // "function"
+console.log(greet instanceof Object); // true
+```
+
+這也是為什麼函式可以：
+
+- 被賦值給變數
+- 被當作參數傳入
+- 從其他函式回傳
+
+這些能力構成了 JavaScript 的「一等公民 (First-Class Function)」特性。
+
+意思是函式可以像其他資料型別一樣被操作，例如：
+
+### 可以被賦值
+
+```javascript
+const sayHi = function () {};
+```
+
+### 可以當作參數
+
+```javascript
+function execute(fn) {
+  fn();
+}
+```
+
+### 可以被回傳
+
+```javascript
+function createAdder(x) {
+  return function (y) {
+    return x + y;
+  };
+}
+```
+
+---
+
+## 回呼函式
+
+回呼函式 (Callback Function) 是被傳入另一個函式，並由該函式在適當時機呼叫的函式。
+
+例如：
+
+```javascript
+function process(callback) {
+  callback();
+}
+
+process(function () {
+  console.log("Hello");
+});
+```
+
+在 JavaScript 中，回呼函式非常常見。
+
+例如陣列方法：
+
+```javascript
+[1, 2, 3].map(function (n) {
+  return n * 2;
+});
+```
+
+常見的場景包括：
+
+- 事件 (Events)
+- `setTimeout` / `setInterval`
+- Promise
+- 陣列方法 (Array methods)
+
+例如：
+
+```javascript
+setTimeout(function () {
+  console.log("3 秒");
+}, 3000);
+```
+
+---
+
+## 函式與作用域
+
+函式會形成自己的作用域 (Scope)。
+
+在函式內宣告的變數，只能在函式內部使用。
+
+例如：
+
+```javascript
+function test() {
+  let a = 10;
+}
+
+console.log(a);
+```
+
+這段程式會出現錯誤：
+
+```text
+ReferenceError
+```
+
+因為變數 `a` 只存在於函式內部。
+
+---
+
+## 函式與提升
+
+函式宣告 (Function Declaration) 會發生提升 (Hoisting)
+
+例如：
+
+```javascript
+sayHello();
+
+function sayHello() {
+  console.log("Hello");
+}
+```
+
+這段程式可以正常執行。
+
+在程式執行之前，JavaScript 會先建立執行環境 (Execution Context)，並處理變數與函式的宣告。這個過程被稱為 Hoisting。
+
+函式宣告會被完整建立，因此可以在宣告前呼叫。
+
+但函式表達式並不會有相同的行為：
+
+```javascript
+sayHello();
+
+const sayHello = function () {};
+```
+
+會出現錯誤。
+
+---
+
+## 高階函式
+
+如果一個函式接收函式作為參數或回傳函式，就稱為高階函式 (Higher-Order Function)。
+
+在 JavaScript 中，許多內建方法都是高階函式，例如：
+
+```javascript
+const numbers = [1, 2, 3];
+
+numbers.map(function (n) {
+  return n * 2;
+});
+```
+
+其中 `map` 就是高階函式。
+
+常見的高階函式包括：
+
+```javascript
+array.map()
+array.filter()
+array.reduce()
+```
+
+---
+
+## 實務應用
+
+函式在 JavaScript 中無處不在。
+
+例如：
+
+### Event Handler
+
+```javascript
+button.addEventListener("click", handleClick);
+```
+
+### Array Methods
+
+```javascript
+array.map()
+array.filter()
+array.reduce()
+```
+
+### API 呼叫
+
+```javascript
+fetch(url).then(function (response) {
+  return response.json();
+});
+```
+
+---
+
+## 函式執行時發生什麼事
+
+當函式被呼叫時，JavaScript 會建立一個新的 Execution Context。
+
+這個過程通常包含：
+
+1. 建立新的變數環境
+2. 建立作用域鏈 (Scope Chain)
+3. 綁定 this
+4. 執行函式內的程式碼
+
+---
+
+## 總結
+
+函式是 JavaScript 程式設計中最重要的抽象之一。
+
+透過函式，我們可以：
+
+- 重複使用程式碼
+- 提高程式可讀性
+- 建立模組化架構
+
+函式本身不複雜，但它牽連的概念很多：
+
+- 箭頭函式
+- 作用域
+- 提升
+- 閉包
+- `this`
+
+這些概念會一起構成 JavaScript 函式的運作方式。

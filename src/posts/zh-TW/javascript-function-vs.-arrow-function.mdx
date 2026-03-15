@@ -1,0 +1,263 @@
+export const metadata = {
+  title: '一般函式 vs. 箭頭函式：差異與使用時機',
+  date: '2026-03-16',
+  excerpt: '比較一般函式與箭頭函式的核心差異，包含 this 行為、arguments、建構函式與 Hoisting，以及各自適合的使用時機。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# 一般函式 vs. 箭頭函式：差異與使用時機
+
+JavaScript 有兩種主要的函式寫法：一般函式 (Function) 與箭頭函式 (Arrow Function)。
+
+兩者在語法上不同，但更關鍵的是：它們在行為上也有差異，尤其是 `this` 的運作方式。
+
+```text
+一般函式 vs. 箭頭函式
+├─ 語法差異
+├─ this 的差異
+├─ arguments 的差異
+├─ 建構函式
+├─ Hoisting
+└─ 使用時機
+```
+
+- [語法差異](#語法差異)
+- [`this` 的差異](#this-的差異)
+- [`arguments` 的差異](#arguments-的差異)
+- [建構函式](#建構函式)
+- [Hoisting](#hoisting)
+- [差異總覽](#差異總覽)
+- [使用時機](#使用時機)
+
+---
+
+## 語法差異
+
+一般函式：
+
+```javascript
+function plus(a, b) {
+  return a + b;
+}
+```
+
+箭頭函式：
+
+```javascript
+const plus = (a, b) => a + b;
+```
+
+箭頭函式的語法更精簡，支援隱式回傳，適合用來寫簡短的邏輯。
+
+---
+
+## `this` 的差異
+
+這是兩者最重要的差異。
+
+### 一般函式
+一般函式的 `this` 是動態的，取決於「誰呼叫了這個函式」。
+```javascript
+const obj = {
+  value: 10,
+  show: function () {
+    console.log(this.value); // 10
+  }
+};
+
+obj.show();
+```
+`this` 指向 `obj`，因為是 `obj` 呼叫了 `show`。
+
+### 箭頭函式
+箭頭函式沒有自己的 `this`，它的 `this` 來自外層作用域 (lexical this)。
+```javascript
+const obj = {
+  value: 10,
+  show: () => {
+    console.log(this.value); // undefined
+  }
+};
+
+obj.show();
+```
+`this` 不會指向 `obj`，而是指向外層的作用域。
+
+### 實際案例：`setTimeout`
+`this` 的差異在非同步情境中特別明顯。
+#### 一般函式：
+```javascript
+const timer = {
+  seconds: 0,
+  start: function () {
+    setTimeout(function () {
+      this.seconds++; // this 不是 timer
+      console.log(this.seconds); // NaN
+    }, 1000);
+  }
+};
+```
+#### 箭頭函式：
+```javascript
+const timer = {
+  seconds: 0,
+  start: function () {
+    setTimeout(() => {
+      this.seconds++; // this 是 timer
+      console.log(this.seconds); // 1
+    }, 1000);
+  }
+};
+```
+箭頭函式繼承了外層 `start` 的 `this`，所以可以正確存取 `timer.seconds`。
+
+---
+
+## `arguments` 的差異
+
+一般函式有內建的 `arguments` 物件，可以存取所有傳入的參數：
+
+```javascript
+function test() {
+  console.log(arguments); // [1, 2, 3]
+}
+
+test(1, 2, 3);
+```
+
+箭頭函式沒有自己的 `arguments`：
+
+```javascript
+const test = () => {
+  console.log(arguments); // ReferenceError 或外層的 arguments
+};
+```
+
+如果需要處理不固定數量的參數，箭頭函式應該改用 Rest Parameter：
+
+```javascript
+const test = (...args) => {
+  console.log(args); // [1, 2, 3]
+};
+```
+
+---
+
+## 建構函式
+
+一般函式可以作為建構函式使用：
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+
+const p = new Person("Charmy");
+console.log(p.name); // "Charmy"
+```
+
+箭頭函式不能作為建構函式，因為它沒有 `prototype`，也不支援 `new`：
+
+```javascript
+const Person = (name) => {
+  this.name = name;
+};
+
+new Person("Charmy"); // TypeError
+```
+
+---
+
+## Hoisting
+
+一般函式宣告會被提升，可以在宣告之前呼叫：
+
+```javascript
+greet(); // "Hello"
+
+function greet() {
+  console.log("Hello");
+}
+```
+
+箭頭函式是函式表達式，不會被提升：
+
+```javascript
+greet(); // ReferenceError
+
+const greet = () => {
+  console.log("Hello");
+};
+```
+
+---
+
+## 差異總覽
+
+| | 一般函式 | 箭頭函式 |
+| - | - | - |
+| 語法 | 較冗長 | 簡潔 |
+| `this` | 動態，取決於呼叫者 | 繼承外層作用域 |
+| `arguments` | 有 | 無 (用 rest parameter 代替) |
+| 建構函式 | 可以 | 不行 |
+| Hoisting | 會提升 | 不會提升 |
+
+---
+
+## 使用時機
+
+### 建議使用箭頭函式
+#### 陣列方法，邏輯簡短時：
+```javascript
+const doubled = [1, 2, 3].map(n => n * 2);
+const evens = [1, 2, 3, 4].filter(n => n % 2 === 0);
+```
+#### Promise 鏈：
+```javascript
+fetch(url)
+  .then(response => response.json())
+  .then(data => console.log(data));
+```
+#### 需要保留外層 `this` 的回呼函式：
+```javascript
+setTimeout(() => {
+  this.update();
+}, 1000);
+```
+
+### 建議使用一般函式
+#### 物件方法，需要存取 `this`：
+```javascript
+const user = {
+  name: "Charmy",
+  greet() {
+    console.log(this.name); // "Charmy"
+  }
+};
+```
+#### 建構函式：
+```javascript
+function Person(name) {
+  this.name = name;
+}
+```
+#### 需要 Hoisting 的情況，例如把函式宣告放在檔案底部：
+```javascript
+init();
+
+function init() {
+  // 可以正常執行
+}
+```
+
+---
+
+## 總結
+
+一般函式與箭頭函式各有適合的使用場景。
+
+需要動態 `this` 就用一般函式，需要繼承外層 `this` 就用箭頭函式。
+
+語法簡潔是箭頭函式的優點，但不是選擇它的唯一理由。
+
+理解兩者的差異，才能在正確的情境選對工具。

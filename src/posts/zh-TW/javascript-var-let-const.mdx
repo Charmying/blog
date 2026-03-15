@@ -1,0 +1,253 @@
+export const metadata = {
+  title: 'JavaScript var、let、const：差異與使用時機',
+  date: '2026-03-16',
+  excerpt: '介紹 JavaScript var、let、const 的核心差異，包含作用域、提升與暫時死區、重複宣告、重新賦值，以及 for 迴圈中的經典案例。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript `var`、`let`、`const`：差異與使用時機
+
+JavaScript 有三種宣告變數的方式：`var`、`let`、`const`。
+
+`var` 是早期 JavaScript 唯一的選擇，直到 ES6 (ES2015) 才引入 `let` 和 `const`。
+
+```text
+var、let、const
+├─ 作用域
+├─ 提升與暫時死區
+├─ 重複宣告
+├─ 重新賦值
+├─ var 與 let 在 for 迴圈的差異
+└─ 差異總覽
+```
+
+- [作用域](#作用域)
+- [提升與暫時死區](#提升與暫時死區)
+- [重複宣告](#重複宣告)
+- [重新賦值](#重新賦值)
+- [`var` 與 `let` 在 `for` 迴圈的差異](#var-與-let-在-for-迴圈的差異)
+- [差異總覽](#差異總覽)
+
+---
+
+## 作用域
+
+`var` 是函式作用域 (Function Scope)，只受函式邊界限制，不受區塊 `{}` 限制。
+
+`let` 和 `const` 是區塊作用域 (Block Scope)，變數只存在於宣告它的 `{}` 內。
+
+```javascript
+// var 不受區塊限制
+{
+  var a = "Charmy";
+}
+console.log(a); // "Charmy"
+```
+
+```javascript
+// let 受區塊限制
+{
+  let b = "Charmy";
+}
+console.log(b); // ReferenceError: b is not defined
+```
+
+`var` 雖然不受區塊限制，但仍然受函式邊界限制：
+
+```javascript
+function greet() {
+  var name = "Charmy";
+}
+console.log(name); // ReferenceError: name is not defined
+```
+
+區塊作用域的好處：
+
+- 避免同名變數衝突
+- 防止變數意外洩漏到外層作用域
+
+---
+
+## 提升與暫時死區
+
+`var`、`let`、`const` 都會被提升，但行為不同。
+
+### `var`
+`var` 在建立階段就會被初始化為 `undefined`，因此在宣告前使用不會報錯：
+```javascript
+console.log(i); // undefined
+var i = 5;
+```
+上面的程式碼等同於：
+```javascript
+var i;
+console.log(i); // undefined
+i = 5;
+```
+
+### `let` 和 `const`
+`let` 和 `const` 也會被提升，但不會自動初始化，而是進入暫時死區 (Temporal Dead Zone，TDZ)。
+在宣告之前存取變數會直接報錯：
+```javascript
+console.log(i); // ReferenceError: Cannot access 'i' before initialization
+let i = 5;
+```
+暫時死區讓錯誤更容易被發現，避免在宣告前意外使用變數。
+
+### 變數生命週期
+`var`、`let`、`const` 的差異可以從變數生命週期理解，變數的生命週期分三個階段：
+1. 建立 (Creation)：執行上下文建立時，JavaScript 會掃描所有變數宣告並進行綁定，這就是提升。
+2. 初始化 (Initialization)：`var` 在建立階段就自動初始化為 `undefined`；`let` 和 `const` 則進入暫時死區，不會自動初始化。
+3. 賦值 (Assignment)：程式執行到宣告語句時才會賦值。`const` 必須在宣告時同時賦值。
+
+---
+
+## 重複宣告
+
+`var` 允許重複宣告同名變數：
+
+```javascript
+var str = "Charmy";
+var str = "Charmying";
+console.log(str); // "Charmying"
+```
+
+`let` 和 `const` 不允許重複宣告：
+
+```javascript
+let str = "Charmy";
+let str = "Charmying"; // SyntaxError: Identifier 'str' has already been declared
+```
+
+```javascript
+const str = "Charmy";
+const str = "Charmying"; // SyntaxError: Identifier 'str' has already been declared
+```
+
+---
+
+## 重新賦值
+
+`var` 和 `let` 可以重新賦值：
+
+```javascript
+let count = 0;
+count = 1;
+console.log(count); // 1
+```
+
+`const` 不能重新賦值：
+
+```javascript
+const count = 0;
+count = 1; // TypeError: Assignment to constant variable.
+```
+
+但如果 `const` 宣告的是物件或陣列，可以修改內部的屬性或元素：
+
+```javascript
+const user = { name: "Charmy" };
+user.name = "Charmying"; // 可以
+user = {}; // TypeError，不能重新賦值
+```
+
+```javascript
+const nums = [1, 2, 3];
+nums.push(4); // 可以
+nums = []; // TypeError，不能重新賦值
+```
+
+---
+
+## `var` 與 `let` 在 `for` 迴圈的差異
+
+這是 `var` 和 `let` 最經典的差異之一。
+
+```javascript
+for (var i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 100);
+}
+```
+
+執行結果：
+
+```text
+3
+3
+3
+```
+
+結果不是 `0 1 2`，而是 `3 3 3`，原因有兩點：
+
+第一點：非同步執行順序
+
+`setTimeout` 的 callback 會在 `for` 迴圈執行完畢後才執行。JavaScript 是非同步語言，0.1 秒的等待期間，`for` 迴圈已經跑完了。
+
+第二點：`var` 的作用域
+
+`var` 是函式作用域，這段迴圈外沒有任何函式包覆，所以 `i` 存在於全域中，整個迴圈共用同一個 `i`。
+
+迴圈結束時 `i` 已經是 `3`，因此三次 `console.log(i)` 全都印出 `3`。
+
+---
+
+改用 `let` 可以直接解決這個問題：
+
+```javascript
+for (let i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 100);
+}
+```
+
+執行結果：
+
+```text
+0
+1
+2
+```
+
+`let` 是區塊作用域，每次迭代都會建立一個新的環境，各自保存當下的 `i` 值，互不干擾。
+
+---
+
+在 `var` 時代，通常用 IIFE 來解決這個問題，但相對複雜且不直覺：
+
+```javascript
+for (var i = 0; i < 3; i++) {
+  (function (x) {
+    setTimeout(function () {
+      console.log(x);
+    }, 100);
+  })(i);
+}
+```
+
+`let` 的出現讓這類問題的處理變得簡單許多。
+
+---
+
+## 差異總覽
+
+| | `var` | `let` | `const` |
+| - | - | - | - |
+| 作用域 | 函式作用域 | 區塊作用域 | 區塊作用域 |
+| 提升 | 提升並初始化為 `undefined` | 提升但進入暫時死區 | 提升但進入暫時死區 |
+| 重複宣告 | 允許 | 不允許 | 不允許 |
+| 重新賦值 | 允許 | 允許 | 不允許 |
+
+---
+
+## 總結
+
+`let` 和 `const` 讓變數宣告變得更嚴謹：
+
+- 區塊作用域防止變數意外洩漏
+- 暫時死區讓錯誤更容易被發現
+- 不允許重複宣告，降低出錯機率
+
+現代 JavaScript 開發中，優先使用 `const`，需要重新賦值時才使用 `let`，避免使用 `var`。

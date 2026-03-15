@@ -1,0 +1,263 @@
+export const metadata = {
+  title: 'Regular Functions vs. Arrow Functions: Key Differences and When to Use Each',
+  date: '2026-03-16',
+  excerpt: 'A practical comparison of regular functions and arrow functions — covering this behavior, arguments, constructors, hoisting, and when to use each.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# Regular Functions vs. Arrow Functions: Key Differences and When to Use Each
+
+JavaScript has two main ways to write functions: regular functions and arrow functions.
+
+The syntax is different, but more importantly, so is the behavior — especially when it comes to `this`.
+
+```text
+Regular Functions vs. Arrow Functions
+├─ Syntax
+├─ this Behavior
+├─ arguments Object
+├─ Constructor Functions
+├─ Hoisting
+└─ When to Use Each
+```
+
+- [Syntax](#syntax)
+- [The `this` Difference](#the-this-difference)
+- [The `arguments` Difference](#the-arguments-difference)
+- [Constructor Functions](#constructor-functions)
+- [Hoisting](#hoisting)
+- [Quick Reference](#quick-reference)
+- [When to Use Each](#when-to-use-each)
+
+---
+
+## Syntax
+
+Regular function:
+
+```javascript
+function plus(a, b) {
+  return a + b;
+}
+```
+
+Arrow function:
+
+```javascript
+const plus = (a, b) => a + b;
+```
+
+Arrow functions are more concise and support implicit returns, making them a natural fit for short, simple logic.
+
+---
+
+## The `this` Difference
+
+This is the most important difference between the two.
+
+### Regular Functions
+In a regular function, `this` is dynamic — it depends on who calls the function.
+```javascript
+const obj = {
+  value: 10,
+  show: function () {
+    console.log(this.value); // 10
+  }
+};
+
+obj.show();
+```
+`this` refers to `obj` because `obj` is the one calling `show`.
+
+### Arrow Functions
+Arrow functions don't have their own `this`. Instead, they inherit it from the surrounding lexical scope.
+```javascript
+const obj = {
+  value: 10,
+  show: () => {
+    console.log(this.value); // undefined
+  }
+};
+
+obj.show();
+```
+`this` doesn't point to `obj` — it points to whatever `this` is in the outer scope.
+
+### Real-World Example: `setTimeout`
+The difference becomes especially clear in async contexts.
+#### Regular function:
+```javascript
+const timer = {
+  seconds: 0,
+  start: function () {
+    setTimeout(function () {
+      this.seconds++; // `this` is not `timer`
+      console.log(this.seconds); // NaN
+    }, 1000);
+  }
+};
+```
+#### Arrow function:
+```javascript
+const timer = {
+  seconds: 0,
+  start: function () {
+    setTimeout(() => {
+      this.seconds++; // `this` is `timer`
+      console.log(this.seconds); // 1
+    }, 1000);
+  }
+};
+```
+The arrow function inherits `this` from `start`, so it correctly accesses `timer.seconds`.
+
+---
+
+## The `arguments` Difference
+
+Regular functions have a built-in `arguments` object that holds all passed-in values:
+
+```javascript
+function test() {
+  console.log(arguments); // [1, 2, 3]
+}
+
+test(1, 2, 3);
+```
+
+Arrow functions don't have their own `arguments`:
+
+```javascript
+const test = () => {
+  console.log(arguments); // ReferenceError (or outer scope's arguments)
+};
+```
+
+If you need to handle a variable number of arguments in an arrow function, use a rest parameter instead:
+
+```javascript
+const test = (...args) => {
+  console.log(args); // [1, 2, 3]
+};
+```
+
+---
+
+## Constructor Functions
+
+Regular functions can be used as constructors:
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+
+const p = new Person("Charmy");
+console.log(p.name); // "Charmy"
+```
+
+Arrow functions cannot — they have no `prototype` and don't support `new`:
+
+```javascript
+const Person = (name) => {
+  this.name = name;
+};
+
+new Person("Charmy"); // TypeError
+```
+
+---
+
+## Hoisting
+
+Function declarations are hoisted, so you can call them before they're defined:
+
+```javascript
+greet(); // "Hello"
+
+function greet() {
+  console.log("Hello");
+}
+```
+
+Arrow functions are expressions and are not hoisted:
+
+```javascript
+greet(); // ReferenceError
+
+const greet = () => {
+  console.log("Hello");
+};
+```
+
+---
+
+## Quick Reference
+
+| | Regular Function | Arrow Function |
+| - | - | - |
+| Syntax | More verbose | Concise |
+| `this` | Dynamic, depends on the caller | Inherited from outer scope |
+| `arguments` | Available | Not available (use rest params) |
+| Constructor | Supported | Not supported |
+| Hoisting | Hoisted | Not hoisted |
+
+---
+
+## When to Use Each
+
+### Use Arrow Functions
+#### Array methods with short logic:
+```javascript
+const doubled = [1, 2, 3].map(n => n * 2);
+const evens = [1, 2, 3, 4].filter(n => n % 2 === 0);
+```
+#### Promise chains:
+```javascript
+fetch(url)
+  .then(response => response.json())
+  .then(data => console.log(data));
+```
+#### Callbacks that need to preserve the outer `this`:
+```javascript
+setTimeout(() => {
+  this.update();
+}, 1000);
+```
+
+---
+
+### Use Regular Functions
+#### Object methods that need to access `this`:
+```javascript
+const user = {
+  name: "Charmy",
+  greet() {
+    console.log(this.name); // "Charmy"
+  }
+};
+```
+#### Constructor functions:
+```javascript
+function Person(name) {
+  this.name = name;
+}
+```
+#### When hoisting matters — for example, placing function definitions at the bottom of a file:
+```javascript
+init();
+
+function init() {
+  // works fine
+}
+```
+
+---
+
+## Conclusion
+
+Regular functions and arrow functions each have their place.
+
+Need dynamic this? Use a regular function. Need to inherit it from the outer scope? Use an arrow function.
+
+Concise syntax is a nice perk of arrow functions, but it shouldn't be the only reason you reach for one. Understanding the differences is what lets you pick the right tool for the job.

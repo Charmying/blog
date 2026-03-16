@@ -80,6 +80,12 @@
     "tagCount": "{count} articles tagged \"{tag}\"",
     "readingTime": "{time} min",
     "backToArticles": "Back to articles",
-    "notFound": "Article not found"
+    "notFound": "Article not found",
+    "viewGrid": "Grid view",
+    "viewList": "List view",
+    "sortByDate": "Sort by date",
+    "sortByTitle": "Sort by title",
+    "sortByReadingTime": "Sort by reading time",
+    "noArticles": "No articles found"
   }
 }

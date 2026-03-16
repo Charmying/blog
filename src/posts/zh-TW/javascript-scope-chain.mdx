@@ -1,0 +1,194 @@
+export const metadata = {
+  title: 'JavaScript Scope Chain：作用域鏈',
+  date: '2026-03-16',
+  excerpt: '介紹 JavaScript Scope Chain 的運作機制，包含變數查找方向、Variable Shadowing，以及作用域鏈與靜態作用域的關係。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Scope Chain：作用域鏈
+
+當程式碼存取一個變數時，JavaScript 不只在目前的作用域尋找，還會一層一層往外找，直到找到或報錯為止。
+
+這個查找機制就是 Scope Chain (作用域鏈)。
+
+```text
+作用域鏈
+├─ 什麼是作用域鏈
+├─ 查找方向：只往外，不往內
+├─ 遮蔽效果 (Variable Shadowing)
+└─ 作用域鏈與靜態作用域
+```
+
+- [什麼是作用域鏈](#什麼是作用域鏈)
+- [查找方向：只往外，不往內](#查找方向只往外不往內)
+- [遮蔽效果 (Variable Shadowing)](#遮蔽效果-variable-shadowing)
+- [作用域鏈與靜態作用域](#作用域鏈與靜態作用域)
+
+---
+
+## 什麼是作用域鏈
+
+每個作用域都可以存取自己的變數，也可以存取外層作用域的變數。
+
+這些作用域由內到外形成一條鏈，就是作用域鏈。
+
+```javascript
+const a = 1;
+
+function outer() {
+  const b = 2;
+
+  function inner() {
+    const c = 3;
+    console.log(a); // 1，往外找到全域
+    console.log(b); // 2，往外找到 outer
+    console.log(c); // 3，在自己的作用域找到
+  }
+
+  inner();
+}
+
+outer();
+```
+
+查找順序：
+
+```text
+inner → outer → 全域
+```
+
+JavaScript 沿著這條鏈從內往外尋找，找到就停止，找不到就繼續往外，一直到全域作用域。
+
+如果全域也找不到，就拋出 `ReferenceError`：
+
+```javascript
+function test() {
+  console.log(x); // ReferenceError: x is not defined
+}
+
+test();
+```
+
+---
+
+## 查找方向：只往外，不往內
+
+作用域鏈的查找方向是單向的，只能從內往外，不能從外往內。
+
+外層作用域無法存取內層作用域的變數：
+
+```javascript
+function outer() {
+  function inner() {
+    const x = 10;
+  }
+
+  console.log(x); // ReferenceError: x is not defined
+}
+
+outer();
+```
+
+`outer` 無法存取 `inner` 內部的 `x`。
+
+多層巢狀的情況下，查找方向也是一樣的：
+
+```javascript
+const level1 = "global";
+
+function funcA() {
+  const level2 = "funcA";
+
+  function funcB() {
+    const level3 = "funcB";
+
+    function funcC() {
+      console.log(level1); // "global"
+      console.log(level2); // "funcA"
+      console.log(level3); // "funcB"
+    }
+
+    funcC();
+  }
+
+  funcB();
+}
+
+funcA();
+```
+
+`funcC` 可以存取所有外層的變數，但 `funcA` 無法存取 `funcB` 或 `funcC` 的變數。
+
+---
+
+## 遮蔽效果 (Variable Shadowing)
+
+當內層作用域宣告了與外層同名的變數，內層的變數會「遮蔽」外層的變數。
+
+```javascript
+const name = "global";
+
+function greet() {
+  const name = "local";
+  console.log(name); // "local"
+}
+
+greet();
+console.log(name); // "global"
+```
+
+在 `greet` 內部，`name` 指向的是函式內宣告的 `"local"`，外層的 `"global"` 被遮蔽了。
+
+兩個 `name` 各自存在於不同的作用域，互不影響。
+
+Variable Shadowing 本身不是錯誤，但同名變數可能讓程式碼變得難以閱讀，使用時要注意。
+
+---
+
+## 作用域鏈與靜態作用域
+
+作用域鏈的結構在程式碼撰寫時就已決定，與函式在哪裡被呼叫無關。
+
+這就是靜態作用域 (Lexical Scope) 的概念。
+
+```javascript
+const name = "global";
+
+function printName() {
+  console.log(name);
+}
+
+function main() {
+  const name = "local";
+  printName(); // "global"
+}
+
+main();
+```
+
+`printName` 定義在全域，它的作用域鏈是：
+
+```text
+printName → 全域
+```
+
+即使 `printName` 是在 `main` 內被呼叫，它也不會存取 `main` 的 `name`，因為 `main` 不在它的作用域鏈上。
+
+這個特性也是閉包 (Closure) 能夠運作的基礎。
+
+---
+
+## 總結
+
+作用域鏈是 JavaScript 變數查找的核心機制：
+
+- 從目前作用域往外層尋找，直到全域
+- 查找方向只能由內往外，不能由外往內
+- 內層同名變數會遮蔽外層變數
+- 作用域鏈的結構由程式碼的撰寫位置決定，不受呼叫位置影響
+
+理解作用域鏈之後，接下來通常會進一步學習：
+
+- Closure
+- Hoisting
+- Execution Context

@@ -1,0 +1,265 @@
+export const metadata = {
+  title: 'JavaScript this：this 的指向規則',
+  date: '2026-03-17',
+  excerpt: '介紹 JavaScript this 的指向規則，包含全域環境、一般函式、物件方法、建構函式、call/apply/bind，以及箭頭函式的差異。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript `this`：this 的指向規則
+
+`this` 是 JavaScript 中最常讓人困惑的概念之一。
+
+它的值不是固定的，而是根據函式被呼叫的方式決定的。
+
+```text
+this 的指向規則
+├─ 全域環境
+├─ 一般函式呼叫
+├─ 物件方法呼叫
+├─ 建構函式
+├─ call、apply、bind
+└─ 箭頭函式
+```
+
+- [什麼是 `this`](#什麼是-this)
+- [全域環境](#全域環境)
+- [一般函式呼叫](#一般函式呼叫)
+- [物件方法呼叫](#物件方法呼叫)
+- [建構函式](#建構函式)
+- [`call`、`apply`、`bind`](#callapplybind)
+- [箭頭函式](#箭頭函式)
+- [規則總覽](#規則總覽)
+
+---
+
+## 什麼是 `this`
+
+`this` 是一個在函式內部可以使用的關鍵字，指向「目前執行環境的物件」。
+
+它的值取決於函式是如何被呼叫的，而不是在哪裡被定義的。
+
+---
+
+## 全域環境
+
+在全域環境中 (任何函式外部)，`this` 指向全域物件。
+
+在瀏覽器中是 `window`：
+
+```javascript
+console.log(this); // window
+console.log(this === window); // true
+```
+
+在 Node.js 中是 `global`：
+
+```javascript
+console.log(this); // {} (模組層級)
+```
+
+---
+
+## 一般函式呼叫
+
+直接呼叫一個函式時，`this` 的指向取決於是否在嚴格模式下執行。
+
+非嚴格模式：`this` 指向全域物件 (瀏覽器中是 `window`)：
+
+```javascript
+function show() {
+  console.log(this); // window
+}
+
+show();
+```
+
+嚴格模式 ()`"use strict"`)：`this` 是 `undefined`：
+
+```javascript
+"use strict";
+
+function show() {
+  console.log(this); // undefined
+}
+
+show();
+```
+
+---
+
+## 物件方法呼叫
+
+當函式作為物件的方法被呼叫時，`this` 指向呼叫該方法的物件：
+
+```javascript
+const user = {
+  name: "Charmy",
+  greet() {
+    console.log(this.name); // "Charmy"
+  }
+};
+
+user.greet();
+```
+
+`this` 指向 `user`，因為是 `user` 在呼叫 `greet`。
+
+注意：`this` 取決於呼叫時的情況，把方法提取出來單獨呼叫，`this` 就會改變：
+
+```javascript
+const greet = user.greet;
+greet(); // undefined (非嚴格模式下是 window.name)
+```
+
+---
+
+## 建構函式
+
+使用 `new` 呼叫函式時，JavaScript 會建立一個新物件，`this` 指向這個新物件：
+
+```javascript
+function Person(name) {
+  this.name = name;
+}
+
+const p = new Person("Charmy");
+console.log(p.name); // "Charmy"
+```
+
+`new` 的執行過程：
+
+1. 建立一個新的空物件
+2. 將 `this` 指向這個新物件
+3. 執行函式內的程式碼
+4. 回傳這個新物件
+
+---
+
+## `call`、`apply`、`bind`
+
+這三個方法可以手動指定 `this` 的值。
+
+### `call`
+
+立即呼叫函式，第一個參數指定 `this`，其餘參數逐一傳入：
+
+```javascript
+function greet(greeting) {
+  console.log(greeting + ", " + this.name);
+}
+
+const user = { name: "Charmy" };
+
+greet.call(user, "Hello"); // "Hello, Charmy"
+```
+
+### `apply`
+
+與 `call` 相同，但參數以陣列傳入：
+
+```javascript
+greet.apply(user, ["Hello"]); // "Hello, Charmy"
+```
+
+### `bind`
+
+不立即呼叫，而是回傳一個綁定了 `this` 的新函式：
+
+```javascript
+const boundGreet = greet.bind(user);
+boundGreet("Hello"); // "Hello, Charmy"
+```
+
+`bind` 常用於需要保留 `this` 的場景，例如事件處理：
+
+```javascript
+class Timer {
+  constructor() {
+    this.seconds = 0;
+  }
+
+  start() {
+    setInterval(this.tick.bind(this), 1000);
+  }
+
+  tick() {
+    this.seconds++;
+    console.log(this.seconds);
+  }
+}
+```
+
+---
+
+## 箭頭函式
+
+箭頭函式沒有自己的 `this`，它的 `this` 繼承自定義時的外層作用域 (lexical this)。
+
+```javascript
+const user = {
+  name: "Charmy",
+  greet: () => {
+    console.log(this.name); // undefined
+  }
+};
+
+user.greet();
+```
+
+`this` 不是 `user`，而是外層作用域的 `this` (此處為全域)。
+
+箭頭函式的 `this` 不會因為呼叫方式而改變，也無法用 `call`、`apply`、`bind` 改變它：
+
+```javascript
+const show = () => {
+  console.log(this);
+};
+
+show.call({ name: "Charmy" }); // 仍然是外層的 this，不是 { name: "Charmy" }
+```
+
+箭頭函式在需要保留外層 `this` 的場景下非常好用：
+
+```javascript
+const timer = {
+  seconds: 0,
+  start() {
+    setInterval(() => {
+      this.seconds++; // this 是 timer
+      console.log(this.seconds);
+    }, 1000);
+  }
+};
+```
+
+---
+
+## 規則總覽
+
+| 呼叫方式 | `this` 指向 |
+| - | - |
+| 全域環境 | 全域物件 (`window` / `global`) |
+| 一般函式呼叫 (非嚴格) | 全域物件 |
+| 一般函式呼叫 (嚴格模式) | `undefined` |
+| 物件方法呼叫 | 呼叫該方法的物件 |
+| `new` 建構函式 | 新建立的物件 |
+| `call` / `apply` / `bind` | 手動指定的物件 |
+| 箭頭函式 | 外層作用域的 `this` |
+
+---
+
+## 總結
+
+`this` 的值取決於函式被呼叫的方式：
+
+- 一般呼叫 → 全域物件或 `undefined` (嚴格模式)
+- 物件方法 → 呼叫的物件
+- `new` → 新建立的物件
+- `call` / `apply` / `bind` → 手動指定
+- 箭頭函式 → 繼承外層作用域
+
+理解 `this` 之後，接下來通常會進一步學習：
+
+- Execution Context
+- Closure
+- Prototype

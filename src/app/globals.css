@@ -388,7 +388,6 @@ body.theme-ready {
   border-radius: 0;
   padding: 0;
   margin: 0;
-  overflow: visible;
 }
 
 .prose-custom code {
@@ -469,7 +468,6 @@ body.theme-ready {
 .code-block {
   margin: 2rem 0;
   border-radius: clamp(12px, 2vw, 16px);
-  overflow: hidden;
   border: 1px solid var(--code-border);
   background: var(--code-bg);
   transition: box-shadow 0.5s;
@@ -485,6 +483,7 @@ body.theme-ready {
   align-items: center;
   padding: 0.75rem 1.25rem;
   border-bottom: 1px solid var(--code-border);
+  border-radius: clamp(12px, 2vw, 16px) clamp(12px, 2vw, 16px) 0 0;
 }
 
 .code-block__lang {
@@ -517,11 +516,30 @@ body.theme-ready {
 
 .code-block__pre {
   margin: 0;
-  overflow-x: auto;
+  padding: 0;
   background: var(--code-bg);
   border: none;
-  border-radius: 0;
-  padding: 0;
+  border-radius: 0 0 clamp(12px, 2vw, 16px) clamp(12px, 2vw, 16px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+.code-block__pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-block__pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-block__pre::-webkit-scrollbar-thumb {
+  background: var(--button-bg);
+  border-radius: 4px;
+}
+
+.code-block__pre::-webkit-scrollbar-thumb:hover {
+  background: var(--button-hover);
 }
 
 .code-block__code {
@@ -531,6 +549,10 @@ body.theme-ready {
   font-size: 0.875rem;
   line-height: 1.65;
   tab-size: 2;
+  white-space: pre;
+  word-wrap: normal;
+  overflow-wrap: normal;
+  min-width: max-content;
 }
 
 /* ========================= 11. Syntax Highlighting ========================= */

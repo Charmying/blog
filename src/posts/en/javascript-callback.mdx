@@ -1,0 +1,314 @@
+export const metadata = {
+  title: 'JavaScript Callback Functions',
+  date: '2026-03-18',
+  excerpt: 'A practical guide to JavaScript callback functions — covering synchronous and asynchronous callbacks, common use cases, Callback Hell and how to escape it, and the Error-First Callback convention.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# JavaScript Callback Functions
+
+In JavaScript, a callback is just a function you pass into another function to be called later.
+
+Simple idea — but it shows up everywhere.
+
+```text
+Callback Functions
+├─ What Is a Callback Function
+├─ Synchronous Callbacks
+├─ Asynchronous Callbacks
+├─ Common Use Cases
+├─ Callback Hell
+└─ Error Handling
+```
+
+- [What Is a Callback Function](#what-is-a-callback-function)
+- [Synchronous Callbacks](#synchronous-callbacks)
+- [Asynchronous Callbacks](#asynchronous-callbacks)
+- [Common Use Cases](#common-use-cases)
+- [Callback Hell](#callback-hell)
+- [Error Handling](#error-handling)
+
+---
+
+## What Is a Callback Function
+
+```javascript
+function greet(name, callback) {
+  console.log("Hello, " + name);
+  callback();
+}
+
+function sayBye() {
+  console.log("Goodbye!");
+}
+
+greet("Charmy", sayBye);
+```
+
+Output:
+
+```text
+Hello, Charmy
+Goodbye!
+```
+
+`sayBye` is passed into `greet` and called inside it — that makes it a callback.
+
+You can also pass an anonymous function directly:
+
+```javascript
+greet("Charmy", function () {
+  console.log("Goodbye!");
+});
+```
+
+---
+
+## Synchronous Callbacks
+
+Callbacks don't have to be asynchronous. A synchronous callback runs immediately, inline with the rest of the code.
+
+The most common examples are array methods:
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const doubled = numbers.map(function (n) {
+  return n * 2;
+});
+
+console.log(doubled); // [2, 4, 6, 8, 10]
+```
+
+`map` calls the callback on each element right away — no waiting involved.
+
+Other common synchronous callbacks:
+
+```javascript
+// filter
+const evens = numbers.filter(n => n % 2 === 0);
+
+// forEach
+numbers.forEach(n => console.log(n));
+
+// sort
+const sorted = [3, 1, 2].sort((a, b) => a - b);
+```
+
+---
+
+## Asynchronous Callbacks
+
+An asynchronous callback doesn't run immediately. It's called later, once some operation has finished.
+
+### setTimeout
+
+```javascript
+console.log("Start");
+
+setTimeout(function () {
+  console.log("runs after 1 second");
+}, 1000);
+
+console.log("End");
+```
+
+Output:
+
+```text
+Start
+End
+runs after 1 second
+```
+
+The callback runs 1 second later, without blocking anything in between.
+
+### Event Listeners
+
+```javascript
+button.addEventListener("click", function () {
+  console.log("button clicked");
+});
+```
+
+This callback fires when the user clicks the button — could be 1 second from now, could be never.
+
+### Network Requests (legacy XMLHttpRequest)
+
+```javascript
+const xhr = new XMLHttpRequest();
+xhr.open("GET", "https://api.example.com/data");
+xhr.onload = function () {
+  console.log(xhr.responseText);
+};
+xhr.send();
+```
+
+---
+
+## Common Use Cases
+
+Callbacks show up everywhere in JavaScript.
+
+### Array methods
+
+```javascript
+const names = ["Charmy", "Alice", "Bob"];
+
+names.forEach(name => console.log(name));
+names.filter(name => name.length > 3);
+names.map(name => name.toUpperCase());
+```
+
+### Timers
+
+```javascript
+setTimeout(() => {
+  console.log("runs once after 500ms");
+}, 500);
+
+setInterval(() => {
+  console.log("runs every second");
+}, 1000);
+```
+
+### Event handling
+
+```javascript
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("page loaded");
+});
+
+input.addEventListener("input", function (event) {
+  console.log(event.target.value);
+});
+```
+
+---
+
+## Callback Hell
+
+When multiple async operations need to run in sequence, callbacks start nesting inside each other. This is Callback Hell.
+
+```javascript
+fetchUser(userId, function (user) {
+  fetchPosts(user.id, function (posts) {
+    fetchComments(posts[0].id, function (comments) {
+      fetchLikes(comments[0].id, function (likes) {
+        console.log(likes);
+      });
+    });
+  });
+});
+```
+
+The problems:
+
+- Code drifts to the right with each level of nesting
+- Logic is scattered and hard to follow
+- Error handling gets messy fast
+
+Fix 1: Extract named functions
+
+```javascript
+function handleLikes(likes) {
+  console.log(likes);
+}
+
+function handleComments(comments) {
+  fetchLikes(comments[0].id, handleLikes);
+}
+
+function handlePosts(posts) {
+  fetchComments(posts[0].id, handleComments);
+}
+
+function handleUser(user) {
+  fetchPosts(user.id, handlePosts);
+}
+
+fetchUser(userId, handleUser);
+```
+
+The nesting is gone, but the logic is still spread across multiple functions.
+
+Fix 2: Use Promises or async/await
+
+Modern JavaScript handles this with Promises or async/await:
+
+```javascript
+// Promise
+fetchUser(userId)
+  .then(user => fetchPosts(user.id))
+  .then(posts => fetchComments(posts[0].id))
+  .then(comments => fetchLikes(comments[0].id))
+  .then(likes => console.log(likes));
+
+// async/await
+async function getData() {
+  const user = await fetchUser(userId);
+  const posts = await fetchPosts(user.id);
+  const comments = await fetchComments(posts[0].id);
+  const likes = await fetchLikes(comments[0].id);
+  console.log(likes);
+}
+```
+
+---
+
+## Error Handling
+
+Callbacks have no built-in error handling standard, but Node.js popularized a convention called Error-First Callbacks.
+
+The first argument is always an error object, and the second is the result:
+
+```javascript
+function fetchData(callback) {
+  setTimeout(function () {
+    const error = null;
+    const data = "some data";
+    callback(error, data);
+  }, 1000);
+}
+
+fetchData(function (error, data) {
+  if (error) {
+    console.error("Something went wrong:", error);
+    return;
+  }
+  console.log(data); // "some data"
+});
+```
+
+If something went wrong, `error` is an Error object. If everything's fine, `error` is `null`.
+
+This pattern is used throughout Node.js's built-in modules:
+
+```javascript
+const fs = require("fs");
+
+fs.readFile("file.txt", "utf8", function (error, data) {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  console.log(data);
+});
+```
+
+---
+
+## Conclusion
+
+A callback is a function you pass into another function to be called at a specific point — immediately, or once some operation finishes.
+
+- Synchronous callbacks run immediately — `map`, `filter`, `forEach`
+- Asynchronous callbacks run later — `setTimeout`, event listeners, network requests
+- Nest too many of them and you end up with Callback Hell
+- For error handling, the Error-First convention is the standard
+
+Once you're comfortable with callbacks, the natural next topics are:
+
+- Promises
+- async / await
+- Event Loop

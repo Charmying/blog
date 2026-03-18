@@ -1,0 +1,320 @@
+export const metadata = {
+  title: 'JavaScript Callback Function：回呼函式',
+  date: '2026-03-18',
+  excerpt: '介紹 JavaScript Callback Function 的概念與使用方式，包含同步與非同步 Callback、常見使用場景、Callback Hell 的成因與解法，以及 Error-First Callback 的錯誤處理慣例。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Callback Function：回呼函式
+
+Callback Function (回呼函式) 是 JavaScript 非同步程式設計的基礎概念之一。
+
+簡單來說：將一個函式作為參數傳入另一個函式，並在適當時機呼叫它，這個被傳入的函式就是 Callback Function。
+
+```text
+Callback Function
+├─ 什麼是 Callback Function
+├─ 同步 Callback
+├─ 非同步 Callback
+├─ 常見的使用場景
+├─ Callback Hell
+└─ 錯誤處理
+```
+
+- [什麼是 Callback Function](#什麼是-callback-function)
+- [同步 Callback](#同步-callback)
+- [非同步 Callback](#非同步-callback)
+- [常見的使用場景](#常見的使用場景)
+- [Callback Hell](#callback-hell)
+- [錯誤處理](#錯誤處理)
+
+---
+
+## 什麼是 Callback Function
+
+在 JavaScript 中，函式是一等公民 (First-Class Citizen)，可以像普通值一樣被傳遞。
+
+當一個函式被當作參數傳入另一個函式，並在內部被呼叫，這個函式就稱為 Callback Function。
+
+```javascript
+function greet(name, callback) {
+  console.log("Hello, " + name);
+  callback();
+}
+
+function sayBye() {
+  console.log("Goodbye!");
+}
+
+greet("Charmy", sayBye);
+```
+
+輸出：
+
+```text
+Hello, Charmy
+Goodbye!
+```
+
+`sayBye` 被當作參數傳入 `greet`，在 `greet` 內部被呼叫，所以 `sayBye` 就是一個 Callback Function。
+
+也可以直接傳入匿名函式：
+
+```javascript
+greet("Charmy", function () {
+  console.log("Goodbye!");
+});
+```
+
+---
+
+## 同步 Callback
+
+Callback 不一定是非同步的。
+
+同步 Callback 會在當下立刻被呼叫，執行順序與一般程式碼相同。
+
+最常見的例子是陣列方法：
+
+```javascript
+const numbers = [1, 2, 3, 4, 5];
+
+const doubled = numbers.map(function (n) {
+  return n * 2;
+});
+
+console.log(doubled); // [2, 4, 6, 8, 10]
+```
+
+`map` 接收一個 Callback，對每個元素立刻執行，不涉及任何等待。
+
+其他常見的同步 Callback：
+
+```javascript
+// filter
+const evens = numbers.filter(n => n % 2 === 0);
+
+// forEach
+numbers.forEach(n => console.log(n));
+
+// sort
+const sorted = [3, 1, 2].sort((a, b) => a - b);
+```
+
+---
+
+## 非同步 Callback
+
+非同步 Callback 不會立刻執行，而是在某個操作完成後才被呼叫。
+
+### setTimeout
+
+```javascript
+console.log("開始");
+
+setTimeout(function () {
+  console.log("1 秒後執行");
+}, 1000);
+
+console.log("結束");
+```
+
+輸出：
+
+```text
+開始
+結束
+1 秒後執行
+```
+
+`setTimeout` 的 Callback 在 1 秒後才執行，不會阻塞後面的程式碼。
+
+### 事件監聽
+
+```javascript
+button.addEventListener("click", function () {
+  console.log("按鈕被點擊");
+});
+```
+
+這裡的 Callback 在使用者點擊按鈕時才執行，可能是 1 秒後，也可能是 1 小時後。
+
+### 網路請求 (舊式 XMLHttpRequest)
+
+```javascript
+const xhr = new XMLHttpRequest();
+xhr.open("GET", "https://api.example.com/data");
+xhr.onload = function () {
+  console.log(xhr.responseText);
+};
+xhr.send();
+```
+
+---
+
+## 常見的使用場景
+
+Callback 在 JavaScript 中無處不在：
+
+### 陣列方法
+
+```javascript
+const names = ["Charmy", "Alice", "Bob"];
+
+names.forEach(name => console.log(name));
+names.filter(name => name.length > 3);
+names.map(name => name.toUpperCase());
+```
+
+### 計時器
+
+```javascript
+setTimeout(() => {
+  console.log("延遲執行");
+}, 500);
+
+setInterval(() => {
+  console.log("每秒執行");
+}, 1000);
+```
+
+### 事件處理
+
+```javascript
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("頁面載入完成");
+});
+
+input.addEventListener("input", function (event) {
+  console.log(event.target.value);
+});
+```
+
+---
+
+## Callback Hell
+
+當多個非同步操作需要依序執行時，Callback 會層層巢狀，形成所謂的 Callback Hell。
+
+```javascript
+fetchUser(userId, function (user) {
+  fetchPosts(user.id, function (posts) {
+    fetchComments(posts[0].id, function (comments) {
+      fetchLikes(comments[0].id, function (likes) {
+        console.log(likes);
+      });
+    });
+  });
+});
+```
+
+Callback Hell 的問題：
+
+- 程式碼往右縮排，難以閱讀
+- 邏輯分散，難以維護
+- 錯誤處理複雜
+
+改善方式一：將 Callback 抽成命名函式
+
+```javascript
+function handleLikes(likes) {
+  console.log(likes);
+}
+
+function handleComments(comments) {
+  fetchLikes(comments[0].id, handleLikes);
+}
+
+function handlePosts(posts) {
+  fetchComments(posts[0].id, handleComments);
+}
+
+function handleUser(user) {
+  fetchPosts(user.id, handlePosts);
+}
+
+fetchUser(userId, handleUser);
+```
+
+縮排問題解決了，但邏輯仍然分散。
+
+改善方式二：改用 Promise 或 async/await
+
+現代 JavaScript 通常用 Promise 或 async/await 取代深層 Callback：
+
+```javascript
+// Promise
+fetchUser(userId)
+  .then(user => fetchPosts(user.id))
+  .then(posts => fetchComments(posts[0].id))
+  .then(comments => fetchLikes(comments[0].id))
+  .then(likes => console.log(likes));
+
+// async/await
+async function getData() {
+  const user = await fetchUser(userId);
+  const posts = await fetchPosts(user.id);
+  const comments = await fetchComments(posts[0].id);
+  const likes = await fetchLikes(comments[0].id);
+  console.log(likes);
+}
+```
+
+---
+
+## 錯誤處理
+
+Callback 的錯誤處理沒有統一的標準，但 Node.js 流行了一個慣例：Error-First Callback。
+
+第一個參數是錯誤物件，第二個參數才是結果：
+
+```javascript
+function fetchData(callback) {
+  setTimeout(function () {
+    const error = null;
+    const data = "資料";
+    callback(error, data);
+  }, 1000);
+}
+
+fetchData(function (error, data) {
+  if (error) {
+    console.error("發生錯誤：", error);
+    return;
+  }
+  console.log(data); // "資料"
+});
+```
+
+如果有錯誤，`error` 會是一個 Error 物件；如果成功，`error` 是 `null`。
+
+這個模式在 Node.js 的內建模組中非常常見：
+
+```javascript
+const fs = require("fs");
+
+fs.readFile("file.txt", "utf8", function (error, data) {
+  if (error) {
+    console.error(error);
+    return;
+  }
+  console.log(data);
+});
+```
+
+---
+
+## 總結
+
+Callback Function 是將函式作為參數傳遞，並在適當時機呼叫的模式。
+
+- 同步 Callback：立刻執行，例如 `map`、`filter`、`forEach`
+- 非同步 Callback：延後執行，例如 `setTimeout`、事件監聽、網路請求
+- 多層 Callback 會形成 Callback Hell，影響可讀性
+- 錯誤處理可以用 Error-First Callback 的慣例
+
+理解 Callback 之後，接下來通常會進一步學習：
+
+- Promise
+- async / await
+- Event Loop

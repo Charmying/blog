@@ -1,0 +1,247 @@
+export const metadata = {
+  title: 'JavaScript Event Loop：事件循環',
+  date: '2026-03-19',
+  excerpt: '介紹 JavaScript Event Loop 的運作機制，包含 Call Stack、Web APIs、Task Queue、Microtask Queue 的角色，以及 Macrotask 與 Microtask 的執行優先順序。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Event Loop：事件循環
+
+JavaScript 是單執行緒語言，同一時間只能執行一件事。但它卻能同時處理計時器、網路請求、使用者互動，不會卡住。
+
+這背後的機制就是 Event Loop (事件循環)。
+
+```text
+Event Loop
+├─ JavaScript 的執行環境
+│   ├─ Call Stack
+│   ├─ Web APIs
+│   ├─ Task Queue (Macrotask Queue)
+│   └─ Microtask Queue
+├─ Event Loop 的運作方式
+├─ Macrotask vs Microtask
+└─ 執行順序總覽
+```
+
+- [JavaScript 的執行環境](#javascript-的執行環境)
+- [Event Loop 的運作方式](#event-loop-的運作方式)
+- [Macrotask vs Microtask](#macrotask-vs-microtask)
+- [執行順序總覽](#執行順序總覽)
+
+---
+
+## JavaScript 的執行環境
+
+要理解 Event Loop，必須先認識 JavaScript 執行環境的幾個組成部分。
+
+### Call Stack (呼叫堆疊)
+
+Call Stack 是執行同步程式碼的地方。
+
+JavaScript 每次呼叫一個函式，就會把它推入 Call Stack；函式執行完畢，就從 Call Stack 移除。
+
+Call Stack 一次只能執行一個任務，這就是單執行緒的意思。
+
+```javascript
+function first() {
+  second();
+}
+
+function second() {
+  console.log("Hello");
+}
+
+first();
+```
+
+執行過程：
+
+```text
+1. first() 推入 Call Stack
+2. second() 推入 Call Stack
+3. console.log("Hello") 執行並移除
+4. second() 執行完畢，移除
+5. first() 執行完畢，移除
+```
+
+### Web APIs
+
+Web APIs 是瀏覽器提供的功能，例如 `setTimeout`、`fetch`、DOM 事件監聽。
+
+這些操作不在 Call Stack 上執行，而是交給瀏覽器在背景處理，不會阻塞 JavaScript 的執行。
+
+### Task Queue (Macrotask Queue)
+
+Web APIs 完成後，callback 不會直接回到 Call Stack，而是先進入 Task Queue 排隊等待。
+
+常見的 Macrotask 來源：
+
+- `setTimeout`
+- `setInterval`
+- DOM 事件 (`click`、`input` 等)
+- `MessageChannel`
+
+### Microtask Queue
+
+Microtask Queue 的優先權高於 Task Queue，每次 Call Stack 清空後，JavaScript 會先把 Microtask Queue 裡的所有任務處理完，才會從 Task Queue 取下一個任務。
+
+常見的 Microtask 來源：
+
+- `Promise` 的 `.then`、`.catch`、`.finally`
+- `queueMicrotask()`
+- `MutationObserver`
+
+---
+
+## Event Loop 的運作方式
+
+Event Loop 持續執行以下流程：
+
+1. 執行 Call Stack 中的所有同步程式碼
+2. Call Stack 清空後，處理 Microtask Queue 中的所有任務
+3. Microtask Queue 清空後，從 Task Queue 取出一個任務推入 Call Stack
+4. 重複以上步驟
+
+用程式碼來理解：
+
+```javascript
+console.log("A");
+
+setTimeout(function () {
+  console.log("B");
+}, 0);
+
+console.log("C");
+```
+
+執行過程：
+
+1. `console.log("A")` 推入 Call Stack，執行，輸出 `"A"`，移除
+2. `setTimeout` 推入 Call Stack，執行，callback 交給 Web APIs，`setTimeout` 移除
+3. `console.log("C")` 推入 Call Stack，執行，輸出 `"C"`，移除
+4. Call Stack 清空，Web APIs 完成，callback 進入 Task Queue
+5. Event Loop 將 callback 推入 Call Stack，執行，輸出 `"B"`
+
+輸出：
+
+```text
+A
+C
+B
+```
+
+---
+
+## Macrotask vs Microtask
+
+這是 Event Loop 最容易讓人困惑的部分。
+
+```javascript
+console.log("A");
+
+setTimeout(function () {
+  console.log("B"); // Macrotask
+}, 0);
+
+Promise.resolve().then(function () {
+  console.log("C"); // Microtask
+});
+
+console.log("D");
+```
+
+執行過程：
+
+1. 輸出 `"A"` (同步)
+2. `setTimeout` callback 進入 Task Queue (Macrotask)
+3. `Promise.then` callback 進入 Microtask Queue
+4. 輸出 `"D"` (同步)
+5. Call Stack 清空，處理 Microtask Queue → 輸出 `"C"`
+6. Microtask Queue 清空，從 Task Queue 取出 callback → 輸出 `"B"`
+
+輸出：
+
+```text
+A
+D
+C
+B
+```
+
+Microtask 的優先權高於 Macrotask。
+
+每次 Call Stack 清空後，Microtask Queue 會被完全清空，才會執行下一個 Macrotask。
+
+這表示如果 Microtask 不斷產生新的 Microtask，Task Queue 中的任務就永遠不會執行：
+
+```javascript
+function loop() {
+  Promise.resolve().then(loop);
+}
+
+loop(); // 頁面會卡住，因為 Microtask Queue 永遠不會清空
+```
+
+---
+
+## 執行順序總覽
+
+理解了以上概念，來看一個完整的例子：
+
+```javascript
+console.log("1");
+
+setTimeout(function () {
+  console.log("2");
+}, 0);
+
+Promise.resolve()
+  .then(function () {
+    console.log("3");
+  })
+  .then(function () {
+    console.log("4");
+  });
+
+console.log("5");
+```
+
+執行順序分析：
+
+1. 輸出 `"1"` (同步)
+2. `setTimeout` callback 進入 Task Queue
+3. `Promise.then("3")` 進入 Microtask Queue
+4. 輸出 `"5"` (同步)
+5. Call Stack 清空，處理 Microtask Queue：
+   - 輸出 `"3"`，同時 `.then("4")` 進入 Microtask Queue
+   - 輸出 `"4"`
+6. Microtask Queue 清空，從 Task Queue 取出 callback → 輸出 `"2"`
+
+輸出：
+
+```text
+1
+5
+3
+4
+2
+```
+
+---
+
+## 總結
+
+Event Loop 是 JavaScript 處理非同步的核心機制：
+
+- Call Stack：執行同步程式碼，一次一個任務
+- Web APIs：背景處理計時器、網路請求、事件等
+- Microtask Queue：Promise callback，Call Stack 清空後優先執行
+- Task Queue：setTimeout、setInterval 等，Microtask 清空後才執行
+
+執行優先順序：同步程式碼 → Microtask → Macrotask
+
+理解 Event Loop 之後，接下來通常會進一步學習：
+
+- Promise
+- async / await
+- 同步與非同步

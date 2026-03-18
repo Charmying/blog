@@ -1,0 +1,222 @@
+export const metadata = {
+  title: 'JavaScript 同步與非同步',
+  date: '2026-03-18',
+  excerpt: '介紹 JavaScript 同步與非同步的核心概念，包含事件循環的運作機制，以及 Callback、Promise、async/await 三種非同步處理方式。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript 同步與非同步
+
+JavaScript 是單執行緒語言，同一時間只能執行一件事。
+
+但現實中的程式需要處理網路請求、計時器、讀取檔案等耗時操作。如果這些操作都阻塞執行，頁面就會卡住，什麼都不能做。
+
+這就是非同步 (Asynchronous) 存在的原因。
+
+```text
+同步與非同步
+├─ 什麼是同步
+├─ 什麼是非同步
+├─ 事件循環
+├─ 常見的非同步操作
+└─ 處理非同步的方式
+```
+
+- [什麼是同步](#什麼是同步)
+- [什麼是非同步](#什麼是非同步)
+- [事件循環](#事件循環)
+- [常見的非同步操作](#常見的非同步操作)
+- [處理非同步的方式](#處理非同步的方式)
+
+---
+
+## 什麼是同步
+
+同步 (Synchronous) 代表程式碼按照順序一行一行執行，每一行執行完才繼續下一行。
+
+```javascript
+console.log("第一行");
+console.log("第二行");
+console.log("第三行");
+```
+
+輸出：
+
+```text
+第一行
+第二行
+第三行
+```
+
+同步程式碼簡單直觀，但如果某一行需要很長時間 (例如等待伺服器回應)，後面所有的程式碼都必須等待，整個程式會被阻塞 (Block)。
+
+---
+
+## 什麼是非同步
+
+非同步 (Asynchronous) 代表程式不需要等待耗時操作完成，可以先繼續執行後面的程式碼，等操作完成後再回來處理結果。
+
+```javascript
+console.log("開始");
+
+setTimeout(function () {
+  console.log("setTimeout 執行");
+}, 1000);
+
+console.log("結束");
+```
+
+輸出：
+
+```text
+開始
+結束
+setTimeout 執行
+```
+
+`setTimeout` 不會阻塞程式，JavaScript 繼續執行 `console.log("結束")`，1 秒後才執行 `setTimeout` 的 callback。
+
+---
+
+## 事件循環
+
+JavaScript 能夠處理非同步的核心機制是事件循環 (Event Loop)。
+
+JavaScript 的執行環境由幾個部分組成：
+
+- Call Stack (呼叫堆疊)：執行同步程式碼的地方，一次只能執行一個任務
+- Web APIs：瀏覽器提供的功能，例如 `setTimeout`、`fetch`、DOM 事件，這些操作在背景執行
+- Task Queue (任務佇列)：Web APIs 完成後，callback 會被放進這裡等待
+- 事件循環：持續監視 Call Stack，當 Call Stack 清空時，將 Task Queue 中的任務推入執行
+
+以 `setTimeout` 為例：
+
+```javascript
+console.log("A");
+
+setTimeout(function () {
+  console.log("B");
+}, 0);
+
+console.log("C");
+```
+
+輸出：
+
+```text
+A
+C
+B
+```
+
+即使 `setTimeout` 的延遲是 `0`，`"B"` 仍然最後執行。
+
+原因：`setTimeout` 的 callback 被交給 Web APIs 處理，完成後進入 Task Queue，等 Call Stack 清空 ()`"A"` 和 `"C"` 都執行完) 之後，事件循環才把它推入 Call Stack 執行。
+
+---
+
+## 常見的非同步操作
+
+JavaScript 中常見的非同步操作包括：
+
+- `setTimeout` / `setInterval`：計時器
+- `fetch`：網路請求
+- DOM 事件：`click`、`input` 等使用者互動
+- `Promise`：非同步操作的封裝
+- `async` / `await`：更直觀的非同步寫法
+
+```javascript
+// 計時器
+setTimeout(() => {
+  console.log("1 秒後執行");
+}, 1000);
+
+// 網路請求
+fetch("https://api.example.com/data")
+  .then(response => response.json())
+  .then(data => console.log(data));
+
+// DOM 事件
+button.addEventListener("click", () => {
+  console.log("按鈕被點擊");
+});
+```
+
+---
+
+## 處理非同步的方式
+
+JavaScript 提供了三種主要的方式來處理非同步操作：
+
+### Callback
+
+最早的非同步處理方式，將函式作為參數傳入，操作完成後呼叫它：
+
+```javascript
+function fetchData(callback) {
+  setTimeout(function () {
+    callback("資料");
+  }, 1000);
+}
+
+fetchData(function (data) {
+  console.log(data); // "資料"
+});
+```
+
+Callback 雖然直觀，但多層巢狀時容易形成「Callback Hell」，難以閱讀和維護：
+
+```javascript
+fetchUser(function (user) {
+  fetchPosts(user.id, function (posts) {
+    fetchComments(posts[0].id, function (comments) {
+      console.log(comments);
+    });
+  });
+});
+```
+
+### Promise
+
+ES6 引入的非同步處理方式，讓非同步程式碼更有結構：
+
+```javascript
+fetch("https://api.example.com/data")
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error(error));
+```
+
+Promise 解決了 Callback Hell，讓非同步操作可以鏈式呼叫。
+
+### async / await
+
+ES2017 引入，讓非同步程式碼看起來像同步程式碼，是目前最常用的寫法：
+
+```javascript
+async function getData() {
+  try {
+    const response = await fetch("https://api.example.com/data");
+    const data = await response.json();
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+getData();
+```
+
+`await` 只能在 `async` 函式內使用，它會暫停函式的執行，等待 Promise 完成後再繼續，但不會阻塞整個程式。
+
+---
+
+## 總結
+
+| | 同步 | 非同步 |
+| - | - | - |
+| 執行方式 | 依序執行，會阻塞 | 不阻塞，完成後回來處理 |
+| 適合場景 | 一般邏輯運算 | 網路請求、計時器、I/O |
+| 處理方式 | 直接執行 | Callback、Promise、`async` / `await` |
+
+JavaScript 的非同步模型讓單執行緒語言也能有效處理耗時操作，是理解 JavaScript 運作方式不可缺少的概念。

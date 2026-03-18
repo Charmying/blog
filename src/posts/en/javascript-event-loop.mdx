@@ -1,0 +1,247 @@
+export const metadata = {
+  title: 'JavaScript Event Loop',
+  date: '2026-03-19',
+  excerpt: 'A practical guide to the JavaScript Event Loop — covering the Call Stack, Web APIs, Task Queue, and Microtask Queue, and how macrotasks and microtasks are prioritized.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# JavaScript Event Loop
+
+JavaScript is single-threaded — it can only do one thing at a time. Yet it handles timers, network requests, and user interactions without freezing up.
+
+The mechanism that makes this possible is the Event Loop.
+
+```text
+Event Loop
+├─ JavaScript's Runtime Environment
+│   ├─ Call Stack
+│   ├─ Web APIs
+│   ├─ Task Queue (Macrotask Queue)
+│   └─ Microtask Queue
+├─ How the Event Loop Works
+├─ Macrotasks vs Microtasks
+└─ Execution Order in Practice
+```
+
+- [JavaScript's Runtime Environment](#javascripts-runtime-environment)
+- [How the Event Loop Works](#how-the-event-loop-works)
+- [Macrotasks vs Microtasks](#macrotasks-vs-microtasks)
+- [Execution Order in Practice](#execution-order-in-practice)
+
+---
+
+## JavaScript's Runtime Environment
+
+To understand the Event Loop, you need to understand the pieces that make up JavaScript's runtime.
+
+### Call Stack
+
+The Call Stack is where synchronous code runs.
+
+Every time a function is called, it's pushed onto the stack. When it finishes, it's popped off. Only one function can run at a time — that's what single-threaded means.
+
+```javascript
+function first() {
+  second();
+}
+
+function second() {
+  console.log("Hello");
+}
+
+first();
+```
+
+What happens on the stack:
+
+```text
+1. first() pushed onto the stack
+2. second() pushed onto the stack
+3. console.log("Hello") runs and is removed
+4. second() finishes, removed
+5. first() finishes, removed
+```
+
+### Web APIs
+
+Web APIs are browser-provided features: `setTimeout`, `fetch`, DOM event listeners, and so on.
+
+These don't run on the Call Stack. They're handed off to the browser, which handles them in the background — so JavaScript keeps running without waiting.
+
+### Task Queue (Macrotask Queue)
+
+When a Web API operation completes, its callback doesn't go straight back to the Call Stack. It gets placed in the Task Queue to wait its turn.
+
+Common sources of macrotasks:
+
+- `setTimeout`
+- `setInterval`
+- DOM events (`click`, `input`, etc.)
+- `MessageChannel`
+
+### Microtask Queue
+
+The Microtask Queue has higher priority than the Task Queue. After the Call Stack empties, JavaScript processes all pending microtasks before picking up the next macrotask.
+
+Common sources of microtasks:
+
+- Promise `.then`, `.catch`, `.finally`
+- `queueMicrotask()`
+- `MutationObserver`
+
+---
+
+## How the Event Loop Works
+
+The Event Loop runs a continuous cycle:
+
+1. Run all synchronous code on the Call Stack
+2. Once the Call Stack is empty, drain the Microtask Queue completely
+3. Pick one task from the Task Queue and push it onto the Call Stack
+4. Repeat
+
+Here's a simple example:
+
+```javascript
+console.log("A");
+
+setTimeout(function () {
+  console.log("B");
+}, 0);
+
+console.log("C");
+```
+
+Step by step:
+
+1. `console.log("A")` runs → outputs `"A"`
+2. `setTimeout` runs → callback handed to Web APIs, `setTimeout` removed from stack
+3. `console.log("C")` runs → outputs `"C"`
+4. Call Stack is empty → Web APIs have completed → callback moves to Task Queue
+5. Event Loop pushes callback onto the Call Stack → outputs `"B"`
+
+Output:
+
+```text
+A
+C
+B
+```
+
+Even with a `0` delay, `"B"` runs last — because `setTimeout` callbacks always go through the Task Queue.
+
+---
+
+## Macrotasks vs Microtasks
+
+This is the part of the Event Loop that trips most people up.
+
+```javascript
+console.log("A");
+
+setTimeout(function () {
+  console.log("B"); // Macrotask
+}, 0);
+
+Promise.resolve().then(function () {
+  console.log("C"); // Microtask
+});
+
+console.log("D");
+```
+
+Step by step:
+
+1. Output `"A"` (synchronous)
+2. `setTimeout` callback queued in Task Queue (macrotask)
+3. `Promise.then` callback queued in Microtask Queue
+4. Output `"D"` (synchronous)
+5. Call Stack empty → drain Microtask Queue → output `"C"`
+6. Microtask Queue empty → pick next macrotask → output `"B"`
+
+Output:
+
+```text
+A
+D
+C
+B
+```
+
+Microtasks always run before the next macrotask.
+
+After the Call Stack empties, the entire Microtask Queue is drained before the Event Loop picks up the next Task Queue item.
+
+This means if microtasks keep generating new microtasks, the Task Queue will never get a turn:
+
+```javascript
+function loop() {
+  Promise.resolve().then(loop);
+}
+
+loop(); // the page hangs — Microtask Queue never empties
+```
+
+---
+
+## Execution Order in Practice
+
+Here's a complete example that puts everything together:
+
+```javascript
+console.log("1");
+
+setTimeout(function () {
+  console.log("2");
+}, 0);
+
+Promise.resolve()
+  .then(function () {
+    console.log("3");
+  })
+  .then(function () {
+    console.log("4");
+  });
+
+console.log("5");
+```
+
+Breaking it down:
+
+1. Output `"1"` (synchronous)
+2. `setTimeout` callback → Task Queue
+3. First `.then("3")` → Microtask Queue
+4. Output `"5"` (synchronous)
+5. Call Stack empty → drain Microtask Queue:
+   - Output `"3"` → second `.then("4")` added to Microtask Queue
+   - Output `"4"`
+6. Microtask Queue empty → pick from Task Queue → output `"2"`
+
+Output:
+
+```text
+1
+5
+3
+4
+2
+```
+
+---
+
+## Conclusion
+
+The Event Loop is what lets JavaScript handle asynchronous work despite being single-threaded:
+
+- Call Stack — runs synchronous code, one task at a time
+- Web APIs — handles timers, network requests, and events in the background
+- Microtask Queue — Promise callbacks, drained completely after each Call Stack clear
+- Task Queue — `setTimeout`, `setInterval`, DOM events; runs after microtasks
+
+Execution priority: synchronous code → microtasks → macrotasks
+
+Once you're comfortable with the Event Loop, the natural next topics are:
+
+- Promises
+- async / await
+- Synchronous vs Asynchronous JavaScript

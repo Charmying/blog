@@ -1,0 +1,189 @@
+export const metadata = {
+  title: 'JavaScript IIFE：立即呼叫函式表達式',
+  date: '2026-03-18',
+  excerpt: '介紹 JavaScript IIFE 的語法與用途，包含避免全域污染、防止命名衝突、傳入參數，以及在現代 JavaScript 中的使用時機。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript IIFE：立即呼叫函式表達式
+
+IIFE (Immediately Invoked Function Expression，立即呼叫函式表達式) 是一種定義後立刻執行的函式。
+
+它最主要的用途是建立獨立的作用域，避免變數污染全域環境。
+
+```text
+IIFE
+├─ 什麼是 IIFE
+├─ 基本語法
+├─ 為什麼需要 IIFE
+├─ 傳入參數
+└─ 現代 JavaScript 中的 IIFE
+```
+
+- [什麼是 IIFE](#什麼是-iife)
+- [基本語法](#基本語法)
+- [為什麼需要 IIFE](#為什麼需要-iife)
+- [傳入參數](#傳入參數)
+- [現代 JavaScript 中的 IIFE](#現代-javascript-中的-iife)
+
+---
+
+## 什麼是 IIFE
+
+IIFE 是一個定義後立刻執行的函式，執行完畢後就消失，不會留下任何名稱或污染外部作用域。
+
+```javascript
+(function () {
+  console.log("Hello");
+})();
+```
+
+這段程式碼定義了一個函式，並立刻呼叫它，輸出 `"Hello"`。
+
+---
+
+## 基本語法
+
+IIFE 有兩種常見的寫法：
+
+```javascript
+// 寫法一
+(function () {
+  // 程式碼
+})();
+
+// 寫法二
+(function () {
+  // 程式碼
+}());
+```
+
+兩種寫法效果相同，差別只在於括號的位置。
+
+箭頭函式也可以寫成 IIFE：
+
+```javascript
+(() => {
+  console.log("Hello");
+})();
+```
+
+---
+
+## 為什麼需要 IIFE
+
+### 避免污染全域作用域
+
+在 ES6 之前，JavaScript 沒有區塊作用域，`var` 宣告的變數會洩漏到全域：
+
+```javascript
+var count = 0;
+
+// 其他地方可能意外覆蓋 count
+var count = 100;
+
+console.log(count); // 100
+```
+
+用 IIFE 包起來，就能建立獨立的作用域：
+
+```javascript
+(function () {
+  var count = 0;
+  // count 只存在於這個 IIFE 內部
+})();
+
+console.log(count); // ReferenceError: count is not defined
+```
+
+### 避免命名衝突
+
+當多個 JavaScript 檔案共用同一個全域環境時，IIFE 可以防止不同檔案間的變數互相干擾：
+
+```javascript
+// 檔案 A
+(function () {
+  var name = "File A";
+  console.log(name);
+})();
+
+// 檔案 B
+(function () {
+  var name = "File B";
+  console.log(name);
+})();
+```
+
+兩個 `name` 各自存在於獨立的作用域，互不影響。
+
+---
+
+## 傳入參數
+
+IIFE 可以接收參數，常見的用途是將全域物件傳入，確保在 IIFE 內部可以安全存取：
+
+```javascript
+(function (global) {
+  console.log(global === window); // true
+})(window);
+```
+
+也可以傳入任何需要的值：
+
+```javascript
+(function (name) {
+  console.log("Hello, " + name);
+})("Charmy");
+```
+
+---
+
+## 現代 JavaScript 中的 IIFE
+
+ES6 引入了 `let`、`const` 和模組系統 (ES Modules) 之後，IIFE 的使用場景大幅減少。
+
+`let` 和 `const` 本身就具備區塊作用域，不需要靠 IIFE 來隔離變數：
+
+```javascript
+{
+  let count = 0;
+  // count 只存在於這個區塊
+}
+
+console.log(count); // ReferenceError
+```
+
+ES Modules 讓每個檔案都有自己獨立的作用域，也不需要用 IIFE 避免全域污染：
+
+```javascript
+// module.js
+const name = "Charmy"; // 不會洩漏到全域
+export { name };
+```
+
+不過 IIFE 在某些情況下仍然有用，例如需要立即執行一段初始化邏輯，同時不想建立多餘的函式名稱：
+
+```javascript
+const result = (function () {
+  const x = 10;
+  const y = 20;
+  return x + y;
+})();
+
+console.log(result); // 30
+```
+
+或是在非模組環境中，IIFE 仍然是避免全域污染的常見手段。
+
+---
+
+## 總結
+
+IIFE 是一個定義後立刻執行的函式，用來建立獨立的作用域。
+
+主要用途：
+
+- 避免變數污染全域環境
+- 防止命名衝突
+
+在現代 JavaScript 中，`let`、`const` 和 ES Modules 已經解決了大部分 IIFE 要處理的問題，但理解 IIFE 仍然重要，因為你會在許多舊有的程式碼中看到它。

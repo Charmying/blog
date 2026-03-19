@@ -1,0 +1,181 @@
+export const metadata = {
+  title: 'JavaScript Execution Context：執行環境',
+  date: '2026-03-19',
+  excerpt: '介紹 JavaScript Execution Context 的運作機制，包含全域與函式執行環境、建立與執行兩個階段、Call Stack，以及與 Hoisting、Scope、Closure 的關係。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Execution Context：執行環境
+
+JavaScript 在執行程式碼之前，會先建立一個環境來管理變數、函式以及 `this` 的值。
+
+這個環境就是 Execution Context (執行環境)。
+
+```text
+Execution Context
+├─ 什麼是 Execution Context
+├─ Execution Context 的種類
+├─ Execution Context 的兩個階段
+├─ Call Stack
+└─ Execution Context 與 Hoisting、Scope、Closure 的關係
+```
+
+- [什麼是 Execution Context](#什麼是-execution-context)
+- [Execution Context 的種類](#execution-context-的種類)
+- [Execution Context 的兩個階段](#execution-context-的兩個階段)
+- [Call Stack](#call-stack)
+- [與 Hoisting、Scope、Closure 的關係](#與-hoistingscopeclosure-的關係)
+
+---
+
+## 什麼是 Execution Context
+
+每當 JavaScript 執行一段程式碼，都會建立一個 Execution Context。
+
+它負責管理三件事：
+
+- 目前作用域內的變數和函式宣告
+- `this` 的值
+- 外層作用域的參考
+
+Execution Context 是理解 Hoisting、Scope Chain、`this`、Closure 的底層基礎。
+
+---
+
+## Execution Context 的種類
+
+JavaScript 有兩種主要的 Execution Context：
+
+### Global Execution Context (全域執行環境)
+
+程式一開始執行時，JavaScript 就會建立 Global Execution Context。
+
+整個程式只有一個，負責管理所有不在函式內的程式碼。
+
+在瀏覽器中，Global Execution Context 的 `this` 指向 `window`。
+
+### Function Execution Context (函式執行環境)
+
+每次呼叫一個函式，JavaScript 就會為它建立一個新的 Function Execution Context。
+
+同一個函式被呼叫多次，每次都會建立獨立的 Execution Context。
+
+```javascript
+function greet(name) {
+  const message = "Hello, " + name;
+  console.log(message);
+}
+
+greet("Charmy"); // 建立一個 Execution Context
+greet("Charmying"); // 再建立一個新的 Execution Context
+```
+
+---
+
+## Execution Context 的兩個階段
+
+每個 Execution Context 的建立分為兩個階段：
+
+### 1. 建立階段 (Creation Phase)
+
+程式碼執行之前，JavaScript 先做以下事情：
+
+- 掃描所有變數和函式宣告
+- `var` 宣告的變數被初始化為 `undefined`
+- `let` 和 `const` 宣告的變數進入 TDZ (暫時死區)
+- 函式宣告被完整提升
+- 決定 `this` 的值
+- 建立對外層作用域的參考
+
+這個階段就是 Hoisting 發生的地方。
+
+### 2. 執行階段 (Execution Phase)
+
+程式碼從上到下開始執行：
+
+- 變數依序被賦值
+- 函式依序被呼叫
+
+```javascript
+console.log(a); // undefined (建立階段已初始化)
+console.log(b); // ReferenceError (建立階段進入 TDZ)
+
+var a = 1;
+let b = 2;
+```
+
+---
+
+## Call Stack
+
+JavaScript 是單執行緒語言，同一時間只能執行一個 Execution Context。
+
+Call Stack (呼叫堆疊) 負責追蹤目前有哪些 Execution Context 正在執行。
+
+執行流程如下：
+
+1. 程式啟動，Global Execution Context 被推入 Call Stack
+2. 每次呼叫函式，Function Execution Context 被推入 Call Stack
+3. 函式執行完畢，它的 Execution Context 從 Call Stack 移除
+4. 回到上一個 Execution Context 繼續執行
+
+```javascript
+function first() {
+  console.log("first");
+  second();
+}
+
+function second() {
+  console.log("second");
+}
+
+first();
+```
+
+執行過程：
+
+```text
+1. Global Execution Context 推入 Call Stack
+2. 呼叫 first() → First Execution Context 推入
+3. 呼叫 second() → Second Execution Context 推入
+4. second() 執行完畢 → Second Execution Context 移除
+5. first() 執行完畢 → First Execution Context 移除
+6. 回到 Global Execution Context
+```
+
+如果函式不斷遞迴呼叫自己，Call Stack 會一直增長，最終超過上限，拋出 `RangeError: Maximum call stack size exceeded`。
+
+---
+
+## 與 Hoisting、Scope、Closure 的關係
+
+Execution Context 是許多 JavaScript 概念的底層機制。
+
+Hoisting
+
+Hoisting 發生在 Execution Context 的建立階段。JavaScript 在執行程式碼前，就已經處理了所有變數和函式宣告。
+
+Scope Chain
+
+每個 Execution Context 都持有一個對外層作用域的參考，這些參考串連起來就形成了 Scope Chain。JavaScript 沿著這條鏈查找變數。
+
+Closure
+
+函式在被定義時，會記住當下 Execution Context 的作用域環境。即使 Execution Context 執行完畢被移除，Closure 仍然保有對那個環境的參考。
+
+`this`
+
+`this` 的值在 Execution Context 的建立階段就被決定，取決於函式的呼叫方式。
+
+---
+
+## 總結
+
+Execution Context 是 JavaScript 執行程式碼的核心機制：
+
+- 程式啟動時建立 Global Execution Context
+- 每次呼叫函式建立 Function Execution Context
+- 建立階段處理 Hoisting，執行階段執行程式碼
+- Call Stack 追蹤目前執行中的 Execution Context
+
+理解 Execution Context，就能更清楚地理解 Hoisting、Scope Chain、Closure、`this` 的運作原理。

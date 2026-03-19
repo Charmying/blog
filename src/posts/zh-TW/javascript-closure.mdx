@@ -1,0 +1,229 @@
+export const metadata = {
+  title: 'JavaScript Closure：閉包',
+  date: '2026-03-19',
+  excerpt: '介紹 JavaScript Closure 的概念與運作方式，包含資料私有化、工廠函式、保留狀態等實務應用，以及迴圈中的常見陷阱。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript Closure：閉包
+
+Closure (閉包) 是 JavaScript 中一個核心概念，也是許多進階特性的基礎。
+
+簡單來說：函式可以記住它被定義時的作用域，即使在那個作用域之外執行，仍然能存取其中的變數。
+
+```text
+Closure
+├─ 什麼是 Closure
+├─ Closure 的運作方式
+├─ 實務應用
+│   ├─ 資料私有化
+│   ├─ 工廠函式
+│   └─ 保留狀態
+└─ 常見陷阱：迴圈中的 Closure
+```
+
+- [什麼是 Closure](#什麼是-closure)
+- [Closure 的運作方式](#closure-的運作方式)
+- [實務應用](#實務應用)
+- [常見陷阱：迴圈中的 Closure](#常見陷阱迴圈中的-closure)
+
+---
+
+## 什麼是 Closure
+
+當一個函式在另一個函式內部被定義時，內層函式可以存取外層函式的變數。
+
+即使外層函式已經執行完畢，內層函式仍然保有對這些變數的參考，這就是 Closure。
+
+```javascript
+function outer() {
+  const message = "Hello";
+
+  function inner() {
+    console.log(message); // "Hello"
+  }
+
+  return inner;
+}
+
+const fn = outer();
+fn(); // "Hello"
+```
+
+`outer` 執行完後，`message` 照理應該消失，但 `fn` (也就是 `inner`) 仍然可以存取它。
+
+這是因為 `inner` 形成了一個 Closure，保留了對 `message` 的參考。
+
+---
+
+## Closure 的運作方式
+
+Closure 之所以能運作，是因為 JavaScript 使用靜態作用域 (Lexical Scope)。
+
+函式在定義時，就會記住自己的作用域環境，包括外層作用域中的所有變數。
+
+即使函式被帶到其他地方執行，這個作用域環境仍然跟著它。
+
+```javascript
+function makeCounter() {
+  let count = 0;
+
+  return function () {
+    count++;
+    console.log(count);
+  };
+}
+
+const counter = makeCounter();
+
+counter(); // 1
+counter(); // 2
+counter(); // 3
+```
+
+每次呼叫 `counter`，`count` 都會加一。
+
+`count` 不是全域變數，外部無法直接存取，但 `counter` 記住了它所在的作用域，所以每次呼叫都能讀取並修改它。
+
+---
+
+## 實務應用
+
+### 資料私有化
+
+Closure 可以用來模擬私有變數，讓外部只能透過特定方法存取資料：
+
+```javascript
+function createUser(name) {
+  let _name = name;
+
+  return {
+    getName() {
+      return _name;
+    },
+    setName(newName) {
+      _name = newName;
+    }
+  };
+}
+
+const user = createUser("Charmy");
+
+console.log(user.getName()); // "Charmy"
+user.setName("Charmying");
+console.log(user.getName()); // "Charmying"
+console.log(user._name); // undefined，外部無法直接存取
+```
+
+`_name` 只能透過 `getName` 和 `setName` 存取，外部無法直接讀取或修改。
+
+### 工廠函式
+
+Closure 讓函式可以根據參數產生不同的行為：
+
+```javascript
+function multiply(x) {
+  return function (y) {
+    return x * y;
+  };
+}
+
+const double = multiply(2);
+const triple = multiply(3);
+
+console.log(double(5)); // 10
+console.log(triple(5)); // 15
+```
+
+`double` 和 `triple` 各自記住了不同的 `x` 值。
+
+### 保留狀態
+
+Closure 適合用來在函式呼叫之間保留狀態，而不需要依賴全域變數：
+
+```javascript
+function makeIdGenerator() {
+  let id = 0;
+
+  return function () {
+    id++;
+    return id;
+  };
+}
+
+const generateId = makeIdGenerator();
+
+console.log(generateId()); // 1
+console.log(generateId()); // 2
+console.log(generateId()); // 3
+```
+
+---
+
+## 常見陷阱：迴圈中的 Closure
+
+在迴圈中使用 `var` 搭配 Closure，是一個經典的陷阱：
+
+```javascript
+for (var i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 100);
+}
+```
+
+執行結果：
+
+```text
+3
+3
+3
+```
+
+原因：`var` 是函式作用域，迴圈中的 `i` 只有一個，所有 Closure 都指向同一個 `i`。迴圈結束時 `i` 是 `3`，所以全都印出 `3`。
+
+解法一：改用 `let`
+
+`let` 是區塊作用域，每次迭代都有自己的 `i`：
+
+```javascript
+for (let i = 0; i < 3; i++) {
+  setTimeout(function () {
+    console.log(i);
+  }, 100);
+}
+// 0, 1, 2
+```
+
+解法二：用 IIFE 建立新作用域
+
+```javascript
+for (var i = 0; i < 3; i++) {
+  (function (x) {
+    setTimeout(function () {
+      console.log(x);
+    }, 100);
+  })(i);
+}
+// 0, 1, 2
+```
+
+IIFE 每次執行都建立一個新的作用域，將當下的 `i` 值作為參數傳入並保留。
+
+---
+
+## 總結
+
+Closure 是函式記住自己定義時的作用域環境的能力。
+
+它讓函式可以：
+
+- 存取外層函式的變數，即使外層函式已經執行完畢
+- 模擬私有變數，保護資料不被外部直接存取
+- 在函式呼叫之間保留狀態
+
+理解 Closure 之後，接下來通常會進一步學習：
+
+- Execution Context
+- IIFE
+- 模組模式 (Module Pattern)

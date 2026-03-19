@@ -1,0 +1,212 @@
+export const metadata = {
+  title: 'JavaScript By Value vs By Reference: How JavaScript Copies Data',
+  date: '2026-03-20',
+  excerpt: 'A practical guide to JavaScript by value vs. by reference — covering how primitives and objects behave differently when assigned or passed to functions, and how to correctly copy objects with shallow and deep copy.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# JavaScript By Value vs By Reference: How JavaScript Copies Data
+
+How JavaScript copies and passes data depends entirely on the type of value involved.
+
+- Primitives are passed by value — you get a copy
+- Objects are passed by reference — you get a pointer to the same thing
+
+Get this wrong and you'll end up with bugs that are surprisingly hard to track down.
+
+```text
+By Value vs. By Reference
+├─ Primitives: By Value
+├─ Objects: By Reference
+├─ Function Parameters
+└─ Copying Objects
+```
+
+- [Primitives: By Value](#primitives-by-value)
+- [Objects: By Reference](#objects-by-reference)
+- [Function Parameters](#function-parameters)
+- [Copying Objects](#copying-objects)
+
+---
+
+## Primitives: By Value
+
+JavaScript's primitive types are: `string`, `number`, `boolean`, `null`, `undefined`, `symbol`, and `bigint`.
+
+When you assign a primitive to another variable, you get an independent copy:
+
+```javascript
+let a = 10;
+let b = a;
+
+b = 20;
+
+console.log(a); // 10 — unchanged
+console.log(b); // 20
+```
+
+`b = a` copies the value `10` into `b`. From that point on, they're completely independent — changing `b` has no effect on `a`.
+
+---
+
+## Objects: By Reference
+
+Objects, arrays, and functions are all reference types.
+
+When you assign one to another variable, both variables point to the same thing in memory:
+
+```javascript
+const a = { name: 'Charmy' };
+const b = a;
+
+b.name = 'Charmying';
+
+console.log(a.name); // "Charmying" — affected
+console.log(b.name); // "Charmying"
+```
+
+`b = a` doesn't create a new object. It makes `b` point to the exact same object `a` already points to. Modify it through `b`, and `a` sees the change too.
+
+Same thing with arrays:
+
+```javascript
+const arr1 = [1, 2, 3];
+const arr2 = arr1;
+
+arr2.push(4);
+
+console.log(arr1); // [1, 2, 3, 4] — affected
+console.log(arr2); // [1, 2, 3, 4]
+```
+
+---
+
+## Function Parameters
+
+The same rules apply when passing values into functions.
+
+### Passing a Primitive
+
+The function gets a copy. Whatever it does with that copy doesn't touch the original:
+
+```javascript
+function double(n) {
+  n = n * 2;
+  console.log(n); // 20
+}
+
+let num = 10;
+double(num);
+console.log(num); // 10 — unchanged
+```
+
+### Passing an Object
+
+The function gets a reference to the same object. Modifying a property inside the function changes the original:
+
+```javascript
+function updateName(user) {
+  user.name = 'Charmying';
+}
+
+const person = { name: 'Charmy' };
+updateName(person);
+console.log(person.name); // "Charmying" — affected
+```
+
+But reassigning the parameter entirely inside the function doesn't affect the original — you're just pointing the local variable somewhere else:
+
+```javascript
+function replace(user) {
+  user = { name: 'Someone Else' };
+}
+
+const person = { name: 'Charmy' };
+replace(person);
+console.log(person.name); // "Charmy" — unchanged
+```
+
+`user = { name: 'Someone Else' }` only changes what the local `user` variable points to. The original `person` is untouched.
+
+---
+
+## Copying Objects
+
+If you need a copy that doesn't share a reference, you have to create one explicitly.
+
+### Shallow Copy
+
+Spread operator
+
+```javascript
+const original = { name: 'Charmy', age: 25 };
+const copy = { ...original };
+
+copy.name = 'Charmying';
+
+console.log(original.name); // "Charmy" — unchanged
+console.log(copy.name);     // "Charmying"
+```
+
+Object.assign
+
+```javascript
+const copy = Object.assign({}, original);
+```
+
+Arrays
+
+```javascript
+const arr = [1, 2, 3];
+const arrCopy = [...arr];
+
+arrCopy.push(4);
+console.log(arr);     // [1, 2, 3] — unchanged
+console.log(arrCopy); // [1, 2, 3, 4]
+```
+
+Shallow copies only go one level deep. Nested objects are still shared:
+
+```javascript
+const original = { name: 'Charmy', address: { city: 'Taipei' } };
+const copy = { ...original };
+
+copy.address.city = 'Taichung';
+
+console.log(original.address.city); // "Taichung" — still affected
+```
+
+### Deep Copy
+
+structuredClone (modern browsers and Node.js 17+)
+
+```javascript
+const original = { name: 'Charmy', address: { city: 'Taipei' } };
+const copy = structuredClone(original);
+
+copy.address.city = 'Taichung';
+
+console.log(original.address.city); // "Taipei" — unchanged
+```
+
+`structuredClone` is the recommended approach. It handles nested objects correctly and supports more types than the JSON workaround.
+
+JSON.parse / JSON.stringify
+
+```javascript
+const copy = JSON.parse(JSON.stringify(original));
+```
+
+Works for simple data, but can't handle `undefined`, functions, `Date`, `RegExp`, or circular references.
+
+---
+
+## Conclusion
+
+| | Primitives | Objects |
+| - | - | - |
+| Types | `string`, `number`, `boolean`, etc. | `Object`, `Array`, `Function` |
+| Assignment | Copies the value | Copies the reference |
+| Modifying the copy | No effect on the original | Affects the original |
+| Shallow copy | — | `...spread`, `Object.assign` |
+| Deep copy | — | `structuredClone`, `JSON.parse/stringify` |

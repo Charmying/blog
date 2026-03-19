@@ -1,0 +1,177 @@
+export const metadata = {
+  title: 'JavaScript Execution Context',
+  date: '2026-03-19',
+  excerpt: 'A practical guide to JavaScript execution context — covering global and function contexts, the two phases, the call stack, and how it connects to hoisting, scope, and closures.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# JavaScript Execution Context
+
+Before JavaScript runs any code, it sets up an environment to manage variables, functions, and the value of `this`.
+
+That environment is called the execution context.
+
+```text
+Execution Context
+├─ What Is an Execution Context
+├─ Types of Execution Context
+├─ The Two Phases
+├─ The Call Stack
+└─ Connection to Hoisting, Scope, and Closures
+```
+
+- [What Is an Execution Context](#what-is-an-execution-context)
+- [Types of Execution Context](#types-of-execution-context)
+- [The Two Phases](#the-two-phases)
+- [The Call Stack](#the-call-stack)
+- [Connection to Hoisting, Scope, and Closures](#connection-to-hoisting-scope-and-closures)
+
+---
+
+## What Is an Execution Context
+
+Every time JavaScript runs a piece of code, it creates an execution context.
+
+Each execution context manages three things:
+
+- The variables and function declarations in the current scope
+- The value of `this`
+- A reference to the outer scope
+
+Execution context is the underlying mechanism that makes hoisting, scope chains, `this`, and closures work.
+
+---
+
+## Types of Execution Context
+
+There are two main types:
+
+### Global Execution Context
+
+Created when the program first starts. There's only one, and it manages all code that isn't inside a function.
+
+In a browser, the global execution context's `this` points to `window`.
+
+### Function Execution Context
+
+Created every time a function is called. Each call gets its own separate execution context — even if the same function is called multiple times.
+
+```javascript
+function greet(name) {
+  const message = "Hello, " + name;
+  console.log(message);
+}
+
+greet("Charmy");   // creates one execution context
+greet("Charmying"); // creates another
+```
+
+---
+
+## The Two Phases
+
+Every execution context goes through two phases:
+
+### 1. Creation Phase
+
+Before any code runs, JavaScript:
+
+- Scans all variable and function declarations
+- Initializes `var` variables to `undefined`
+- Places `let` and `const` variables in the TDZ (Temporal Dead Zone)
+- Fully hoists function declarations
+- Determines the value of `this`
+- Stores a reference to the outer scope
+
+This is where hoisting happens.
+
+### 2. Execution Phase
+
+Code runs top to bottom:
+
+- Variables get assigned their values
+- Functions get called
+
+```javascript
+console.log(a); // undefined — initialized during creation phase
+console.log(b); // ReferenceError — in TDZ during creation phase
+
+var a = 1;
+let b = 2;
+```
+
+---
+
+## The Call Stack
+
+JavaScript is single-threaded — it can only run one execution context at a time.
+
+The call stack keeps track of which execution contexts are active and in what order.
+
+Here's how it works:
+
+1. The program starts — the global execution context is pushed onto the stack
+2. A function is called — a new execution context is pushed on top
+3. The function finishes — its execution context is popped off
+4. Execution resumes in the previous context
+
+```javascript
+function first() {
+  console.log("first");
+  second();
+}
+
+function second() {
+  console.log("second");
+}
+
+first();
+```
+
+Step by step:
+
+```text
+1. Global execution context pushed onto the stack
+2. first() called → its context pushed on top
+3. second() called → its context pushed on top
+4. second() finishes → its context popped off
+5. first() finishes → its context popped off
+6. Back to the global execution context
+```
+
+If a function keeps calling itself recursively without stopping, the stack grows until it hits the limit and throws: `RangeError: Maximum call stack size exceeded`.
+
+---
+
+## Connection to Hoisting, Scope, and Closures
+
+Execution context is the foundation that ties several JavaScript concepts together.
+
+### Hoisting
+
+Hoisting happens during the creation phase. By the time your code starts running, all variable and function declarations have already been processed.
+
+### Scope Chain
+
+Every execution context holds a reference to its outer scope. Those references chain together, and JavaScript walks up the chain when looking up a variable.
+
+### Closures
+
+When a function is defined, it captures a reference to the current execution context's scope. Even after that execution context is gone, the closure still holds onto it.
+
+### this
+
+The value of `this` is determined during the creation phase, based on how the function was called.
+
+---
+
+## Conclusion
+
+The execution context is how JavaScript sets up and manages the environment for running code:
+
+- The global execution context is created when the program starts
+- A new function execution context is created on every function call
+- The creation phase handles hoisting; the execution phase runs the code
+- The call stack tracks which execution contexts are active
+
+Understanding execution context gives you a clearer mental model for how hoisting, scope chains, closures, and `this` all fit together.

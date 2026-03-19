@@ -45,7 +45,7 @@ export function getFullUrl(path: string): string {
 
 export function getCanonicalUrl(path: string, locale: string): string {
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  const localePath = locale === 'zh-TW' ? `/zh-TW${cleanPath}` : cleanPath;
+  const localePath = locale === 'zh-TW' ? cleanPath : `/${locale}${cleanPath}`;
   return getFullUrl(localePath);
 }
 

@@ -7,7 +7,7 @@ import { getSEOConfig } from '@/lib/seo';
 export default function sitemap(): MetadataRoute.Sitemap {
   const { siteUrl } = getSEOConfig();
   const localizedStaticPages = routing.locales.flatMap((locale) => {
-    const prefix = locale === 'zh-TW' ? '/zh-TW' : '';
+    const prefix = locale === 'zh-TW' ? '' : `/${locale}`;
     return [
       {
         url: `${siteUrl}${prefix}`,
@@ -32,7 +32,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const articlePages = routing.locales.flatMap((locale) => {
     const posts = getAllPosts(locale as Locale);
-    const prefix = locale === 'zh-TW' ? '/zh-TW' : '';
+    const prefix = locale === 'zh-TW' ? '' : `/${locale}`;
 
     return posts.map((post) => ({
       url: `${siteUrl}${prefix}/articles/${post.slug}`,

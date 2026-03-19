@@ -1,0 +1,272 @@
+export const metadata = {
+  title: 'JavaScript setTimeout vs. setInterval',
+  date: '2026-03-19',
+  excerpt: '比較 JavaScript setTimeout 與 setInterval 的差異，包含基本用法、清除計時器、使用時機，以及為什麼有時候遞迴 setTimeout 比 setInterval 更可靠。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript setTimeout vs. setInterval
+
+`setTimeout` 和 `setInterval` 是 JavaScript 中最常用的計時器函式，兩者都能延遲執行程式碼，但行為不同。
+
+- `setTimeout`：延遲一段時間後執行一次
+- `setInterval`：每隔一段時間重複執行
+
+```text
+setTimeout vs. setInterval
+├─ setTimeout
+├─ setInterval
+├─ 清除計時器
+├─ 差異總覽
+└─ 使用時機
+```
+
+- [setTimeout](#settimeout)
+- [setInterval](#setinterval)
+- [清除計時器](#清除計時器)
+- [差異總覽](#差異總覽)
+- [使用時機](#使用時機)
+
+---
+
+## setTimeout
+
+`setTimeout` 在指定的延遲時間後，執行一次 callback。
+
+### 語法
+
+```javascript
+setTimeout(callback, delay, ...args)
+```
+
+- `callback`：要執行的函式
+- `delay`：延遲毫秒數 (1000 = 1 秒)
+- `...args`：可選，傳給 callback 的參數
+
+### 基本用法
+
+```javascript
+setTimeout(function () {
+  console.log("1 秒後執行");
+}, 1000);
+```
+
+箭頭函式寫法：
+
+```javascript
+setTimeout(() => {
+  console.log("1 秒後執行");
+}, 1000);
+```
+
+### 傳遞參數
+
+```javascript
+setTimeout(function (name) {
+  console.log("Hello, " + name);
+}, 1000, "Charmy");
+// "Hello, Charmy" (1 秒後)
+```
+
+### delay 為 0
+
+即使 `delay` 設為 `0`，callback 也不會立刻執行，而是等 Call Stack 清空後才執行：
+
+```javascript
+console.log("A");
+
+setTimeout(function () {
+  console.log("B");
+}, 0);
+
+console.log("C");
+```
+
+輸出：
+
+```text
+A
+C
+B
+```
+
+這是 Event Loop 的行為，`setTimeout` 的 callback 永遠是非同步執行的。
+
+---
+
+## setInterval
+
+`setInterval` 每隔指定的時間間隔，重複執行 callback，直到被清除為止。
+
+### 語法
+
+```javascript
+setInterval(callback, delay, ...args)
+```
+
+### 基本用法
+
+```javascript
+setInterval(function () {
+  console.log("每秒執行一次");
+}, 1000);
+```
+
+### 實際範例：計時器
+
+```javascript
+let count = 0;
+
+const id = setInterval(function () {
+  count++;
+  console.log(count);
+
+  if (count === 5) {
+    clearInterval(id);
+    console.log("計時器停止");
+  }
+}, 1000);
+```
+
+輸出：
+
+```text
+1
+2
+3
+4
+5
+計時器停止
+```
+
+---
+
+## 清除計時器
+
+`setTimeout` 和 `setInterval` 都會回傳一個 ID，可以用來清除計時器。
+
+### clearTimeout
+
+清除還未執行的 `setTimeout`：
+
+```javascript
+const id = setTimeout(function () {
+  console.log("這段不會執行");
+}, 2000);
+
+clearTimeout(id); // 取消計時器
+```
+
+### clearInterval
+
+停止 `setInterval` 的重複執行：
+
+```javascript
+const id = setInterval(function () {
+  console.log("執行中");
+}, 1000);
+
+setTimeout(function () {
+  clearInterval(id);
+  console.log("停止了");
+}, 3500);
+```
+
+輸出：
+
+```text
+執行中
+執行中
+執行中
+停止了
+```
+
+---
+
+## 差異總覽
+
+| | setTimeout | setInterval |
+| - | - | - |
+| 執行次數 | 一次 | 重複執行 |
+| 清除方式 | `clearTimeout(id)` | `clearInterval(id)` |
+| 適合場景 | 延遲執行某個操作 | 定期重複執行某個操作 |
+
+---
+
+## 使用時機
+
+### 建議使用 setTimeout
+
+延遲執行一次性操作，例如顯示提示訊息後自動關閉：
+
+```javascript
+showNotification("儲存成功");
+
+setTimeout(function () {
+  hideNotification();
+}, 3000);
+```
+
+模擬非同步行為，在測試或開發時使用：
+
+```javascript
+function fakeApiCall() {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve({ name: "Charmy" });
+    }, 500);
+  });
+}
+```
+
+### 建議使用 setInterval
+
+定期輪詢或更新，例如每隔幾秒更新資料：
+
+```javascript
+const id = setInterval(function () {
+  fetchLatestData();
+}, 5000);
+```
+
+倒數計時器：
+
+```javascript
+let seconds = 10;
+
+const id = setInterval(function () {
+  console.log(seconds);
+  seconds--;
+
+  if (seconds < 0) {
+    clearInterval(id);
+    console.log("時間到！");
+  }
+}, 1000);
+```
+
+### 使用 setInterval 的注意事項
+
+`setInterval` 不考慮 callback 的執行時間。如果 callback 執行時間超過間隔時間，下一次執行可能會立刻觸發，造成任務堆疊。
+
+如果需要確保每次執行之間有固定間隔，可以用遞迴 `setTimeout` 代替：
+
+```javascript
+function repeat() {
+  doSomething();
+  setTimeout(repeat, 1000); // 每次執行完後才開始計時
+}
+
+setTimeout(repeat, 1000);
+```
+
+這樣可以確保 `doSomething` 執行完畢後，才開始計算下一次的 1 秒延遲。
+
+---
+
+## 總結
+
+- `setTimeout`：延遲指定時間後執行一次，用 `clearTimeout` 取消
+- `setInterval`：每隔指定時間重複執行，用 `clearInterval` 停止
+- 兩者的 delay 都是最短等待時間，不保證精確，實際執行時間受 Event Loop 影響
+- 需要精確間隔時，考慮用遞迴 `setTimeout` 代替 `setInterval`

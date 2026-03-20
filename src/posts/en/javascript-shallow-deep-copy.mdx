@@ -1,0 +1,214 @@
+export const metadata = {
+  title: 'JavaScript Shallow Copy vs Deep Copy: When Each One Matters',
+  date: '2026-03-20',
+  excerpt: 'A practical guide to shallow copy and deep copy in JavaScript — covering spread, Object.assign, structuredClone, and JSON.parse/stringify, with their limitations and when to use each.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# JavaScript Shallow Copy vs Deep Copy: When Each One Matters
+
+Copying an object in JavaScript isn't as simple as it sounds.
+
+Objects are reference types — assigning one to another variable just copies the reference, not the object itself. To get a real copy, you have to create one explicitly. And depending on how deeply you need to copy, you'll get very different behavior.
+
+- Shallow copy — copies the top level only; nested objects still share a reference
+- Deep copy — copies everything, all the way down; no shared references
+
+```text
+Shallow Copy vs. Deep Copy
+├─ Shallow Copy
+│   ├─ Spread Operator
+│   ├─ Object.assign
+│   └─ The Limitation
+├─ Deep Copy
+│   ├─ structuredClone
+│   └─ JSON.parse / JSON.stringify
+└─ When to Use Each
+```
+
+- [Shallow Copy](#shallow-copy)
+- [Deep Copy](#deep-copy)
+- [When to Use Each](#when-to-use-each)
+
+---
+
+## Shallow Copy
+
+A shallow copy duplicates the top-level properties of an object.
+
+If any of those properties are objects themselves, the copy gets a reference to the same nested object — not a new one.
+
+### Spread Operator
+
+```javascript
+const original = { name: 'Charmy', age: 25 };
+const copy = { ...original };
+
+copy.name = 'Charmying';
+
+console.log(original.name); // "Charmy" — unchanged
+console.log(copy.name);     // "Charmying"
+```
+
+For top-level primitives, modifying the copy leaves the original alone.
+
+### Object.assign
+
+```javascript
+const copy = Object.assign({}, original);
+```
+
+Same behavior as the spread operator.
+
+### Arrays
+
+```javascript
+const arr = [1, 2, 3];
+const copy = [...arr];
+
+copy.push(4);
+
+console.log(arr);  // [1, 2, 3] — unchanged
+console.log(copy); // [1, 2, 3, 4]
+```
+
+Other shallow copy methods for arrays:
+
+```javascript
+const copy = arr.slice();
+const copy = Array.from(arr);
+```
+
+### The Limitation
+
+Once you have nested objects, shallow copy breaks down. The top level is independent, but anything nested is still shared:
+
+```javascript
+const original = {
+  name: 'Charmy',
+  address: { city: 'Taipei' }
+};
+
+const copy = { ...original };
+
+copy.name = 'Charmying';        // top-level — original is unaffected
+copy.address.city = 'Taichung'; // nested — original IS affected
+
+console.log(original.name);         // "Charmy" — unchanged
+console.log(original.address.city); // "Taichung" — changed
+```
+
+`copy.address` and `original.address` point to the same object in memory. Change one, you change both.
+
+---
+
+## Deep Copy
+
+A deep copy creates a fully independent copy at every level. Modifying anything in the copy — no matter how deeply nested — won't touch the original.
+
+### structuredClone
+
+`structuredClone` is the modern built-in way to deep copy in JavaScript:
+
+```javascript
+const original = {
+  name: 'Charmy',
+  address: { city: 'Taipei' },
+  scores: [90, 85, 92]
+};
+
+const copy = structuredClone(original);
+
+copy.name = 'Charmying';
+copy.address.city = 'Taichung';
+copy.scores.push(100);
+
+console.log(original.name);         // "Charmy" — unchanged
+console.log(original.address.city); // "Taipei" — unchanged
+console.log(original.scores);       // [90, 85, 92] — unchanged
+```
+
+`structuredClone` handles: `Object`, `Array`, `Date`, `Map`, `Set`, `RegExp`, `ArrayBuffer`, and more.
+
+It does not support: functions, DOM nodes, or class instance methods.
+
+### JSON.parse / JSON.stringify
+
+Serializing to JSON and parsing back also produces a deep copy:
+
+```javascript
+const original = {
+  name: 'Charmy',
+  address: { city: 'Taipei' }
+};
+
+const copy = JSON.parse(JSON.stringify(original));
+
+copy.address.city = 'Taichung';
+
+console.log(original.address.city); // "Taipei" — unchanged
+```
+
+But the limitations are real:
+
+```javascript
+const original = {
+  greet: function () {},   // function → dropped entirely
+  createdAt: new Date(),   // Date → becomes a string
+  value: undefined,        // undefined → dropped
+  pattern: /hello/,        // RegExp → becomes {}
+};
+
+const copy = JSON.parse(JSON.stringify(original));
+
+console.log(copy.greet);     // undefined
+console.log(copy.createdAt); // string, not a Date
+console.log(copy.value);     // undefined
+console.log(copy.pattern);   // {}
+```
+
+If your object contains any of these types, `JSON.parse / JSON.stringify` will silently corrupt your data.
+
+---
+
+## When to Use Each
+
+### Use Shallow Copy
+
+When the object is flat, or you know the nested parts don't need to be independent:
+
+```javascript
+// creating a new state object (e.g. in React)
+const newState = { ...state, name: 'Charmying' };
+
+// copying an array
+const newArr = [...arr];
+```
+
+Shallow copy is fast, the syntax is clean, and it covers most everyday cases.
+
+### Use Deep Copy
+
+When the object has nested structure and you need a fully independent copy:
+
+```javascript
+// duplicating a config object before modifying it
+const configCopy = structuredClone(config);
+
+// working with API response data
+const dataCopy = structuredClone(apiData);
+```
+
+Default to `structuredClone`. Only reach for `JSON.parse / JSON.stringify` when you're in an environment that doesn't support it, or when you're certain the data is simple JSON-safe values.
+
+---
+
+## Conclusion
+
+| | Shallow Copy | Deep Copy |
+| - | - | - |
+| Copy depth | Top level only | All levels |
+| Nested objects | Shared reference | Fully independent |
+| Common methods | `...spread`, `Object.assign` | `structuredClone`, `JSON.parse/stringify` |
+| Performance | Faster | Slower (depends on size) |
+| Best for | Flat objects, state updates | Nested structures that need full isolation |

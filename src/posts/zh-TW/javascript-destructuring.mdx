@@ -1,0 +1,263 @@
+export const metadata = {
+  title: 'JavaScript 解構賦值：Destructuring Assignment',
+  date: '2026-03-20',
+  excerpt: '介紹 JavaScript 解構賦值的語法與應用，包含陣列解構、物件解構、預設值、重新命名、Rest 元素，以及函式參數解構的使用方式。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript 解構賦值：Destructuring Assignment
+
+解構賦值 (Destructuring Assignment) 是 ES6 引入的語法，讓你可以從陣列或物件中提取值，直接賦值給變數，省去逐一存取的步驟。
+
+```text
+解構賦值
+├─ 陣列解構
+├─ 物件解構
+├─ 預設值
+├─ 函式參數解構
+└─ 實務應用
+```
+
+- [陣列解構](#陣列解構)
+- [物件解構](#物件解構)
+- [預設值](#預設值)
+- [函式參數解構](#函式參數解構)
+- [實務應用](#實務應用)
+
+---
+
+## 陣列解構
+
+從陣列中依照位置提取值：
+
+```javascript
+const colors = ['red', 'green', 'blue'];
+
+const [first, second, third] = colors;
+
+console.log(first);  // "red"
+console.log(second); // "green"
+console.log(third);  // "blue"
+```
+
+### 跳過元素
+
+用逗號佔位，跳過不需要的元素：
+
+```javascript
+const [, second, , fourth] = [1, 2, 3, 4];
+
+console.log(second); // 2
+console.log(fourth); // 4
+```
+
+### Rest 元素
+
+用 `...` 收集剩餘的元素：
+
+```javascript
+const [first, ...rest] = [1, 2, 3, 4, 5];
+
+console.log(first); // 1
+console.log(rest);  // [2, 3, 4, 5]
+```
+
+### 交換變數
+
+解構提供了一種優雅的交換變數方式：
+
+```javascript
+let a = 1;
+let b = 2;
+
+[a, b] = [b, a];
+
+console.log(a); // 2
+console.log(b); // 1
+```
+
+---
+
+## 物件解構
+
+從物件中依照屬性名稱提取值：
+
+```javascript
+const user = { name: 'Charmy', age: 29, city: 'Taichung' };
+
+const { name, age } = user;
+
+console.log(name); // "Charmy"
+console.log(age);  // 29
+```
+
+### 重新命名
+
+提取時可以同時重新命名變數：
+
+```javascript
+const { name: userName, age: userAge } = user;
+
+console.log(userName); // "Charmy"
+console.log(userAge);  // 29
+```
+
+### Rest 屬性
+
+用 `...` 收集剩餘的屬性：
+
+```javascript
+const { name, ...rest } = user;
+
+console.log(name); // "Charmy"
+console.log(rest); // { age: 29, city: 'Taichung' }
+```
+
+### 巢狀物件解構
+
+可以直接解構巢狀的物件：
+
+```javascript
+const user = {
+  name: 'Charmy',
+  address: {
+    city: 'Taichung',
+    zip: '100'
+  }
+};
+
+const { name, address: { city } } = user;
+
+console.log(name); // "Charmy"
+console.log(city); // "Taichung"
+```
+
+注意：`address` 在這裡只是解構的路徑，不會被宣告為變數。如果同時需要 `address` 和 `city`，要分開宣告：
+
+```javascript
+const { address, address: { city } } = user;
+```
+
+---
+
+## 預設值
+
+當提取的值是 `undefined` 時，可以指定預設值：
+
+```javascript
+// 陣列
+const [a = 1, b = 2] = [10];
+
+console.log(a); // 10 (有值，使用提取的值)
+console.log(b); // 2 (undefined，使用預設值)
+```
+
+```javascript
+// 物件
+const { name = 'Guest', role = 'user' } = { name: 'Charmy' };
+
+console.log(name); // "Charmy" (有值)
+console.log(role); // "user" (undefined，使用預設值)
+```
+
+預設值只在提取到 `undefined` 時生效，`null` 不會觸發預設值：
+
+```javascript
+const { value = 'default' } = { value: null };
+
+console.log(value); // null (不是 undefined，所以不使用預設值)
+```
+
+---
+
+## 函式參數解構
+
+解構可以直接用在函式參數上，讓函式簽名更清晰：
+
+### 物件參數解構
+
+```javascript
+function greet({ name, age }) {
+  console.log(`${name}, ${age} 歲`);
+}
+
+greet({ name: 'Charmy', age: 29 }); // "Charmy, 29 歲"
+```
+
+搭配預設值：
+
+```javascript
+function createUser({ name, role = 'user', active = true } = {}) {
+  return { name, role, active };
+}
+
+createUser({ name: 'Charmy' });
+// { name: 'Charmy', role: 'user', active: true }
+```
+
+`= {}` 讓函式在不傳入任何參數時不會報錯。
+
+### 陣列參數解構
+
+```javascript
+function sum([a, b, c = 0]) {
+  return a + b + c;
+}
+
+sum([1, 2, 3]); // 6
+sum([1, 2]);    // 3
+```
+
+---
+
+## 實務應用
+
+### 從 API 回應提取資料
+
+```javascript
+const response = {
+  status: 200,
+  data: {
+    user: { name: 'Charmy', email: 'charmy@example.com' }
+  }
+};
+
+const { data: { user: { name, email } } } = response;
+
+console.log(name);  // "Charmy"
+console.log(email); // "charmy@example.com"
+```
+
+### import 模組
+
+```javascript
+import { useState, useEffect } from 'react';
+import { Router, Route } from '@angular/router';
+```
+
+### 函式回傳多個值
+
+```javascript
+function getMinMax(numbers) {
+  return {
+    min: Math.min(...numbers),
+    max: Math.max(...numbers),
+  };
+}
+
+const { min, max } = getMinMax([3, 1, 4, 1, 5, 9]);
+
+console.log(min); // 1
+console.log(max); // 9
+```
+
+---
+
+## 總結
+
+解構賦值讓提取陣列和物件的值更簡潔：
+
+- 陣列解構依照位置提取，物件解構依照屬性名稱提取
+- 可以重新命名、設定預設值、使用 Rest 收集剩餘的值
+- 函式參數解構讓參數結構一目瞭然
+- 預設值只在提取到 `undefined` 時生效，`null` 不觸發

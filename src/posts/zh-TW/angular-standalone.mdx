@@ -1,0 +1,242 @@
+export const metadata = {
+  title: 'Angular 開發必學：深入了解 Standalone Components',
+  date: '2026-03-22',
+  excerpt: '介紹 Angular Standalone Component 的概念與寫法，包含依賴匯入、bootstrapApplication、與 NgModule 的差異，以及路由與 Lazy Loading 的設定方式。',
+  tags: ['前端', 'Angular'],
+};
+
+# Angular Standalone Component
+
+Angular 17 開始，Standalone Component 成為預設的開發方式。
+
+它讓元件不再需要依附於 NgModule，可以直接宣告自己需要的依賴，讓程式結構更簡潔、更容易維護。
+
+```text
+Angular Standalone Component
+├─ 什麼是 Standalone Component
+├─ 基本寫法
+├─ 匯入依賴
+├─ bootstrapApplication
+├─ Standalone 與 NgModule 的差異
+└─ 路由與 Lazy Loading
+```
+
+- [什麼是 Standalone Component](#什麼是-standalone-component)
+- [基本寫法](#基本寫法)
+- [匯入依賴](#匯入依賴)
+- [bootstrapApplication](#bootstrapapplication)
+- [Standalone 與 NgModule 的差異](#standalone-與-ngmodule-的差異)
+- [路由與 Lazy Loading](#路由與-lazy-loading)
+
+---
+
+## 什麼是 Standalone Component
+
+在傳統的 Angular 架構中，元件必須宣告在某個 NgModule 的 `declarations` 裡，才能被使用。NgModule 負責管理元件、指令、管道之間的依賴關係。
+
+Standalone Component 改變了這個模式：元件自己管理自己的依賴，不需要 NgModule。
+
+這讓元件更獨立、更容易移植，也讓新專案的結構更簡單。
+
+Angular 14 引入 Standalone 作為選用功能，Angular 17 開始成為預設。
+
+---
+
+## 基本寫法
+
+在 `@Component` 裝飾器中加上 `standalone: true`，即可宣告為 Standalone Component：
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-hello',
+  template: `<h1>Hello</h1>`,
+})
+export class HelloComponent {}
+```
+
+Angular 17 之後，`standalone: true` 是預設值，可以省略不寫：
+
+```typescript
+@Component({
+  selector: 'app-hello',
+  template: `<h1>Hello</h1>`,
+})
+export class HelloComponent {}
+```
+
+---
+
+## 匯入依賴
+
+Standalone Component 透過 `imports` 陣列直接宣告需要的依賴，包括其他元件、指令、管道，以及 Angular 的內建模組。
+
+### 使用 Angular 內建指令
+
+使用 `NgIf`、`NgFor` 等指令，需要匯入 `CommonModule` 或個別的獨立指令：
+
+```typescript
+import { Component } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-list',
+  imports: [NgIf, NgFor],
+  template: `
+    <div *ngIf="users.length > 0">
+      <ul>
+        <li *ngFor="let user of users">{{ user.name }}</li>
+      </ul>
+    </div>
+  `,
+})
+export class UserListComponent {
+  users = [{ name: 'Charmy' }, { name: 'Alice' }];
+}
+```
+
+### 使用其他 Standalone Component
+
+直接在 `imports` 中加入：
+
+```typescript
+import { Component } from '@angular/core';
+import { HeaderComponent } from './header.component';
+
+@Component({
+  standalone: true,
+  selector: 'app-home',
+  imports: [HeaderComponent],
+  template: `
+    <app-header />
+    <main>內容</main>
+  `,
+})
+export class HomeComponent {}
+```
+
+### 使用 ReactiveFormsModule
+
+```typescript
+import { Component } from '@angular/core';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `<input [formControl]="name" />`,
+})
+export class FormComponent {
+  name = new FormControl('');
+}
+```
+
+---
+
+## bootstrapApplication
+
+傳統的 Angular 應用透過 NgModule 啟動，Standalone 應用則使用 `bootstrapApplication`：
+
+```typescript
+// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent);
+```
+
+需要提供全域服務或設定時，使用 `providers`：
+
+```typescript
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(),
+  ],
+});
+```
+
+---
+
+## Standalone 與 NgModule 的差異
+
+| | NgModule | Standalone |
+| - | - | - |
+| 元件宣告 | 在 NgModule 的 `declarations` | 元件本身的 `imports` |
+| 依賴管理 | 由 NgModule 統一管理 | 元件自己管理 |
+| 啟動方式 | `platformBrowserDynamic().bootstrapModule()` | `bootstrapApplication()` |
+| 複雜度 | 較高，需要額外的 NgModule | 較低，結構更扁平 |
+| Angular 版本 | 所有版本 | v14+ (v17+ 為預設) |
+
+Standalone 不是要取代 NgModule，而是提供一個更簡單的替代方案。NgModule 仍然可以使用，現有的程式碼也可以逐步遷移。
+
+---
+
+## 路由與 Lazy Loading
+
+Standalone Component 支援路由，可以直接在路由設定中使用：
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./home/home.component').then(m => m.HomeComponent),
+  },
+  {
+    path: 'about',
+    loadComponent: () =>
+      import('./about/about.component').then(m => m.AboutComponent),
+  },
+];
+```
+
+`loadComponent` 讓每個頁面元件都可以 Lazy Load，不需要額外建立 NgModule 來包裝。
+
+子路由的設定：
+
+```typescript
+export const routes: Routes = [
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./admin/admin.routes').then(m => m.adminRoutes),
+  },
+];
+```
+
+```typescript
+// admin/admin.routes.ts
+import { Routes } from '@angular/router';
+
+export const adminRoutes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+  },
+];
+```
+
+---
+
+## 總結
+
+Standalone Component 讓 Angular 的開發變得更簡單：
+
+- 元件自己管理依賴，不需要 NgModule
+- `bootstrapApplication` 取代傳統的模組啟動方式
+- `loadComponent` 讓 Lazy Loading 更直接
+- Angular 17 開始為預設，是現代 Angular 開發的標準方式

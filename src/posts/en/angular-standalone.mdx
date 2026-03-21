@@ -1,0 +1,240 @@
+export const metadata = {
+  title: 'Understanding Angular Standalone Components',
+  date: '2026-03-22',
+  excerpt: 'A practical guide to Angular standalone components — covering the basic syntax, importing dependencies, bootstrapApplication, how it compares to NgModule, and routing with lazy loading.',
+  tags: ['Front-end', 'Angular'],
+};
+
+# Angular Standalone Components
+
+Starting with Angular 17, standalone components are the default way to build Angular applications.
+
+They let components manage their own dependencies directly, without needing to be declared in a NgModule. The result is a simpler, flatter project structure that's easier to understand and maintain.
+
+```text
+Angular Standalone Components
+├─ What Is a Standalone Component
+├─ Basic Syntax
+├─ Importing Dependencies
+├─ bootstrapApplication
+├─ Standalone vs. NgModule
+└─ Routing and Lazy Loading
+```
+
+- [What Is a Standalone Component](#what-is-a-standalone-component)
+- [Basic Syntax](#basic-syntax)
+- [Importing Dependencies](#importing-dependencies)
+- [bootstrapApplication](#bootstrapapplication)
+- [Standalone vs. NgModule](#standalone-vs-ngmodule)
+- [Routing and Lazy Loading](#routing-and-lazy-loading)
+
+---
+
+## What Is a Standalone Component
+
+In the traditional Angular architecture, every component has to be declared inside a NgModule's `declarations` array before it can be used. NgModules are responsible for wiring up the dependencies between components, directives, and pipes.
+
+Standalone components change that: each component declares its own dependencies and doesn't need a NgModule.
+
+This makes components more self-contained and portable, and removes a lot of the boilerplate that came with NgModule-based projects.
+
+Standalone was introduced as an opt-in feature in Angular 14 and became the default in Angular 17.
+
+---
+
+## Basic Syntax
+
+Add `standalone: true` to the `@Component` decorator to mark a component as standalone:
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-hello',
+  template: `<h1>Hello</h1>`,
+})
+export class HelloComponent {}
+```
+
+In Angular 17+, `standalone: true` is the default and can be omitted:
+
+```typescript
+@Component({
+  selector: 'app-hello',
+  template: `<h1>Hello</h1>`,
+})
+export class HelloComponent {}
+```
+
+---
+
+## Importing Dependencies
+
+Standalone components use the `imports` array to declare what they need — other components, directives, pipes, and Angular's built-in modules.
+
+### Using Built-in Directives
+
+To use `NgIf`, `NgFor`, and similar directives, import them individually or via `CommonModule`:
+
+```typescript
+import { Component } from '@angular/core';
+import { NgIf, NgFor } from '@angular/common';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-list',
+  imports: [NgIf, NgFor],
+  template: `
+    <div *ngIf="users.length > 0">
+      <ul>
+        <li *ngFor="let user of users">{{ user.name }}</li>
+      </ul>
+    </div>
+  `,
+})
+export class UserListComponent {
+  users = [{ name: 'Charmy' }, { name: 'Alice' }];
+}
+```
+
+### Using Other Standalone Components
+
+Add them directly to `imports`:
+
+```typescript
+import { Component } from '@angular/core';
+import { HeaderComponent } from './header.component';
+
+@Component({
+  standalone: true,
+  selector: 'app-home',
+  imports: [HeaderComponent],
+  template: `
+    <app-header />
+    <main>Content</main>
+  `,
+})
+export class HomeComponent {}
+```
+
+### Using ReactiveFormsModule
+
+```typescript
+import { Component } from '@angular/core';
+import { ReactiveFormsModule, FormControl } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `<input [formControl]="name" />`,
+})
+export class FormComponent {
+  name = new FormControl('');
+}
+```
+
+---
+
+## bootstrapApplication
+
+Traditional Angular apps bootstrap through a NgModule. Standalone apps use `bootstrapApplication` instead:
+
+```typescript
+// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent);
+```
+
+To provide global services or configuration, pass a `providers` array:
+
+```typescript
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
+import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(),
+  ],
+});
+```
+
+---
+
+## Standalone vs. NgModule
+
+| | NgModule | Standalone |
+| - | - | - |
+| Component declaration | In NgModule `declarations` | In the component's own `imports` |
+| Dependency management | Centralized in NgModule | Each component manages its own |
+| Bootstrap | `platformBrowserDynamic().bootstrapModule()` | `bootstrapApplication()` |
+| Complexity | Higher, requires extra NgModules | Lower, flatter structure |
+| Angular version | All versions | v14+ (default in v17+) |
+
+Standalone doesn't replace NgModule — it's a simpler alternative. Existing NgModule-based code still works, and you can migrate gradually.
+
+---
+
+## Routing and Lazy Loading
+
+Standalone components work directly with Angular's router. Use `loadComponent` to lazy load individual page components without wrapping them in a NgModule:
+
+```typescript
+// app.routes.ts
+import { Routes } from '@angular/router';
+
+export const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./home/home.component').then(m => m.HomeComponent),
+  },
+  {
+    path: 'about',
+    loadComponent: () =>
+      import('./about/about.component').then(m => m.AboutComponent),
+  },
+];
+```
+
+For nested routes, use `loadChildren` with a separate routes file:
+
+```typescript
+export const routes: Routes = [
+  {
+    path: 'admin',
+    loadChildren: () =>
+      import('./admin/admin.routes').then(m => m.adminRoutes),
+  },
+];
+```
+
+```typescript
+// admin/admin.routes.ts
+import { Routes } from '@angular/router';
+
+export const adminRoutes: Routes = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(m => m.DashboardComponent),
+  },
+];
+```
+
+---
+
+## Conclusion
+
+Standalone components simplify Angular development:
+
+- Components manage their own dependencies — no NgModule required
+- `bootstrapApplication` replaces the traditional module-based bootstrap
+- `loadComponent` makes lazy loading straightforward, without extra NgModule wrappers
+- Default since Angular 17, and the standard approach for modern Angular projects

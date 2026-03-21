@@ -1,0 +1,233 @@
+export const metadata = {
+  title: 'JavaScript undefined vs. null vs. undeclared',
+  date: '2026-03-21',
+  excerpt: 'A practical guide to the difference between undefined, null, and undeclared in JavaScript — covering what each means, how typeof behaves, and how to check for each one correctly.',
+  tags: ['Front-end', 'JavaScript'],
+};
+
+# JavaScript undefined vs. null vs. undeclared
+
+`undefined`, `null`, and undeclared are three concepts that look similar but mean very different things.
+
+- `undefined` — the variable exists, but hasn't been assigned a value
+- `null` — the variable exists, and has been explicitly set to "empty"
+- undeclared — the variable doesn't exist at all
+
+```text
+undefined vs. null vs. undeclared
+├─ undefined
+├─ null
+├─ undeclared
+├─ How to Check for Each
+└─ Quick Reference
+```
+
+- [undefined](#undefined)
+- [null](#null)
+- [undeclared](#undeclared)
+- [How to Check for Each](#how-to-check-for-each)
+- [Quick Reference](#quick-reference)
+
+---
+
+## undefined
+
+`undefined` is a primitive value in JavaScript. It means a variable has been declared, but no value has been assigned to it yet.
+
+### When You Get undefined
+
+Variable declared but not assigned:
+
+```javascript
+let name;
+console.log(name); // undefined
+```
+
+Function with no return value:
+
+```javascript
+function greet() {
+  console.log("Hello");
+}
+
+const result = greet();
+console.log(result); // undefined
+```
+
+Accessing a property that doesn't exist:
+
+```javascript
+const user = { name: "Charmy" };
+console.log(user.age); // undefined
+```
+
+Function called without an expected argument:
+
+```javascript
+function greet(name) {
+  console.log(name); // undefined
+}
+
+greet();
+```
+
+### typeof undefined
+
+```javascript
+typeof undefined // "undefined"
+```
+
+---
+
+## null
+
+`null` is also a primitive value, but it means something different from `undefined`. It represents an intentional absence of value — someone explicitly set it to empty.
+
+```javascript
+let user = null; // no user yet, by choice
+```
+
+Common use cases:
+
+```javascript
+// initializing a variable that will be set later
+let selectedItem = null;
+
+// API response indicating no data
+const response = { data: null };
+
+// function returning null when nothing is found
+function findUser(id) {
+  const user = db.find(id);
+  return user || null;
+}
+```
+
+### typeof null
+
+`null` has a well-known historical quirk:
+
+```javascript
+typeof null // "object"
+```
+
+This is a bug from JavaScript's early days that's been kept for backward compatibility. `null` is not an object — `typeof null === "object"` is simply wrong, and shouldn't be relied on.
+
+---
+
+## undeclared
+
+Undeclared isn't a value — it's a state. It means the variable was never declared at all.
+
+Accessing an undeclared variable throws a `ReferenceError`:
+
+```javascript
+console.log(x); // ReferenceError: x is not defined
+```
+
+This is completely different from `undefined`:
+
+```javascript
+let x;
+console.log(x); // undefined — declared, no value
+
+console.log(y); // ReferenceError — never declared
+```
+
+### The typeof Exception
+
+`typeof` is special — it won't throw a `ReferenceError` on undeclared variables. It returns `"undefined"` instead:
+
+```javascript
+typeof undeclaredVariable // "undefined" — no error
+```
+
+This makes `typeof` useful for safely checking whether a variable exists:
+
+```javascript
+if (typeof someVariable !== "undefined") {
+  // safe to use someVariable
+}
+```
+
+---
+
+## How to Check for Each
+
+### Checking for undefined
+
+```javascript
+let x;
+
+x === undefined          // true
+typeof x === "undefined" // true
+```
+
+### Checking for null
+
+```javascript
+let x = null;
+
+x === null // true
+```
+
+Don't use `typeof` to check for `null` — you'll get `"object"`, which is misleading:
+
+```javascript
+typeof null === "object" // true — but this is a bug, don't rely on it
+```
+
+### Checking for Both null and undefined
+
+Use `==` (one of the rare valid uses):
+
+```javascript
+let x = null;
+let y;
+
+x == null // true
+y == null // true (undefined == null is true)
+```
+
+Or be explicit with `===`:
+
+```javascript
+if (value === null || value === undefined) {
+  // ...
+}
+```
+
+### Checking for undeclared
+
+Use `typeof` to avoid a `ReferenceError`:
+
+```javascript
+if (typeof someVariable !== "undefined") {
+  // someVariable exists and has a value
+}
+```
+
+---
+
+## Quick Reference
+
+| | undefined | null | undeclared |
+| - | - | - | - |
+| Meaning | Declared, no value assigned | Explicitly set to empty | Never declared |
+| typeof | `"undefined"` | `"object"` | `"undefined"` |
+| Direct access | Returns `undefined` | Returns `null` | Throws `ReferenceError` |
+| `== null` | `true` | `true` | Throws `ReferenceError` |
+| `=== null` | `false` | `true` | Throws `ReferenceError` |
+
+---
+
+## Conclusion
+
+- `undefined` — JavaScript's default empty value; the variable exists but hasn't been given a value yet
+- `null` — an intentional empty value set by the developer; means "this is deliberately empty"
+- undeclared — the variable doesn't exist; accessing it throws a `ReferenceError`
+
+A couple of practical tips:
+
+- When initializing a variable you'll fill in later, use `null` instead of leaving it `undefined` — the intent is clearer
+- When checking whether an unknown variable exists, use `typeof` instead of accessing it directly to avoid a `ReferenceError`

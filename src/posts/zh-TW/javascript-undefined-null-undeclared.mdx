@@ -1,0 +1,235 @@
+export const metadata = {
+  title: 'JavaScript undefined vs. null vs. undeclared',
+  date: '2026-03-21',
+  excerpt: '介紹 JavaScript undefined、null、undeclared 三者的差異，包含各自的意義、typeof 的行為，以及如何正確判斷每一種情況。',
+  tags: ['前端', 'JavaScript'],
+};
+
+# JavaScript undefined vs. null vs. undeclared
+
+`undefined`、`null`、undeclared 是 JavaScript 中三個容易混淆的概念，但它們代表的意義截然不同。
+
+- `undefined`：變數已宣告，但尚未賦值
+- `null`：變數已宣告，且明確被賦值為「空」
+- undeclared：變數根本沒有被宣告
+
+```text
+undefined vs. null vs. undeclared
+├─ undefined
+├─ null
+├─ undeclared
+├─ 如何判斷
+└─ 三者差異總覽
+```
+
+- [undefined](#undefined)
+- [null](#null)
+- [undeclared](#undeclared)
+- [如何判斷](#如何判斷)
+- [三者差異總覽](#三者差異總覽)
+
+---
+
+## undefined
+
+`undefined` 是 JavaScript 的原始型別之一，代表「變數存在，但沒有值」。
+
+### 什麼情況會是 undefined
+
+變數宣告後未賦值：
+
+```javascript
+let name;
+console.log(name); // undefined
+```
+
+函式沒有回傳值：
+
+```javascript
+function greet() {
+  console.log("Hello");
+}
+
+const result = greet();
+console.log(result); // undefined
+```
+
+存取物件中不存在的屬性：
+
+```javascript
+const user = { name: "Charmy" };
+console.log(user.age); // undefined
+```
+
+函式參數未傳入：
+
+```javascript
+function greet(name) {
+  console.log(name); // undefined
+}
+
+greet();
+```
+
+### typeof undefined
+
+```javascript
+typeof undefined // "undefined"
+```
+
+---
+
+## null
+
+`null` 也是 JavaScript 的原始型別之一，代表「明確設定為空，沒有值」。
+
+與 `undefined` 不同，`null` 是刻意賦予的值，表示「這裡本來可以有值，但現在是空的」。
+
+```javascript
+let user = null; // 明確表示目前沒有使用者
+```
+
+常見的使用場景：
+
+```javascript
+// 初始化一個之後會賦值的變數
+let selectedItem = null;
+
+// API 回傳的資料中表示「無資料」
+const response = { data: null };
+
+// 函式找不到結果時回傳 null
+function findUser(id) {
+  const user = db.find(id);
+  return user || null;
+}
+```
+
+### typeof null
+
+`null` 有一個著名的歷史遺留問題：
+
+```javascript
+typeof null // "object"
+```
+
+這是 JavaScript 早期的 bug，被保留至今以維持向下相容性。`null` 並不是物件，`typeof null === "object"` 是錯誤的結果。
+
+---
+
+## undeclared
+
+undeclared 不是一種值，而是一種狀態：變數根本沒有被宣告過。
+
+存取未宣告的變數會拋出 `ReferenceError`：
+
+```javascript
+console.log(x); // ReferenceError: x is not defined
+```
+
+這和 `undefined` 完全不同：
+
+```javascript
+let x;
+console.log(x); // undefined (已宣告，未賦值)
+
+console.log(y); // ReferenceError (未宣告)
+```
+
+### typeof 的例外
+
+`typeof` 對未宣告的變數不會拋出錯誤，而是回傳 `"undefined"`：
+
+```javascript
+typeof undeclaredVariable // "undefined" (不報錯)
+```
+
+這個行為讓 `typeof` 可以安全地用來檢查一個變數是否存在：
+
+```javascript
+if (typeof someVariable !== "undefined") {
+  // 安全地使用 someVariable
+}
+```
+
+---
+
+## 如何判斷
+
+### 判斷 undefined
+
+```javascript
+let x;
+
+x === undefined          // true
+typeof x === "undefined" // true
+```
+
+### 判斷 null
+
+```javascript
+let x = null;
+
+x === null // true
+```
+
+注意：不要用 `typeof` 判斷 `null`，因為結果是 `"object"`：
+
+```javascript
+typeof null === "object" // true，但這是 bug，不可靠
+```
+
+### 同時判斷 null 和 undefined
+
+使用 `==` (僅此情況)：
+
+```javascript
+let x = null;
+let y;
+
+x == null // true
+y == null // true (undefined == null 是 true)
+```
+
+或者明確用 `===`：
+
+```javascript
+if (value === null || value === undefined) {
+  // ...
+}
+```
+
+### 判斷 undeclared
+
+用 `typeof` 安全地檢查：
+
+```javascript
+if (typeof someVariable !== "undefined") {
+  // someVariable 存在且不是 undefined
+}
+```
+
+---
+
+## 三者差異總覽
+
+| | undefined | null | undeclared |
+| - | - | - | - |
+| 意義 | 已宣告，未賦值 | 明確設定為空 | 從未宣告 |
+| typeof | `"undefined"` | `"object"` | `"undefined"` |
+| 直接存取 | 回傳 `undefined` | 回傳 `null` | 拋出 `ReferenceError` |
+| `== null` | `true` | `true` | 拋出 `ReferenceError` |
+| `=== null` | `false` | `true` | 拋出 `ReferenceError` |
+
+---
+
+## 總結
+
+- `undefined`：JavaScript 自動賦予的預設空值，表示「有這個變數，但還沒有值」
+- `null`：開發者主動賦予的空值，表示「這裡刻意是空的」
+- undeclared：變數根本不存在，直接存取會報錯
+
+實務上的使用建議：
+
+- 初始化一個之後會用到的變數，用 `null` 而非留著 `undefined`，語意更清楚
+- 判斷一個未知變數是否存在，用 `typeof` 而非直接存取，避免 `ReferenceError`

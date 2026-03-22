@@ -1,0 +1,245 @@
+export const metadata = {
+  title: 'Understanding Dependency Injection in Angular',
+  date: '2026-03-22',
+  excerpt: 'A practical guide to Angular Dependency Injection — covering @Injectable, constructor injection and the inject function, providedIn options, global providers in bootstrapApplication, and component-level service scoping.',
+  tags: ['Front-end', 'Angular', 'Design Pattern'],
+};
+
+# Dependency Injection
+
+Dependency Injection (DI) is one of Angular's core mechanisms.
+
+Instead of components creating the services they need, Angular creates and manages those services and hands them over. The result: less coupling, easier testing, and code that's simpler to maintain.
+
+```text
+Dependency Injection
+├─ What Is Dependency Injection
+├─ Services and @Injectable
+├─ Injecting a Service
+├─ providedIn Options
+├─ Providing Services in bootstrapApplication
+└─ Component-Level Services
+```
+
+- [What Is Dependency Injection](#what-is-dependency-injection)
+- [Services and @Injectable](#services-and-injectable)
+- [Injecting a Service](#injecting-a-service)
+- [providedIn Options](#providedin-options)
+- [Providing Services in bootstrapApplication](#providing-services-in-bootstrapapplication)
+- [Component-Level Services](#component-level-services)
+
+---
+
+## What Is Dependency Injection
+
+Say a component needs a `UserService` to fetch user data.
+
+Without DI:
+
+```typescript
+export class UserListComponent {
+  private userService = new UserService(); // created manually
+}
+```
+
+This works, but it has problems:
+
+- The component is tightly coupled to `UserService`
+- You can't swap it out for a mock in tests
+- Each component creates its own instance — no shared state
+
+With DI, Angular handles the creation and provides the instance:
+
+```typescript
+export class UserListComponent {
+  constructor(private userService: UserService) {} // Angular injects it
+}
+```
+
+The component just declares what it needs. Angular figures out how to provide it.
+
+---
+
+## Services and @Injectable
+
+A service is a class that handles business logic, data fetching, or shared state.
+
+To make a class injectable, add the `@Injectable` decorator:
+
+```typescript
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class UserService {
+  getUsers() {
+    return [
+      { id: 1, name: 'Charmy' },
+      { id: 2, name: 'Alice' },
+    ];
+  }
+}
+```
+
+`@Injectable` tells Angular this class can be injected. `providedIn: 'root'` means the service is a singleton — one instance shared across the entire application.
+
+---
+
+## Injecting a Service
+
+### Constructor Injection (traditional)
+
+```typescript
+import { Component } from '@angular/core';
+import { UserService } from './user.service';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-list',
+  template: `
+    <ul>
+      <li *ngFor="let user of users">{{ user.name }}</li>
+    </ul>
+  `,
+})
+export class UserListComponent {
+  users = [];
+
+  constructor(private userService: UserService) {
+    this.users = this.userService.getUsers();
+  }
+}
+```
+
+### The inject Function (Angular 14+)
+
+Angular 14 introduced the `inject` function, which lets you inject dependencies without a constructor:
+
+```typescript
+import { Component, inject } from '@angular/core';
+import { UserService } from './user.service';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-list',
+  template: `...`,
+})
+export class UserListComponent {
+  private userService = inject(UserService);
+  users = this.userService.getUsers();
+}
+```
+
+`inject` can be used during property initialization, which keeps the code concise. It's the recommended approach in modern standalone Angular.
+
+---
+
+## providedIn Options
+
+The `providedIn` property on `@Injectable` determines the scope of the service.
+
+### `providedIn: 'root'`
+
+The most common option. One instance shared across the entire application:
+
+```typescript
+@Injectable({
+  providedIn: 'root',
+})
+export class UserService {}
+```
+
+Use this for globally shared services — API calls, auth state, user preferences.
+
+### `providedIn: 'platform'`
+
+Shared across multiple Angular applications running on the same page. Rarely needed.
+
+### `providedIn: 'any'`
+
+Each lazy-loaded module gets its own instance. Also rarely used.
+
+---
+
+## Providing Services in bootstrapApplication
+
+In a standalone app, global services and configuration go in the `providers` array of `bootstrapApplication`:
+
+```typescript
+// main.ts
+import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
+import { AppComponent } from './app/app.component';
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideHttpClient(),
+  ],
+});
+```
+
+You can also provide custom services or values:
+
+```typescript
+bootstrapApplication(AppComponent, {
+  providers: [
+    { provide: UserService, useClass: UserService },
+    { provide: 'API_URL', useValue: 'https://api.example.com' },
+  ],
+});
+```
+
+To inject a string token, use `@Inject`:
+
+```typescript
+import { Component, Inject } from '@angular/core';
+
+@Component({ ... })
+export class AppComponent {
+  constructor(@Inject('API_URL') private apiUrl: string) {
+    console.log(apiUrl); // "https://api.example.com"
+  }
+}
+```
+
+---
+
+## Component-Level Services
+
+Services can be scoped to a specific component and its children by declaring them in the component's `providers`:
+
+```typescript
+import { Component } from '@angular/core';
+import { UserService } from './user.service';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-section',
+  providers: [UserService], // separate instance, scoped to this component
+  template: `...`,
+})
+export class UserSectionComponent {}
+```
+
+This creates a new `UserService` instance that's isolated from the root-level one. Any child components will share this instance, but nothing outside `UserSectionComponent` can access it.
+
+Useful when you need isolated state — form state, local data management, or keeping two parts of the UI independent.
+
+---
+
+## Conclusion
+
+Angular DI separates the creation and management of services from the components that use them:
+
+- `@Injectable` marks a class as injectable
+- Use constructor injection or the `inject` function to consume services
+- `providedIn: 'root'` creates a global singleton
+- `bootstrapApplication providers` handles app-wide configuration
+- Component-level `providers` create isolated instances scoped to that component tree
+
+Once you're comfortable with DI, the natural next topics are:
+
+- Angular service design pattern
+- HttpClient and API requests
+- Mocking services in tests

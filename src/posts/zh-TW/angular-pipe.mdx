@@ -1,0 +1,343 @@
+export const metadata = {
+  title: 'Angular 開發必學：Pipe',
+  date: '2026-03-22',
+  excerpt: '介紹 Angular Pipe 的使用方式，包含常用內建 Pipe、自訂 Pipe 的建立方式、Pure 與 Impure Pipe 的差異，以及在 Standalone 架構下的使用方法。',
+  tags: ['前端', 'Angular'],
+};
+
+# Angular Pipe
+
+Pipe 是 Angular 中用來在模板裡轉換資料的工具。
+
+它讓資料的格式化邏輯從元件中分離出來，直接在模板中使用，讓程式碼更簡潔。
+
+```text
+Angular Pipe
+├─ 什麼是 Pipe
+├─ 內建 Pipe
+├─ 自訂 Pipe
+├─ Pure vs. Impure Pipe
+└─ Pipe 與 Standalone
+```
+
+- [什麼是 Pipe](#什麼是-pipe)
+- [內建 Pipe](#內建-pipe)
+- [自訂 Pipe](#自訂-pipe)
+- [Pure vs. Impure Pipe](#pure-vs-impure-pipe)
+- [Pipe 與 Standalone](#pipe-與-standalone)
+
+---
+
+## 什麼是 Pipe
+
+Pipe 使用 `|` 符號在模板中轉換資料：
+
+```html
+{{ value | pipeName }}
+```
+
+也可以傳入參數：
+
+```html
+{{ value | pipeName:arg1:arg2 }}
+```
+
+也可以串聯多個 Pipe：
+
+```html
+{{ value | pipe1 | pipe2 }}
+```
+
+Pipe 不會修改原始資料，只是改變它在模板中的顯示方式。
+
+---
+
+## 內建 Pipe
+
+Angular 提供了許多開箱即用的內建 Pipe。
+
+### DatePipe
+
+格式化日期：
+
+```html
+{{ today | date }}
+{{ today | date:'yyyy/MM/dd' }}
+{{ today | date:'medium' }}
+```
+
+```typescript
+today = new Date();
+```
+
+常用格式：
+
+| 格式 | 輸出範例 |
+| - | - |
+| `'short'` | 1/15/24, 3:00 PM |
+| `'medium'` | Jan 15, 2024, 3:00:00 PM |
+| `'yyyy/MM/dd'` | 2024/01/15 |
+| `'HH:mm'` | 15:00 |
+
+### CurrencyPipe
+
+格式化貨幣：
+
+```html
+{{ price | currency }}
+{{ price | currency:'TWD':'symbol':'1.0-0' }}
+```
+
+```typescript
+price = 1200;
+// 輸出：NT$1,200
+```
+
+### DecimalPipe
+
+格式化數字：
+
+```html
+{{ 3.14159 | number:'1.2-2' }}
+<!-- 輸出：3.14 -->
+```
+
+格式為 `minIntegerDigits.minFractionDigits-maxFractionDigits`。
+
+### PercentPipe
+
+格式化百分比：
+
+```html
+{{ 0.85 | percent }}
+<!-- 輸出：85% -->
+
+{{ 0.85 | percent:'1.1-2' }}
+<!-- 輸出：85.0% -->
+```
+
+### UpperCasePipe / LowerCasePipe / TitleCasePipe
+
+轉換字母大小寫：
+
+```html
+{{ 'hello world' | uppercase }}
+<!-- 輸出：HELLO WORLD -->
+
+{{ 'HELLO WORLD' | lowercase }}
+<!-- 輸出：hello world -->
+
+{{ 'hello world' | titlecase }}
+<!-- 輸出：Hello World -->
+```
+
+### JsonPipe
+
+將物件轉為 JSON 字串，常用於除錯：
+
+```html
+<pre>{{ user | json }}</pre>
+```
+
+### AsyncPipe
+
+訂閱 Observable 或 Promise，自動更新顯示值，並在元件銷毀時自動取消訂閱：
+
+```html
+{{ data$ | async }}
+```
+
+```typescript
+data$ = this.userService.getUsers();
+```
+
+AsyncPipe 是處理非同步資料最常見的方式，可以避免手動管理訂閱。
+
+### SlicePipe
+
+截取陣列或字串的一部分：
+
+```html
+{{ [1, 2, 3, 4, 5] | slice:1:3 }}
+<!-- 輸出：[2, 3] -->
+
+{{ 'Hello World' | slice:0:5 }}
+<!-- 輸出：Hello -->
+```
+
+---
+
+## 自訂 Pipe
+
+當內建 Pipe 無法滿足需求時，可以建立自訂 Pipe。
+
+### 建立自訂 Pipe
+
+使用 `@Pipe` 裝飾器，並實作 `PipeTransform` 介面：
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'truncate',
+  standalone: true,
+})
+export class TruncatePipe implements PipeTransform {
+  transform(value: string, limit: number = 50): string {
+    if (value.length <= limit) {
+      return value;
+    }
+    return value.slice(0, limit) + '...';
+  }
+}
+```
+
+### 使用自訂 Pipe
+
+在元件的 `imports` 中加入，然後在模板中使用：
+
+```typescript
+import { Component } from '@angular/core';
+import { TruncatePipe } from './truncate.pipe';
+
+@Component({
+  standalone: true,
+  imports: [TruncatePipe],
+  template: `
+    <p>{{ longText | truncate:20 }}</p>
+  `,
+})
+export class ArticleComponent {
+  longText = 'This is a very long text that needs to be truncated.';
+}
+```
+
+輸出：
+
+```text
+This is a very long...
+```
+
+### 多個參數
+
+`transform` 方法可以接收多個參數：
+
+```typescript
+@Pipe({
+  name: 'highlight',
+  standalone: true,
+})
+export class HighlightPipe implements PipeTransform {
+  transform(value: string, keyword: string, color: string = 'yellow'): string {
+    if (!keyword) return value;
+    return value.replace(
+      new RegExp(keyword, 'gi'),
+      `<mark style="background:${color}">$&</mark>`
+    );
+  }
+}
+```
+
+```html
+<p [innerHTML]="text | highlight:'Angular':'lightblue'"></p>
+```
+
+---
+
+## Pure vs. Impure Pipe
+
+### Pure Pipe (預設)
+
+Pure Pipe 只在輸入值的**參考**改變時才重新計算。
+
+對於原始型別 (`string`、`number`、`boolean`)，只要值改變就會重新計算。
+
+對於物件和陣列，只有當參考改變 (重新賦值) 才會重新計算，**修改陣列或物件的內容不會觸發重新計算**：
+
+```typescript
+// 不會觸發 Pure Pipe 重新計算
+this.items.push(newItem);
+
+// 會觸發 Pure Pipe 重新計算 (建立新陣列)
+this.items = [...this.items, newItem];
+```
+
+Pure Pipe 效能較好，因為不需要在每次變更偵測時都重新計算。
+
+### Impure Pipe
+
+在 `@Pipe` 裝飾器中設定 `pure: false`，即可建立 Impure Pipe：
+
+```typescript
+@Pipe({
+  name: 'filter',
+  standalone: true,
+  pure: false,
+})
+export class FilterPipe implements PipeTransform {
+  transform(items: any[], keyword: string): any[] {
+    if (!keyword) return items;
+    return items.filter(item =>
+      item.name.toLowerCase().includes(keyword.toLowerCase())
+    );
+  }
+}
+```
+
+Impure Pipe 在每次變更偵測時都會重新計算，可以偵測到陣列內部的變更，但效能較差。
+
+**建議優先使用 Pure Pipe**，必要時才使用 Impure Pipe，並注意效能影響。
+
+---
+
+## Pipe 與 Standalone
+
+Angular 17 之後，Pipe 預設就是 Standalone。
+
+使用內建 Pipe 時，需要在元件的 `imports` 中加入對應的模組或 Pipe：
+
+```typescript
+import { Component } from '@angular/core';
+import { DatePipe, CurrencyPipe, AsyncPipe } from '@angular/common';
+
+@Component({
+  standalone: true,
+  imports: [DatePipe, CurrencyPipe, AsyncPipe],
+  template: `
+    <p>{{ today | date:'yyyy/MM/dd' }}</p>
+    <p>{{ price | currency:'TWD':'symbol':'1.0-0' }}</p>
+    <p>{{ data$ | async }}</p>
+  `,
+})
+export class DemoComponent {
+  today = new Date();
+  price = 1200;
+  data$ = this.someService.getData();
+}
+```
+
+或是匯入 `CommonModule` 一次取得所有常用 Pipe：
+
+```typescript
+import { CommonModule } from '@angular/common';
+
+@Component({
+  standalone: true,
+  imports: [CommonModule],
+  template: `...`,
+})
+export class DemoComponent {}
+```
+
+自訂 Pipe 加上 `standalone: true` 之後，就可以直接在元件的 `imports` 中使用，不需要額外的 NgModule。
+
+---
+
+## 總結
+
+Pipe 讓模板中的資料轉換更簡潔：
+
+- 內建 Pipe 涵蓋日期、貨幣、數字、字串、非同步資料等常見需求
+- 自訂 Pipe 透過 `@Pipe` 和 `PipeTransform` 建立
+- Pure Pipe 效能好，只在參考改變時重新計算；Impure Pipe 每次變更偵測都重新計算
+- Standalone 架構下，Pipe 直接在元件的 `imports` 中使用

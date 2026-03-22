@@ -1,0 +1,299 @@
+export const metadata = {
+  title: 'Angular @Input / @Output：元件間的資料傳遞',
+  date: '2026-03-23',
+  excerpt: '介紹 Angular @Input 與 @Output 的使用方式，包含父子元件資料傳遞、@Input 的選項、EventEmitter 的用法，以及 Angular 17+ 的 input() 與 output() 新寫法。',
+  tags: ['前端', 'Angular'],
+};
+
+# Angular @Input / @Output：元件間的資料傳遞
+
+Angular 元件之間的資料傳遞，主要透過兩個裝飾器來完成：
+
+- `@Input`：從父元件傳資料給子元件
+- `@Output`：從子元件發送事件給父元件
+
+```text
+@Input / @Output
+├─ @Input：父傳子
+├─ @Input 的選項
+├─ @Output：子傳父
+├─ 完整範例
+└─ input() 與 output() (Angular 17+)
+```
+
+- [@Input：父傳子](#input父傳子)
+- [@Input 的選項](#input-的選項)
+- [@Output：子傳父](#output子傳父)
+- [完整範例](#完整範例)
+- [input() 與 output() (Angular 17+)](#input-與-output-angular-17)
+
+---
+
+## @Input：父傳子
+
+`@Input` 讓父元件可以把值傳入子元件。
+
+### 子元件
+
+在子元件中，用 `@Input` 宣告要接收的屬性：
+
+```typescript
+import { Component, Input } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-card',
+  template: `
+    <div>
+      <h2>{{ name }}</h2>
+      <p>{{ email }}</p>
+    </div>
+  `,
+})
+export class UserCardComponent {
+  @Input() name = '';
+  @Input() email = '';
+}
+```
+
+### 父元件
+
+在父元件的模板中，用屬性綁定傳入值：
+
+```typescript
+import { Component } from '@angular/core';
+import { UserCardComponent } from './user-card.component';
+
+@Component({
+  standalone: true,
+  imports: [UserCardComponent],
+  template: `
+    <app-user-card
+      [name]="userName"
+      [email]="userEmail"
+    />
+  `,
+})
+export class AppComponent {
+  userName = 'Charmy';
+  userEmail = 'charmy@example.com';
+}
+```
+
+也可以直接傳入字串值 (不需要綁定符號)：
+
+```html
+<app-user-card name="Charmy" email="charmy@example.com" />
+```
+
+---
+
+## @Input 的選項
+
+### 必填屬性 required
+
+Angular 16 加入了 `required` 選項，讓屬性變成必填，在編譯時期就能發現遺漏：
+
+```typescript
+@Input({ required: true }) name!: string;
+```
+
+### 自訂屬性名稱 alias
+
+如果想讓父元件使用不同的屬性名稱，可以設定別名：
+
+```typescript
+@Input('userName') name = '';
+```
+
+父元件使用：
+
+```html
+<app-user-card [userName]="'Charmy'" />
+```
+
+---
+
+## @Output：子傳父
+
+`@Output` 讓子元件可以發送事件給父元件，通常搭配 `EventEmitter` 使用。
+
+### 子元件
+
+宣告一個 `EventEmitter` 屬性，並在適當時機呼叫 `emit`：
+
+```typescript
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-counter',
+  template: `
+    <button (click)="increment()">+1</button>
+    <p>{{ count }}</p>
+  `,
+})
+export class CounterComponent {
+  @Output() countChange = new EventEmitter<number>();
+
+  count = 0;
+
+  increment() {
+    this.count++;
+    this.countChange.emit(this.count);
+  }
+}
+```
+
+### 父元件
+
+在父元件的模板中，用事件綁定監聽子元件發出的事件：
+
+```typescript
+import { Component } from '@angular/core';
+import { CounterComponent } from './counter.component';
+
+@Component({
+  standalone: true,
+  imports: [CounterComponent],
+  template: `
+    <app-counter (countChange)="onCountChange($event)" />
+    <p>父元件收到：{{ latestCount }}</p>
+  `,
+})
+export class AppComponent {
+  latestCount = 0;
+
+  onCountChange(count: number) {
+    this.latestCount = count;
+  }
+}
+```
+
+`$event` 是子元件 `emit` 傳出的值。
+
+---
+
+## 完整範例
+
+一個包含 `@Input` 和 `@Output` 的完整表單元件範例：
+
+子元件 — 輸入框
+
+```typescript
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [FormsModule],
+  selector: 'app-name-input',
+  template: `
+    <input
+      [value]="value"
+      (input)="onInput($event)"
+      placeholder="輸入姓名"
+    />
+  `,
+})
+export class NameInputComponent {
+  @Input() value = '';
+  @Output() valueChange = new EventEmitter<string>();
+
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.valueChange.emit(input.value);
+  }
+}
+```
+
+父元件
+
+```typescript
+import { Component } from '@angular/core';
+import { NameInputComponent } from './name-input.component';
+
+@Component({
+  standalone: true,
+  imports: [NameInputComponent],
+  template: `
+    <app-name-input
+      [value]="name"
+      (valueChange)="name = $event"
+    />
+    <p>你好，{{ name }}</p>
+  `,
+})
+export class AppComponent {
+  name = '';
+}
+```
+
+---
+
+## input() 與 output() (Angular 17+)
+
+Angular 17 引入了新的 Signal-based API：`input()` 和 `output()`，作為 `@Input` 和 `@Output` 的現代替代方式。
+
+### input()
+
+```typescript
+import { Component, input } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-card',
+  template: `
+    <h2>{{ name() }}</h2>
+    <p>{{ email() }}</p>
+  `,
+})
+export class UserCardComponent {
+  name = input('');           // 選填，預設值為 ''
+  email = input.required<string>(); // 必填
+}
+```
+
+`input()` 回傳的是 Signal，讀取值時需要加上 `()`。
+
+### output()
+
+```typescript
+import { Component, output } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-counter',
+  template: `<button (click)="increment()">+1</button>`,
+})
+export class CounterComponent {
+  countChange = output<number>();
+
+  count = 0;
+
+  increment() {
+    this.count++;
+    this.countChange.emit(this.count);
+  }
+}
+```
+
+### @Input / @Output 與 input() / output() 的差異
+
+| | `@Input` / `@Output` | `input()` / `output()` |
+| - | - | - |
+| 語法 | 裝飾器 | 函式 |
+| 讀取值 | 直接讀取屬性 | 需要加 `()` |
+| 必填 | `@Input({ required: true })` | `input.required()` |
+| 與 Signal 整合 | 否 | 是 |
+| Angular 版本 | 所有版本 | v17+ |
+
+兩種寫法目前都可以使用，新專案建議使用 `input()` / `output()`，舊專案可以逐步遷移。
+
+---
+
+## 總結
+
+- `@Input`：父元件透過屬性綁定傳資料給子元件
+- `@Output`：子元件透過 `EventEmitter` 發送事件給父元件
+- Angular 17+ 提供 `input()` 和 `output()`，與 Signal 整合，是更現代的寫法

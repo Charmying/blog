@@ -1,0 +1,318 @@
+export const metadata = {
+  title: 'Angular FormGroup：響應式表單',
+  date: '2026-03-23',
+  excerpt: '介紹 Angular 響應式表單的核心概念，包含 FormControl、FormGroup、內建與自訂驗證器、FormArray 的動態欄位管理，以及表單提交與重置。',
+  tags: ['前端', 'Angular'],
+};
+
+# Angular FormGroup：響應式表單
+
+Angular 提供兩種表單處理方式：Template-driven Forms 和 Reactive Forms。
+
+本篇介紹 Reactive Forms (響應式表單)，它透過 `FormGroup`、`FormControl`、`FormArray` 在 TypeScript 中管理表單狀態，讓表單邏輯更容易測試和維護。
+
+```text
+Angular FormGroup
+├─ FormControl
+├─ FormGroup
+├─ 驗證
+├─ FormArray
+└─ 表單提交與重置
+```
+
+- [FormControl](#formcontrol)
+- [FormGroup](#formgroup)
+- [驗證](#驗證)
+- [FormArray](#formarray)
+- [表單提交與重置](#表單提交與重置)
+
+---
+
+## FormControl
+
+`FormControl` 是響應式表單的基本單位，代表一個單一的輸入欄位。
+
+```typescript
+import { Component } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `
+    <input [formControl]="name" placeholder="姓名" />
+    <p>目前值：{{ name.value }}</p>
+  `,
+})
+export class DemoComponent {
+  name = new FormControl('');
+}
+```
+
+### 讀取與設定值
+
+```typescript
+// 讀取值
+console.log(this.name.value);
+
+// 設定值
+this.name.setValue('Charmy');
+
+// 部分更新 (FormControl 只有一個值，通常用 setValue)
+this.name.patchValue('Charmy');
+```
+
+### 監聽值的變化
+
+```typescript
+this.name.valueChanges.subscribe(value => {
+  console.log(value);
+});
+```
+
+---
+
+## FormGroup
+
+`FormGroup` 將多個 `FormControl` 組合成一個群組，代表整個表單或表單的一部分。
+
+```typescript
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `
+    <form [formGroup]="form">
+      <input formControlName="name" placeholder="姓名" />
+      <input formControlName="email" placeholder="Email" />
+    </form>
+    <p>表單值：{{ form.value | json }}</p>
+  `,
+})
+export class RegisterComponent {
+  form = new FormGroup({
+    name: new FormControl(''),
+    email: new FormControl(''),
+  });
+}
+```
+
+### 讀取與設定值
+
+```typescript
+// 讀取整個表單的值
+console.log(this.form.value); // { name: '', email: '' }
+
+// 讀取單一欄位
+console.log(this.form.get('name')?.value);
+
+// 設定所有欄位的值
+this.form.setValue({
+  name: 'Charmy',
+  email: 'charmy@example.com',
+});
+
+// 部分更新 (只更新指定欄位)
+this.form.patchValue({
+  name: 'Charmy',
+});
+```
+
+### 表單狀態
+
+```typescript
+this.form.valid   // 是否通過所有驗證
+this.form.invalid // 是否有驗證錯誤
+this.form.dirty   // 是否有欄位被修改過
+this.form.touched // 是否有欄位被觸碰過 (失焦)
+this.form.pristine // 是否尚未被修改
+```
+
+---
+
+## 驗證
+
+### 內建驗證器
+
+Angular 的 `Validators` 提供常用的內建驗證規則：
+
+```typescript
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+form = new FormGroup({
+  name: new FormControl('', [
+    Validators.required,
+    Validators.minLength(2),
+    Validators.maxLength(50),
+  ]),
+  email: new FormControl('', [
+    Validators.required,
+    Validators.email,
+  ]),
+  age: new FormControl('', [
+    Validators.min(0),
+    Validators.max(120),
+  ]),
+});
+```
+
+常用的內建驗證器：
+
+| 驗證器 | 說明 |
+| - | - |
+| `Validators.required` | 必填 |
+| `Validators.minLength(n)` | 最少 n 個字元 |
+| `Validators.maxLength(n)` | 最多 n 個字元 |
+| `Validators.email` | Email 格式 |
+| `Validators.min(n)` | 最小值 n |
+| `Validators.max(n)` | 最大值 n |
+| `Validators.pattern(regex)` | 符合正規表達式 |
+
+### 顯示驗證錯誤
+
+```html
+<form [formGroup]="form">
+  <input formControlName="name" placeholder="姓名" />
+  <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+    <span *ngIf="form.get('name')?.errors?.['required']">姓名為必填</span>
+    <span *ngIf="form.get('name')?.errors?.['minlength']">至少需要 2 個字元</span>
+  </div>
+</form>
+```
+
+### 自訂驗證器
+
+自訂驗證器是一個函式，接收 `AbstractControl`，驗證失敗時回傳錯誤物件，驗證通過時回傳 `null`：
+
+```typescript
+import { AbstractControl, ValidationErrors } from '@angular/forms';
+
+function noSpaceValidator(control: AbstractControl): ValidationErrors | null {
+  if (control.value && control.value.includes(' ')) {
+    return { noSpace: true };
+  }
+  return null;
+}
+```
+
+使用自訂驗證器：
+
+```typescript
+form = new FormGroup({
+  username: new FormControl('', [
+    Validators.required,
+    noSpaceValidator,
+  ]),
+});
+```
+
+顯示自訂錯誤：
+
+```html
+<span *ngIf="form.get('username')?.errors?.['noSpace']">
+  使用者名稱不能包含空格
+</span>
+```
+
+---
+
+## FormArray
+
+`FormArray` 用來管理數量不固定的表單欄位，例如多個電話號碼、多個項目清單。
+
+```typescript
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { NgFor } from '@angular/common';
+
+@Component({
+  standalone: true,
+  imports: [ReactiveFormsModule, NgFor],
+  template: `
+    <form [formGroup]="form">
+      <div formArrayName="phones">
+        <div *ngFor="let phone of phones.controls; let i = index">
+          <input [formControlName]="i" placeholder="電話號碼" />
+          <button type="button" (click)="removePhone(i)">移除</button>
+        </div>
+      </div>
+      <button type="button" (click)="addPhone()">新增電話</button>
+    </form>
+  `,
+})
+export class ContactComponent {
+  form = new FormGroup({
+    phones: new FormArray([
+      new FormControl('', Validators.required),
+    ]),
+  });
+
+  get phones() {
+    return this.form.get('phones') as FormArray;
+  }
+
+  addPhone() {
+    this.phones.push(new FormControl('', Validators.required));
+  }
+
+  removePhone(index: number) {
+    this.phones.removeAt(index);
+  }
+}
+```
+
+---
+
+## 表單提交與重置
+
+### 提交表單
+
+```html
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <input formControlName="name" placeholder="姓名" />
+  <input formControlName="email" placeholder="Email" />
+  <button type="submit" [disabled]="form.invalid">送出</button>
+</form>
+```
+
+```typescript
+onSubmit() {
+  if (this.form.valid) {
+    console.log(this.form.value);
+    // 送出資料...
+  }
+}
+```
+
+### 重置表單
+
+```typescript
+// 重置為初始空值
+this.form.reset();
+
+// 重置為指定值
+this.form.reset({
+  name: '',
+  email: '',
+});
+```
+
+`reset` 除了清空值，也會重置 `dirty`、`touched` 等狀態。
+
+---
+
+## 總結
+
+Angular 響應式表單的三個核心類別：
+
+- `FormControl`：單一欄位，管理值與驗證狀態
+- `FormGroup`：多個欄位的群組，代表整個表單
+- `FormArray`：數量不固定的欄位陣列
+
+| | FormControl | FormGroup | FormArray |
+| - | - | - | - |
+| 用途 | 單一輸入 | 表單群組 | 動態欄位 |
+| 取值 | `.value` | `.value` | `.value` |
+| 設值 | `setValue` | `setValue` / `patchValue` | `push` / `removeAt` |

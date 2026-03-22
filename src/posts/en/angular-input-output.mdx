@@ -1,0 +1,297 @@
+export const metadata = {
+  title: 'Angular @Input / @Output: Passing Data Between Components',
+  date: '2026-03-23',
+  excerpt: 'A practical guide to Angular @Input and @Output — covering parent-to-child data passing, @Input options, EventEmitter, and the modern input() and output() API introduced in Angular 17.',
+  tags: ['Front-end', 'Angular'],
+};
+
+# Angular @Input / @Output: Passing Data Between Components
+
+Angular components communicate through two decorators:
+
+- `@Input` — passes data from a parent component down to a child
+- `@Output` — sends events from a child component up to a parent
+
+```text
+@Input / @Output
+├─ @Input: Parent to Child
+├─ @Input Options
+├─ @Output: Child to Parent
+├─ Full Example
+└─ input() and output() (Angular 17+)
+```
+
+- [@Input: Parent to Child](#input-parent-to-child)
+- [@Input Options](#input-options)
+- [@Output: Child to Parent](#output-child-to-parent)
+- [Full Example](#full-example)
+- [input() and output() (Angular 17+)](#input-and-output-angular-17)
+
+---
+
+## @Input: Parent to Child
+
+`@Input` lets a parent component pass a value into a child component.
+
+### Child Component
+
+Declare the properties you want to receive with `@Input`:
+
+```typescript
+import { Component, Input } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-card',
+  template: `
+    <div>
+      <h2>{{ name }}</h2>
+      <p>{{ email }}</p>
+    </div>
+  `,
+})
+export class UserCardComponent {
+  @Input() name = '';
+  @Input() email = '';
+}
+```
+
+### Parent Component
+
+Use property binding in the parent's template to pass values in:
+
+```typescript
+import { Component } from '@angular/core';
+import { UserCardComponent } from './user-card.component';
+
+@Component({
+  standalone: true,
+  imports: [UserCardComponent],
+  template: `
+    <app-user-card
+      [name]="userName"
+      [email]="userEmail"
+    />
+  `,
+})
+export class AppComponent {
+  userName = 'Charmy';
+  userEmail = 'charmy@example.com';
+}
+```
+
+For static string values, you can skip the binding syntax:
+
+```html
+<app-user-card name="Charmy" email="charmy@example.com" />
+```
+
+---
+
+## @Input Options
+
+### Required Inputs
+
+Angular 16 added a `required` option that makes an input mandatory. Missing it becomes a compile-time error:
+
+```typescript
+@Input({ required: true }) name!: string;
+```
+
+### Alias
+
+If you want the parent to use a different property name, set an alias:
+
+```typescript
+@Input('userName') name = '';
+```
+
+Parent usage:
+
+```html
+<app-user-card [userName]="'Charmy'" />
+```
+
+---
+
+## @Output: Child to Parent
+
+`@Output` lets a child component emit events up to its parent, typically using `EventEmitter`.
+
+### Child Component
+
+Declare an `EventEmitter` property and call `emit` when something happens:
+
+```typescript
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-counter',
+  template: `
+    <button (click)="increment()">+1</button>
+    <p>{{ count }}</p>
+  `,
+})
+export class CounterComponent {
+  @Output() countChange = new EventEmitter<number>();
+
+  count = 0;
+
+  increment() {
+    this.count++;
+    this.countChange.emit(this.count);
+  }
+}
+```
+
+### Parent Component
+
+Listen to the event with event binding in the parent's template:
+
+```typescript
+import { Component } from '@angular/core';
+import { CounterComponent } from './counter.component';
+
+@Component({
+  standalone: true,
+  imports: [CounterComponent],
+  template: `
+    <app-counter (countChange)="onCountChange($event)" />
+    <p>Parent received: {{ latestCount }}</p>
+  `,
+})
+export class AppComponent {
+  latestCount = 0;
+
+  onCountChange(count: number) {
+    this.latestCount = count;
+  }
+}
+```
+
+`$event` holds the value passed to `emit`.
+
+---
+
+## Full Example
+
+Here's a complete example combining both `@Input` and `@Output` in a reusable input component:
+
+Child — text input component
+
+```typescript
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-name-input',
+  template: `
+    <input
+      [value]="value"
+      (input)="onInput($event)"
+      placeholder="Enter name"
+    />
+  `,
+})
+export class NameInputComponent {
+  @Input() value = '';
+  @Output() valueChange = new EventEmitter<string>();
+
+  onInput(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.valueChange.emit(input.value);
+  }
+}
+```
+
+Parent
+
+```typescript
+import { Component } from '@angular/core';
+import { NameInputComponent } from './name-input.component';
+
+@Component({
+  standalone: true,
+  imports: [NameInputComponent],
+  template: `
+    <app-name-input
+      [value]="name"
+      (valueChange)="name = $event"
+    />
+    <p>Hello, {{ name }}</p>
+  `,
+})
+export class AppComponent {
+  name = '';
+}
+```
+
+---
+
+## input() and output() (Angular 17+)
+
+Angular 17 introduced a Signal-based API — `input()` and `output()` — as a modern alternative to `@Input` and `@Output`.
+
+### input()
+
+```typescript
+import { Component, input } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-user-card',
+  template: `
+    <h2>{{ name() }}</h2>
+    <p>{{ email() }}</p>
+  `,
+})
+export class UserCardComponent {
+  name = input('');                  // optional, default ''
+  email = input.required<string>();  // required
+}
+```
+
+`input()` returns a Signal, so you read the value by calling it with `()`.
+
+### output()
+
+```typescript
+import { Component, output } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-counter',
+  template: `<button (click)="increment()">+1</button>`,
+})
+export class CounterComponent {
+  countChange = output<number>();
+
+  count = 0;
+
+  increment() {
+    this.count++;
+    this.countChange.emit(this.count);
+  }
+}
+```
+
+### @Input / @Output vs input() / output()
+
+| | `@Input` / `@Output` | `input()` / `output()` |
+| - | - | - |
+| Style | Decorators | Functions |
+| Reading values | Direct property access | Call with `()` |
+| Required inputs | `@Input({ required: true })` | `input.required()` |
+| Signal integration | No | Yes |
+| Angular version | All versions | v17+ |
+
+Both approaches work today. For new projects, `input()` and `output()` are the recommended direction. Existing code can migrate gradually.
+
+---
+
+## Conclusion
+
+- `@Input` — parent passes data down to a child via property binding
+- `@Output` — child sends events up to a parent via `EventEmitter`
+- Angular 17+ offers `input()` and `output()` as Signal-integrated alternatives — cleaner syntax and better integration with the modern Angular reactivity model

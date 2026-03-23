@@ -1,0 +1,266 @@
+export const metadata = {
+  title: 'Smart vs. Dumb Components: Container and Presentational Components',
+  date: '2026-03-24',
+  excerpt: 'A practical guide to the Smart vs. Dumb Components pattern — covering the difference between container and presentational components, why the separation matters, with examples in Angular, React, and Vue.',
+  tags: ['Front-end', 'Front-end Architecture', 'Component Design', 'Angular', 'React', 'Vue'],
+};
+
+# Smart vs. Dumb Components: Container and Presentational Components
+
+Smart/Dumb Components is a component design principle that splits components into two categories based on responsibility:
+
+- Smart Components (Container Components) — handle data and logic
+- Dumb Components (Presentational Components) — handle UI
+
+This isn't tied to any specific framework. It applies equally to Angular, React, and Vue.
+
+```text
+Smart vs. Dumb Components
+├─ Smart Components
+├─ Dumb Components
+├─ Why Bother Separating Them
+├─ Angular Example
+├─ React Example
+├─ Vue Example
+└─ How to Decide in Practice
+```
+
+- [Smart Components](#smart-components)
+- [Dumb Components](#dumb-components)
+- [Why Bother Separating Them](#why-bother-separating-them)
+- [Angular Example](#angular-example)
+- [React Example](#react-example)
+- [Vue Example](#vue-example)
+- [How to Decide in Practice](#how-to-decide-in-practice)
+
+---
+
+## Smart Components
+
+A Smart Component — also called a Container Component — owns the data and logic.
+
+Responsibilities:
+
+- Fetch data from APIs or services
+- Manage component state
+- Handle business logic
+- Pass data down to child components
+
+Smart components typically correspond to a page or a major functional section of a page.
+
+---
+
+## Dumb Components
+
+A Dumb Component — also called a Presentational Component — only cares about the UI.
+
+Responsibilities:
+
+- Receive data via props or `@Input`
+- Emit events via callbacks or `@Output`
+- No direct API or service calls
+- No application state management
+
+A dumb component doesn't know where its data comes from or what happens after it emits an event. It just renders and notifies.
+
+---
+
+## Why Bother Separating Them
+
+### Reusability
+
+Dumb components aren't coupled to any specific service or business logic. You can use the same component in multiple places and just pass in different data.
+
+### Easier Testing
+
+Dumb components have no external dependencies — testing them means passing in data and verifying what renders. No mocking, no complex setup.
+
+Smart component tests can focus entirely on business logic without worrying about UI details.
+
+### Separation of Concerns
+
+Each component has one job:
+
+- Smart Component: "Where does the data come from, and what do we do with it?"
+- Dumb Component: "What does this data look like on screen?"
+
+When the UI needs to change, you only touch the dumb component. When the business logic changes, you only touch the smart component.
+
+---
+
+## Angular Example
+
+Smart Component (page)
+
+```typescript
+@Component({
+  standalone: true,
+  imports: [UserListComponent],
+  selector: 'app-user-page',
+  template: `
+    <app-user-list
+      [users]="users"
+      (deleteUser)="onDelete($event)"
+    />
+  `,
+})
+export class UserPageComponent implements OnInit {
+  users: User[] = [];
+
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
+    });
+  }
+
+  onDelete(userId: number) {
+    this.userService.deleteUser(userId).subscribe(() => {
+      this.users = this.users.filter(u => u.id !== userId);
+    });
+  }
+}
+```
+
+Dumb Component (list)
+
+```typescript
+@Component({
+  standalone: true,
+  imports: [NgFor],
+  selector: 'app-user-list',
+  template: `
+    <ul>
+      <li *ngFor="let user of users">
+        {{ user.name }}
+        <button (click)="deleteUser.emit(user.id)">Delete</button>
+      </li>
+    </ul>
+  `,
+})
+export class UserListComponent {
+  @Input() users: User[] = [];
+  @Output() deleteUser = new EventEmitter<number>();
+}
+```
+
+`UserListComponent` doesn't know what happens after the delete button is clicked — it fires the event and lets the smart component decide.
+
+---
+
+## React Example
+
+Smart Component (page)
+
+```jsx
+function UserPage() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    fetchUsers().then(data => setUsers(data));
+  }, []);
+
+  function handleDelete(userId) {
+    deleteUser(userId).then(() => {
+      setUsers(prev => prev.filter(u => u.id !== userId));
+    });
+  }
+
+  return <UserList users={users} onDelete={handleDelete} />;
+}
+```
+
+Dumb Component (list)
+
+```jsx
+function UserList({ users, onDelete }) {
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>
+          {user.name}
+          <button onClick={() => onDelete(user.id)}>Delete</button>
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+`UserList` receives data through props and passes events up through the `onDelete` callback. No logic, no state, no side effects.
+
+---
+
+## Vue Example
+
+Smart Component (page)
+
+```vue
+<template>
+  <UserList :users="users" @delete="handleDelete" />
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import UserList from './UserList.vue';
+import { fetchUsers, deleteUser } from './userService';
+
+const users = ref([]);
+
+onMounted(async () => {
+  users.value = await fetchUsers();
+});
+
+async function handleDelete(userId) {
+  await deleteUser(userId);
+  users.value = users.value.filter(u => u.id !== userId);
+}
+</script>
+```
+
+Dumb Component (list)
+
+```vue
+<template>
+  <ul>
+    <li v-for="user in users" :key="user.id">
+      {{ user.name }}
+      <button @click="$emit('delete', user.id)">Delete</button>
+    </li>
+  </ul>
+</template>
+
+<script setup>
+defineProps({ users: Array });
+defineEmits(['delete']);
+</script>
+```
+
+The implementation details differ across all three frameworks, but the division of responsibility is identical: the smart component owns the data, the dumb component owns the display.
+
+---
+
+## How to Decide in Practice
+
+A few questions that help:
+
+- Does it need to call an API or service? → Smart Component
+- Does it need to know where its data comes from? → Smart Component
+- Could it be reused on multiple pages? → likely a Dumb Component
+- Does it work with just an input? → Dumb Component
+
+In practice, the line isn't always sharp. Some components sit somewhere in between. The principle is: keep dumb components as pure as possible, and keep logic centralized in smart components.
+
+---
+
+## Summary
+
+| | Smart Component | Dumb Component |
+| - | - | - |
+| Also called | Container Component | Presentational Component |
+| Responsibility | Data and business logic | UI rendering |
+| Data source | APIs, services, state | props / `@Input` |
+| Event handling | Handled directly | Passed up via callback / `@Output` |
+| Reusability | Lower | Higher |
+| Testability | More complex | Simpler |

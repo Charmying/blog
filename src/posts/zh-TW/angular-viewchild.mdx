@@ -1,0 +1,257 @@
+export const metadata = {
+  title: 'Angular @ViewChild',
+  date: '2026-03-23',
+  excerpt: '介紹 Angular @ViewChild 的使用方式，包含取得 DOM 元素與子元件的參考、@ViewChildren 與 QueryList、static 選項，以及 Angular 17+ 的 viewChild() 新寫法。',
+  tags: ['前端', 'Angular'],
+};
+
+# Angular @ViewChild
+
+`@ViewChild` 讓你在元件的 TypeScript 程式碼中直接取得模板裡的 DOM 元素或子元件的參考。
+
+當需要直接操作 DOM 或呼叫子元件的方法時，`@ViewChild` 是最直接的解決方式。
+
+```text
+@ViewChild
+├─ 取得 DOM 元素
+├─ 取得子元件
+├─ @ViewChildren
+├─ 注意事項
+└─ viewChild() (Angular 17+)
+```
+
+- [取得 DOM 元素](#取得-dom-元素)
+- [取得子元件](#取得子元件)
+- [@ViewChildren](#viewchildren)
+- [注意事項](#注意事項)
+- [viewChild() (Angular 17+)](#viewchild-angular-17)
+
+---
+
+## 取得 DOM 元素
+
+在模板中用 `#` 宣告一個範本變數，再用 `@ViewChild` 在 TypeScript 中取得它的參考。
+
+```typescript
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  template: `
+    <input #nameInput placeholder="輸入姓名" />
+    <button (click)="focusInput()">聚焦輸入框</button>
+  `,
+})
+export class DemoComponent implements AfterViewInit {
+  @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
+
+  ngAfterViewInit() {
+    console.log(this.nameInput.nativeElement);
+  }
+
+  focusInput() {
+    this.nameInput.nativeElement.focus();
+  }
+}
+```
+
+`@ViewChild('nameInput')` 接收範本變數名稱作為參數，回傳對應元素的 `ElementRef`。
+
+透過 `ElementRef.nativeElement` 可以存取原生 DOM 元素。
+
+---
+
+## 取得子元件
+
+`@ViewChild` 也可以取得子元件的參考，讓你直接呼叫子元件的方法或存取它的屬性。
+
+子元件
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-timer',
+  template: `<p>{{ seconds }} 秒</p>`,
+})
+export class TimerComponent {
+  seconds = 0;
+
+  start() {
+    setInterval(() => {
+      this.seconds++;
+    }, 1000);
+  }
+
+  reset() {
+    this.seconds = 0;
+  }
+}
+```
+
+父元件
+
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { TimerComponent } from './timer.component';
+
+@Component({
+  standalone: true,
+  imports: [TimerComponent],
+  selector: 'app-parent',
+  template: `
+    <app-timer />
+    <button (click)="startTimer()">開始</button>
+    <button (click)="resetTimer()">重置</button>
+  `,
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChild(TimerComponent) timer!: TimerComponent;
+
+  ngAfterViewInit() {
+    console.log(this.timer); // TimerComponent 的實例
+  }
+
+  startTimer() {
+    this.timer.start();
+  }
+
+  resetTimer() {
+    this.timer.reset();
+  }
+}
+```
+
+用類別名稱 (`TimerComponent`) 而非字串作為參數，取得的就是子元件的實例，可以直接呼叫它的方法。
+
+---
+
+## @ViewChildren
+
+如果模板中有多個相同的元素或元件，用 `@ViewChildren` 可以取得所有的參考，回傳一個 `QueryList`：
+
+```typescript
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  template: `
+    <input #item placeholder="項目 1" />
+    <input #item placeholder="項目 2" />
+    <input #item placeholder="項目 3" />
+    <button (click)="focusAll()">全部聚焦</button>
+  `,
+})
+export class DemoComponent implements AfterViewInit {
+  @ViewChildren('item') items!: QueryList<ElementRef<HTMLInputElement>>;
+
+  ngAfterViewInit() {
+    console.log(this.items.length); // 3
+  }
+
+  focusAll() {
+    this.items.forEach(item => item.nativeElement.focus());
+  }
+}
+```
+
+`QueryList` 支援 `forEach`、`map`、`filter` 等方法，也可以用 `changes` Observable 監聽清單的變化：
+
+```typescript
+ngAfterViewInit() {
+  this.items.changes.subscribe(() => {
+    console.log('清單有變化');
+  });
+}
+```
+
+---
+
+## 注意事項
+
+### 只能在 ngAfterViewInit 之後使用
+
+`@ViewChild` 的值在 `ngAfterViewInit` 生命週期之後才會被填入，在此之前值是 `undefined`：
+
+```typescript
+ngOnInit() {
+  console.log(this.nameInput); // undefined，視圖尚未初始化
+}
+
+ngAfterViewInit() {
+  console.log(this.nameInput); // ElementRef，可以正常使用
+}
+```
+
+### static 選項
+
+`@ViewChild` 有一個 `static` 選項，預設是 `false`：
+
+- `static: false` (預設)：在變更偵測後解析，可以在 `ngAfterViewInit` 中使用
+- `static: true`：在變更偵測前解析，可以在 `ngOnInit` 中使用，但只適用於靜態的元素 (不在 `*ngIf` 或 `*ngFor` 內的元素)
+
+```typescript
+@ViewChild('nameInput', { static: true }) nameInput!: ElementRef;
+
+ngOnInit() {
+  console.log(this.nameInput); // 可以使用 (因為 static: true)
+}
+```
+
+### 避免過度使用
+
+直接操作 DOM 繞過了 Angular 的變更偵測機制，可能導致難以追蹤的問題。
+
+優先考慮用資料綁定解決問題，只在真正需要直接操作 DOM 時才使用 `@ViewChild`。
+
+---
+
+## viewChild() (Angular 17+)
+
+Angular 17 引入了 Signal-based 的 `viewChild()` 函式，作為 `@ViewChild` 的現代替代：
+
+```typescript
+import { Component, viewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  template: `<input #nameInput placeholder="姓名" />`,
+})
+export class DemoComponent {
+  nameInput = viewChild<ElementRef>('nameInput');
+  // 或是必填版本：
+  nameInputRequired = viewChild.required<ElementRef>('nameInput');
+}
+```
+
+`viewChild()` 回傳的是 Signal，讀取時需要加 `()`：
+
+```typescript
+ngAfterViewInit() {
+  console.log(this.nameInput()?.nativeElement);
+  console.log(this.nameInputRequired().nativeElement); // 必填，不需要 ?
+}
+```
+
+### @ViewChild 與 viewChild() 的差異
+
+| | `@ViewChild` | `viewChild()` |
+| - | - | - |
+| 語法 | 裝飾器 | 函式 |
+| 回傳型別 | 直接值 | Signal |
+| 讀取值 | 直接讀取屬性 | 需要加 `()` |
+| 必填 | 用 `!` 斷言 | `viewChild.required()` |
+| Angular 版本 | 所有版本 | v17+ |
+
+---
+
+## 總結
+
+- `@ViewChild`：取得單一 DOM 元素或子元件的參考
+- `@ViewChildren`：取得多個相同元素或元件的 `QueryList`
+- 值在 `ngAfterViewInit` 之後才可用
+- Angular 17+ 提供 Signal-based 的 `viewChild()`，是更現代的寫法

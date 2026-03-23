@@ -1,0 +1,253 @@
+export const metadata = {
+  title: 'Angular @ViewChild',
+  date: '2026-03-23',
+  excerpt: 'A practical guide to Angular @ViewChild — covering DOM element and child component references, @ViewChildren and QueryList, the static option, and the modern viewChild() Signal API in Angular 17+.',
+  tags: ['Front-end', 'Angular'],
+};
+
+# Angular @ViewChild
+
+`@ViewChild` gives you a direct reference to a DOM element or child component from within your TypeScript code.
+
+It's the go-to solution when you need to manipulate the DOM directly or call a method on a child component.
+
+```text
+@ViewChild
+├─ Accessing a DOM Element
+├─ Accessing a Child Component
+├─ @ViewChildren
+├─ Things to Know
+└─ viewChild() (Angular 17+)
+```
+
+- [Accessing a DOM Element](#accessing-a-dom-element)
+- [Accessing a Child Component](#accessing-a-child-component)
+- [@ViewChildren](#viewchildren)
+- [Things to Know](#things-to-know)
+- [viewChild() (Angular 17+)](#viewchild-angular-17)
+
+---
+
+## Accessing a DOM Element
+
+Declare a template variable with `#` in the template, then use `@ViewChild` to grab a reference to it in TypeScript.
+
+```typescript
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  template: `
+    <input #nameInput placeholder="Enter name" />
+    <button (click)="focusInput()">Focus input</button>
+  `,
+})
+export class DemoComponent implements AfterViewInit {
+  @ViewChild('nameInput') nameInput!: ElementRef<HTMLInputElement>;
+
+  ngAfterViewInit() {
+    console.log(this.nameInput.nativeElement);
+  }
+
+  focusInput() {
+    this.nameInput.nativeElement.focus();
+  }
+}
+```
+
+`@ViewChild('nameInput')` takes the template variable name as an argument and returns an `ElementRef`. Access the underlying DOM node through `ElementRef.nativeElement`.
+
+---
+
+## Accessing a Child Component
+
+`@ViewChild` also works with child components, giving you access to their properties and methods directly.
+
+Child component
+
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-timer',
+  template: `<p>{{ seconds }}s</p>`,
+})
+export class TimerComponent {
+  seconds = 0;
+
+  start() {
+    setInterval(() => {
+      this.seconds++;
+    }, 1000);
+  }
+
+  reset() {
+    this.seconds = 0;
+  }
+}
+```
+
+Parent component
+
+```typescript
+import { Component, ViewChild, AfterViewInit } from '@angular/core';
+import { TimerComponent } from './timer.component';
+
+@Component({
+  standalone: true,
+  imports: [TimerComponent],
+  selector: 'app-parent',
+  template: `
+    <app-timer />
+    <button (click)="startTimer()">Start</button>
+    <button (click)="resetTimer()">Reset</button>
+  `,
+})
+export class ParentComponent implements AfterViewInit {
+  @ViewChild(TimerComponent) timer!: TimerComponent;
+
+  ngAfterViewInit() {
+    console.log(this.timer); // TimerComponent instance
+  }
+
+  startTimer() {
+    this.timer.start();
+  }
+
+  resetTimer() {
+    this.timer.reset();
+  }
+}
+```
+
+Pass the class name instead of a string to get a typed reference to the component instance.
+
+---
+
+## @ViewChildren
+
+When the template has multiple elements or components of the same type, use `@ViewChildren` to get all of them as a `QueryList`:
+
+```typescript
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  template: `
+    <input #item placeholder="Item 1" />
+    <input #item placeholder="Item 2" />
+    <input #item placeholder="Item 3" />
+    <button (click)="focusAll()">Focus all</button>
+  `,
+})
+export class DemoComponent implements AfterViewInit {
+  @ViewChildren('item') items!: QueryList<ElementRef<HTMLInputElement>>;
+
+  ngAfterViewInit() {
+    console.log(this.items.length); // 3
+  }
+
+  focusAll() {
+    this.items.forEach(item => item.nativeElement.focus());
+  }
+}
+```
+
+`QueryList` supports `forEach`, `map`, `filter`, and more. You can also subscribe to `changes` to react when the list updates:
+
+```typescript
+ngAfterViewInit() {
+  this.items.changes.subscribe(() => {
+    console.log('list changed');
+  });
+}
+```
+
+---
+
+## Things to Know
+
+### Only available after ngAfterViewInit
+
+`@ViewChild` references aren't populated until after the view has been initialized. Accessing them in `ngOnInit` returns `undefined`:
+
+```typescript
+ngOnInit() {
+  console.log(this.nameInput); // undefined
+}
+
+ngAfterViewInit() {
+  console.log(this.nameInput); // ElementRef — ready to use
+}
+```
+
+### The static Option
+
+`@ViewChild` has a `static` option that defaults to `false`:
+
+- `static: false` (default) — resolved after change detection; available in `ngAfterViewInit`
+- `static: true` — resolved before change detection; available in `ngOnInit`, but only works for elements that aren't inside `*ngIf` or `*ngFor`
+
+```typescript
+@ViewChild('nameInput', { static: true }) nameInput!: ElementRef;
+
+ngOnInit() {
+  console.log(this.nameInput); // works because static: true
+}
+```
+
+### Don't Overuse It
+
+Direct DOM manipulation bypasses Angular's change detection and can lead to hard-to-track bugs. Reach for data binding first — use `@ViewChild` only when you genuinely need direct DOM access.
+
+---
+
+## viewChild() (Angular 17+)
+
+Angular 17 introduced `viewChild()`, a Signal-based alternative to `@ViewChild`:
+
+```typescript
+import { Component, viewChild, ElementRef } from '@angular/core';
+
+@Component({
+  standalone: true,
+  selector: 'app-demo',
+  template: `<input #nameInput placeholder="Name" />`,
+})
+export class DemoComponent {
+  nameInput = viewChild<ElementRef>('nameInput');
+  // required version:
+  nameInputRequired = viewChild.required<ElementRef>('nameInput');
+}
+```
+
+`viewChild()` returns a Signal, so you read the value by calling it with `()`:
+
+```typescript
+ngAfterViewInit() {
+  console.log(this.nameInput()?.nativeElement);
+  console.log(this.nameInputRequired().nativeElement); // no ? needed
+}
+```
+
+### @ViewChild vs viewChild()
+
+| | `@ViewChild` | `viewChild()` |
+| - | - | - |
+| Style | Decorator | Function |
+| Return type | Direct value | Signal |
+| Reading value | Direct property access | Call with `()` |
+| Required | `!` assertion | `viewChild.required()` |
+| Angular version | All versions | v17+ |
+
+---
+
+## Summary
+
+- `@ViewChild` — gets a reference to a single DOM element or child component
+- `@ViewChildren` — gets a `QueryList` of all matching elements or components
+- References aren't available until `ngAfterViewInit`
+- Angular 17+ offers `viewChild()` as a Signal-based alternative — the recommended approach for new projects

@@ -1,0 +1,415 @@
+export const metadata = {
+  title: 'RxJS：響應式程式設計',
+  date: '2026-03-24',
+  excerpt: '介紹 RxJS 的核心概念，包含 Observable、常用 Operator、Subject 與 BehaviorSubject，以及 RxJS 在 Angular、React、Vue 三種框架中的整合方式與使用程度差異。',
+  tags: ['前端', 'JavaScript', 'Angular'],
+};
+
+# RxJS：響應式程式設計
+
+RxJS (Reactive Extensions for JavaScript) 是一個用於處理非同步資料流的函式庫。
+
+它的核心概念是 Observable：一個可以隨時間發出多個值的資料流，你可以訂閱它、轉換它、組合它。
+
+RxJS 在 Angular 中是核心依賴，React 和 Vue 也可以使用，但整合方式和使用程度各有不同。
+
+```text
+RxJS
+├─ Observable 基礎概念
+├─ 常用 Operator
+├─ Subject
+└─ 框架整合
+    ├─ Angular
+    ├─ React
+    └─ Vue
+```
+
+- [Observable 基礎概念](#observable-基礎概念)
+- [常用 Operator](#常用-operator)
+- [Subject](#subject)
+- [框架整合](#框架整合)
+
+---
+
+## Observable 基礎概念
+
+### Observable
+
+Observable 代表一個隨時間發出值的資料流。你可以把它想成一個可以發出多個值的 Promise：
+
+```typescript
+import { Observable } from 'rxjs';
+
+const observable = new Observable(subscriber => {
+  subscriber.next(1);
+  subscriber.next(2);
+  subscriber.next(3);
+  subscriber.complete();
+});
+```
+
+### Observer
+
+Observer 定義了收到值時要做什麼，包含三個 callback：
+
+- `next`：收到新的值時呼叫
+- `error`：發生錯誤時呼叫
+- `complete`：資料流結束時呼叫
+
+### Subscription
+
+呼叫 `subscribe` 才會開始執行 Observable：
+
+```typescript
+const subscription = observable.subscribe({
+  next: value => console.log(value),
+  error: err => console.error(err),
+  complete: () => console.log('完成'),
+});
+
+// 不再需要時取消訂閱
+subscription.unsubscribe();
+```
+
+輸出：
+
+```text
+1
+2
+3
+完成
+```
+
+### Observable vs Promise
+
+| | Promise | Observable |
+| - | - | - |
+| 發出值的次數 | 一次 | 零到多次 |
+| 執行時機 | 建立後立即執行 | 訂閱後才執行 |
+| 可取消 | 否 | 是 (unsubscribe) |
+| 支援 Operator | 否 | 是 |
+
+---
+
+## 常用 Operator
+
+Operator 讓你用宣告式的方式轉換和操作資料流，透過 `pipe` 串接：
+
+```typescript
+observable.pipe(
+  operator1(),
+  operator2(),
+).subscribe(value => console.log(value));
+```
+
+### 轉換 Operator
+
+map — 對每個值進行轉換：
+
+```typescript
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+of(1, 2, 3).pipe(
+  map(x => x * 2)
+).subscribe(console.log);
+// 2, 4, 6
+```
+
+switchMap — 映射成新的 Observable，切換到最新的 (取消前一個)。常用於搜尋：
+
+```typescript
+fromEvent(input, 'input').pipe(
+  debounceTime(300),
+  switchMap(event => searchApi(event.target.value))
+).subscribe(results => console.log(results));
+```
+
+mergeMap — 映射成新的 Observable，所有同時執行，不取消前一個：
+
+```typescript
+of(1, 2, 3).pipe(
+  mergeMap(id => fetchUser(id))
+).subscribe(user => console.log(user));
+```
+
+concatMap — 映射成新的 Observable，依序執行，等前一個完成才執行下一個：
+
+```typescript
+of(1, 2, 3).pipe(
+  concatMap(id => fetchUser(id))
+).subscribe(user => console.log(user));
+```
+
+### 過濾 Operator
+
+filter — 只讓符合條件的值通過：
+
+```typescript
+of(1, 2, 3, 4, 5).pipe(
+  filter(x => x % 2 === 0)
+).subscribe(console.log);
+// 2, 4
+```
+
+debounceTime — 在指定時間內沒有新值才讓值通過：
+
+```typescript
+fromEvent(input, 'input').pipe(
+  debounceTime(300)
+).subscribe(event => console.log(event.target.value));
+```
+
+distinctUntilChanged — 只有在值與前一個不同時才讓值通過：
+
+```typescript
+of(1, 1, 2, 2, 3).pipe(
+  distinctUntilChanged()
+).subscribe(console.log);
+// 1, 2, 3
+```
+
+take — 只取前 n 個值：
+
+```typescript
+of(1, 2, 3, 4, 5).pipe(
+  take(3)
+).subscribe(console.log);
+// 1, 2, 3
+```
+
+### 組合 Operator
+
+combineLatest — 任一 Observable 發出值時，取得所有 Observable 的最新值：
+
+```typescript
+combineLatest([userStream$, postsStream$]).subscribe(
+  ([user, posts]) => console.log(user, posts)
+);
+```
+
+forkJoin — 等待所有 Observable 完成，類似 `Promise.all`：
+
+```typescript
+forkJoin([fetchUser(1), fetchPosts(1)]).subscribe(
+  ([user, posts]) => console.log(user, posts)
+);
+```
+
+---
+
+## Subject
+
+Subject 既是 Observable 也是 Observer，可以同時訂閱和主動發出值：
+
+```typescript
+import { Subject } from 'rxjs';
+
+const subject = new Subject<number>();
+
+subject.subscribe(value => console.log('訂閱者 A:', value));
+subject.subscribe(value => console.log('訂閱者 B:', value));
+
+subject.next(1);
+subject.next(2);
+```
+
+輸出：
+
+```text
+訂閱者 A: 1
+訂閱者 B: 1
+訂閱者 A: 2
+訂閱者 B: 2
+```
+
+### BehaviorSubject
+
+BehaviorSubject 持有一個當前值，新的訂閱者會立即收到最新的值：
+
+```typescript
+import { BehaviorSubject } from 'rxjs';
+
+const subject = new BehaviorSubject(0);
+
+subject.subscribe(value => console.log('訂閱者:', value)); // 立即收到 0
+
+subject.next(1);
+subject.next(2);
+```
+
+輸出：
+
+```text
+訂閱者: 0
+訂閱者: 1
+訂閱者: 2
+```
+
+BehaviorSubject 常用於在元件之間共享狀態。
+
+---
+
+## 框架整合
+
+### Angular
+
+RxJS 是 Angular 的核心依賴，深度整合在框架各處。
+
+HttpClient 回傳 Observable
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class UserService {
+  constructor(private http: HttpClient) {}
+
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>('/api/users');
+  }
+}
+```
+
+AsyncPipe
+
+在模板中用 `async` pipe 訂閱 Observable，Angular 自動處理取消訂閱：
+
+```typescript
+export class UserComponent {
+  users$ = this.userService.getUsers();
+}
+```
+
+```html
+<li *ngFor="let user of users$ | async">{{ user.name }}</li>
+```
+
+取消訂閱
+
+手動訂閱時，必須在元件銷毀時取消訂閱，否則會造成 memory leak。
+
+使用 `takeUntilDestroyed` (Angular 16+) 是最簡潔的方式：
+
+```typescript
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+export class UserComponent {
+  constructor(private userService: UserService) {
+    this.userService.getUsers()
+      .pipe(takeUntilDestroyed())
+      .subscribe(users => {
+        this.users = users;
+      });
+  }
+}
+```
+
+---
+
+### React
+
+React 沒有對 RxJS 的官方整合，使用時需要在 `useEffect` 中手動訂閱和取消訂閱：
+
+```jsx
+import { useEffect, useState } from 'react';
+import { fetchUsers } from './userService'; // 回傳 Observable
+
+function UserList() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const subscription = fetchUsers().subscribe(users => {
+      setUsers(users);
+    });
+
+    return () => subscription.unsubscribe(); // cleanup
+  }, []);
+
+  return (
+    <ul>
+      {users.map(user => <li key={user.id}>{user.name}</li>)}
+    </ul>
+  );
+}
+```
+
+可以封裝成自訂 hook 讓使用更方便：
+
+```javascript
+function useObservable(observable) {
+  const [value, setValue] = useState(null);
+
+  useEffect(() => {
+    const subscription = observable.subscribe(setValue);
+    return () => subscription.unsubscribe();
+  }, [observable]);
+
+  return value;
+}
+
+// 使用
+function UserList() {
+  const users = useObservable(fetchUsers());
+  // ...
+}
+```
+
+實務上，React 社群較少使用 RxJS，多數場景用 `Promise` + `async/await` 或 `React Query` 處理非同步資料就已足夠。RxJS 在 React 中的優勢主要體現在複雜的資料流處理，例如需要 `debounce`、`switchMap` 等 Operator 的場景。
+
+---
+
+### Vue
+
+Vue 同樣沒有官方的 RxJS 整合，可以在 `setup()` 中手動使用：
+
+```vue
+<template>
+  <ul>
+    <li v-for="user in users" :key="user.id">{{ user.name }}</li>
+  </ul>
+</template>
+
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue';
+import { fetchUsers } from './userService';
+
+const users = ref([]);
+let subscription;
+
+onMounted(() => {
+  subscription = fetchUsers().subscribe(data => {
+    users.value = data;
+  });
+});
+
+onUnmounted(() => {
+  subscription?.unsubscribe();
+});
+</script>
+```
+
+`@vueuse/rxjs` 提供了更方便的整合方式：
+
+```javascript
+import { useObservable } from '@vueuse/rxjs';
+import { fetchUsers } from './userService';
+
+const users = useObservable(fetchUsers());
+```
+
+與 React 類似，Vue 社群也較少使用 RxJS，多數場景用 `Pinia` + `async/await` 處理狀態和非同步資料。
+
+---
+
+## 總結
+
+RxJS 的核心概念：
+
+- Observable：資料流，可以發出零到多個值
+- Operator：轉換和操作資料流的工具，透過 `pipe` 串接
+- Subject：既是 Observable 也是 Observer，可以主動發出值
+- BehaviorSubject：持有當前值，新訂閱者立即收到最新值
+
+框架整合的深度差異：
+
+- Angular：深度整合，`HttpClient`、`AsyncPipe` 等都直接使用 RxJS
+- React / Vue：可以使用，但需要手動整合，實務上使用頻率較低

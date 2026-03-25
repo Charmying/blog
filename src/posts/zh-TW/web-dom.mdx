@@ -1,0 +1,326 @@
+export const metadata = {
+  title: 'DOM：文件物件模型',
+  date: '2026-03-25',
+  excerpt: '介紹 DOM 的核心操作，包含選取元素、修改內容與樣式、新增與移除元素，以及事件監聽、事件冒泡與事件委派。',
+  tags: ['前端', 'Web'],
+};
+
+# DOM：文件物件模型
+
+DOM (Document Object Model，文件物件模型) 是瀏覽器將 HTML 文件解析後建立的樹狀結構，讓 JavaScript 可以讀取和修改頁面的內容、結構和樣式。
+
+```text
+DOM
+├─ 什麼是 DOM
+├─ 選取元素
+├─ 修改 DOM
+└─ 事件監聽
+```
+
+- [什麼是 DOM](#什麼是-dom)
+- [選取元素](#選取元素)
+- [修改 DOM](#修改-dom)
+- [事件監聽](#事件監聽)
+
+---
+
+## 什麼是 DOM
+
+當瀏覽器載入 HTML 頁面時，會把 HTML 解析成一個樹狀的物件結構，這就是 DOM。
+
+每個 HTML 元素都是 DOM 樹上的一個節點 (Node)，JavaScript 可以透過 DOM API 存取和操作這些節點。
+
+```html
+<html>
+  <body>
+    <h1>Hello</h1>
+    <p>World</p>
+  </body>
+</html>
+```
+
+對應的 DOM 樹：
+
+```text
+document
+└─ html
+   └─ body
+      ├─ h1 → "Hello"
+      └─ p  → "World"
+```
+
+`document` 是 DOM 的入口，所有操作都從它開始。
+
+---
+
+## 選取元素
+
+### getElementById
+
+透過 `id` 選取單一元素：
+
+```javascript
+const title = document.getElementById('title');
+```
+
+### querySelector
+
+透過 CSS 選擇器選取第一個符合的元素：
+
+```javascript
+const title = document.querySelector('#title');
+const button = document.querySelector('.btn');
+const input = document.querySelector('input[type="text"]');
+```
+
+### querySelectorAll
+
+選取所有符合的元素，回傳 NodeList：
+
+```javascript
+const items = document.querySelectorAll('.item');
+
+items.forEach(item => {
+  console.log(item.textContent);
+});
+```
+
+### 其他選取方法
+
+```javascript
+// 透過 class 選取 (回傳 HTMLCollection)
+document.getElementsByClassName('item');
+
+// 透過標籤名稱選取
+document.getElementsByTagName('p');
+```
+
+現代開發中通常優先使用 `querySelector` 和 `querySelectorAll`，因為它們支援完整的 CSS 選擇器語法，更靈活。
+
+---
+
+## 修改 DOM
+
+### 讀取與修改內容
+
+```javascript
+const title = document.querySelector('h1');
+
+// 讀取純文字內容
+console.log(title.textContent);
+
+// 修改純文字內容
+title.textContent = 'Hello World';
+
+// 讀取或修改 HTML 內容 (包含子元素的 HTML)
+title.innerHTML = '<span>Hello</span> World';
+```
+
+`textContent` 只處理純文字，`innerHTML` 可以包含 HTML 標籤。直接插入使用者輸入的內容到 `innerHTML` 有 XSS 風險，需要特別注意。
+
+### 修改屬性
+
+```javascript
+const link = document.querySelector('a');
+
+// 讀取屬性
+console.log(link.getAttribute('href'));
+
+// 修改屬性
+link.setAttribute('href', 'https://example.com');
+
+// 移除屬性
+link.removeAttribute('target');
+
+// 直接存取常用屬性
+link.href = 'https://example.com';
+link.id = 'main-link';
+```
+
+### 修改樣式
+
+```javascript
+const box = document.querySelector('.box');
+
+// 直接修改 inline style
+box.style.color = 'red';
+box.style.backgroundColor = '#f0f0f0';
+box.style.display = 'none';
+```
+
+### 操作 Class
+
+```javascript
+const button = document.querySelector('.btn');
+
+// 新增 class
+button.classList.add('active');
+
+// 移除 class
+button.classList.remove('active');
+
+// 切換 class (有就移除，沒有就新增)
+button.classList.toggle('active');
+
+// 檢查是否有某個 class
+button.classList.contains('active'); // true / false
+```
+
+操作 class 比直接修改 `style` 更好維護，因為樣式可以集中在 CSS 中管理。
+
+### 新增與移除元素
+
+新增元素：
+
+```javascript
+// 建立新元素
+const newItem = document.createElement('li');
+newItem.textContent = '新項目';
+
+// 加到父元素的末尾
+const list = document.querySelector('ul');
+list.appendChild(newItem);
+
+// 插入到指定位置
+list.insertBefore(newItem, list.firstChild);
+
+// 更靈活的插入方式
+list.insertAdjacentHTML('beforeend', '<li>新項目</li>');
+```
+
+移除元素：
+
+```javascript
+const item = document.querySelector('.item');
+
+// 移除元素本身
+item.remove();
+
+// 或透過父元素移除
+item.parentNode.removeChild(item);
+```
+
+---
+
+## 事件監聽
+
+### addEventListener
+
+`addEventListener` 是監聽事件的標準方式：
+
+```javascript
+const button = document.querySelector('button');
+
+button.addEventListener('click', function (event) {
+  console.log('按鈕被點擊');
+  console.log(event.target); // 觸發事件的元素
+});
+```
+
+### 常見事件
+
+```javascript
+// 滑鼠事件
+element.addEventListener('click', handler);
+element.addEventListener('dblclick', handler);
+element.addEventListener('mouseover', handler);
+element.addEventListener('mouseout', handler);
+
+// 鍵盤事件
+document.addEventListener('keydown', event => {
+  console.log(event.key); // 按下的鍵
+});
+
+// 表單事件
+input.addEventListener('input', event => {
+  console.log(event.target.value);
+});
+
+form.addEventListener('submit', event => {
+  event.preventDefault(); // 阻止表單預設送出行為
+  console.log('表單送出');
+});
+
+// 頁面載入事件
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM 已載入完成');
+});
+```
+
+### 移除事件監聽
+
+移除事件監聽時，必須傳入與新增時相同的函式參考：
+
+```javascript
+function handleClick() {
+  console.log('點擊');
+}
+
+button.addEventListener('click', handleClick);
+button.removeEventListener('click', handleClick);
+```
+
+匿名函式無法被移除，需要先宣告具名函式再使用。
+
+### 事件冒泡
+
+事件觸發後，會從目標元素向上傳遞到祖先元素，這稱為事件冒泡 (Event Bubbling)：
+
+```html
+<div id="parent">
+  <button id="child">點擊</button>
+</div>
+```
+
+```javascript
+document.getElementById('parent').addEventListener('click', () => {
+  console.log('parent');
+});
+
+document.getElementById('child').addEventListener('click', () => {
+  console.log('child');
+});
+```
+
+點擊按鈕後輸出：
+
+```text
+child
+parent
+```
+
+用 `event.stopPropagation()` 可以阻止事件繼續冒泡：
+
+```javascript
+document.getElementById('child').addEventListener('click', event => {
+  event.stopPropagation();
+  console.log('child only');
+});
+```
+
+### 事件委派
+
+事件委派 (Event Delegation) 是利用冒泡機制，在父元素統一監聽子元素的事件，常用於動態新增的元素：
+
+```javascript
+const list = document.querySelector('ul');
+
+list.addEventListener('click', event => {
+  if (event.target.tagName === 'LI') {
+    console.log('點擊了:', event.target.textContent);
+  }
+});
+```
+
+這樣不管之後新增了多少 `<li>`，都不需要個別加上事件監聽。
+
+---
+
+## 總結
+
+DOM 讓 JavaScript 能夠操作頁面的內容和行為：
+
+- 用 `querySelector` / `querySelectorAll` 選取元素
+- 透過 `textContent`、`innerHTML`、`classList`、`style` 修改元素
+- 用 `createElement`、`appendChild`、`remove` 新增和刪除元素
+- 用 `addEventListener` 監聽事件，理解冒泡和委派讓事件處理更有效率

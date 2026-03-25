@@ -1,0 +1,318 @@
+export const metadata = {
+  title: 'DOM: Document Object Model',
+  date: '2026-03-25',
+  excerpt: 'A practical guide to the DOM — covering element selection, modifying content and styles, adding and removing elements, and event listeners including bubbling and delegation.',
+  tags: ['Front-end', 'Web'],
+};
+
+# DOM: Document Object Model
+
+The DOM (Document Object Model) is the tree-structured representation of an HTML document that browsers build when they load a page. JavaScript uses the DOM API to read and modify a page's content, structure, and styles.
+
+```text
+DOM
+├─ What Is the DOM
+├─ Selecting Elements
+├─ Modifying the DOM
+└─ Event Listeners
+```
+
+- [What Is the DOM](#what-is-the-dom)
+- [Selecting Elements](#selecting-elements)
+- [Modifying the DOM](#modifying-the-dom)
+- [Event Listeners](#event-listeners)
+
+---
+
+## What Is the DOM
+
+When a browser loads an HTML page, it parses the markup into a tree of objects. That tree is the DOM.
+
+Every HTML element becomes a node in the tree. JavaScript can access and manipulate these nodes through the DOM API.
+
+```html
+<html>
+  <body>
+    <h1>Hello</h1>
+    <p>World</p>
+  </body>
+</html>
+```
+
+The corresponding DOM tree:
+
+```text
+document
+└─ html
+   └─ body
+      ├─ h1 → "Hello"
+      └─ p  → "World"
+```
+
+`document` is the entry point — all DOM operations start there.
+
+---
+
+## Selecting Elements
+
+### getElementById
+
+Selects a single element by its `id`:
+
+```javascript
+const title = document.getElementById('title');
+```
+
+### querySelector
+
+Selects the first element that matches a CSS selector:
+
+```javascript
+const title = document.querySelector('#title');
+const button = document.querySelector('.btn');
+const input = document.querySelector('input[type="text"]');
+```
+
+### querySelectorAll
+
+Selects all matching elements and returns a NodeList:
+
+```javascript
+const items = document.querySelectorAll('.item');
+
+items.forEach(item => {
+  console.log(item.textContent);
+});
+```
+
+### Other Methods
+
+```javascript
+// by class name (returns HTMLCollection)
+document.getElementsByClassName('item');
+
+// by tag name
+document.getElementsByTagName('p');
+```
+
+In modern code, `querySelector` and `querySelectorAll` are the go-to choice — they support the full CSS selector syntax and are more flexible than the older methods.
+
+---
+
+## Modifying the DOM
+
+### Reading and Updating Content
+
+```javascript
+const title = document.querySelector('h1');
+
+// read plain text
+console.log(title.textContent);
+
+// update plain text
+title.textContent = 'Hello World';
+
+// read or update HTML content (including child elements)
+title.innerHTML = '<span>Hello</span> World';
+```
+
+`textContent` deals with plain text only. `innerHTML` can contain HTML markup — but inserting unsanitized user input into `innerHTML` is an XSS risk, so be careful.
+
+### Modifying Attributes
+
+```javascript
+const link = document.querySelector('a');
+
+// read
+console.log(link.getAttribute('href'));
+
+// set
+link.setAttribute('href', 'https://example.com');
+
+// remove
+link.removeAttribute('target');
+
+// direct property access for common attributes
+link.href = 'https://example.com';
+link.id = 'main-link';
+```
+
+### Modifying Styles
+
+```javascript
+const box = document.querySelector('.box');
+
+box.style.color = 'red';
+box.style.backgroundColor = '#f0f0f0';
+box.style.display = 'none';
+```
+
+### Working with Classes
+
+```javascript
+const button = document.querySelector('.btn');
+
+button.classList.add('active');
+button.classList.remove('active');
+button.classList.toggle('active');   // adds if absent, removes if present
+button.classList.contains('active'); // true / false
+```
+
+Manipulating classes is generally better than setting `style` directly — it keeps styles in CSS where they belong and is easier to maintain.
+
+### Adding and Removing Elements
+
+Adding elements:
+
+```javascript
+// create a new element
+const newItem = document.createElement('li');
+newItem.textContent = 'New item';
+
+// append to the end of a parent
+const list = document.querySelector('ul');
+list.appendChild(newItem);
+
+// insert at a specific position
+list.insertBefore(newItem, list.firstChild);
+
+// flexible insertion with HTML
+list.insertAdjacentHTML('beforeend', '<li>New item</li>');
+```
+
+Removing elements:
+
+```javascript
+const item = document.querySelector('.item');
+
+// remove the element itself
+item.remove();
+
+// or via the parent
+item.parentNode.removeChild(item);
+```
+
+---
+
+## Event Listeners
+
+### addEventListener
+
+The standard way to listen for events:
+
+```javascript
+const button = document.querySelector('button');
+
+button.addEventListener('click', function (event) {
+  console.log('button clicked');
+  console.log(event.target); // the element that triggered the event
+});
+```
+
+### Common Events
+
+```javascript
+// mouse events
+element.addEventListener('click', handler);
+element.addEventListener('dblclick', handler);
+element.addEventListener('mouseover', handler);
+element.addEventListener('mouseout', handler);
+
+// keyboard events
+document.addEventListener('keydown', event => {
+  console.log(event.key);
+});
+
+// form events
+input.addEventListener('input', event => {
+  console.log(event.target.value);
+});
+
+form.addEventListener('submit', event => {
+  event.preventDefault(); // stop the default form submission
+  console.log('form submitted');
+});
+
+// page load
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM ready');
+});
+```
+
+### Removing Event Listeners
+
+To remove a listener, you need a reference to the same function that was added:
+
+```javascript
+function handleClick() {
+  console.log('clicked');
+}
+
+button.addEventListener('click', handleClick);
+button.removeEventListener('click', handleClick);
+```
+
+Anonymous functions can't be removed — always use a named function if you need to clean up later.
+
+### Event Bubbling
+
+When an event fires, it propagates up from the target element through its ancestors. This is called event bubbling:
+
+```html
+<div id="parent">
+  <button id="child">Click</button>
+</div>
+```
+
+```javascript
+document.getElementById('parent').addEventListener('click', () => {
+  console.log('parent');
+});
+
+document.getElementById('child').addEventListener('click', () => {
+  console.log('child');
+});
+```
+
+Clicking the button outputs:
+
+```text
+child
+parent
+```
+
+Use `event.stopPropagation()` to prevent the event from bubbling further:
+
+```javascript
+document.getElementById('child').addEventListener('click', event => {
+  event.stopPropagation();
+  console.log('child only');
+});
+```
+
+### Event Delegation
+
+Event delegation takes advantage of bubbling by listening for events on a parent element instead of attaching individual listeners to each child. It's especially useful for dynamically added elements:
+
+```javascript
+const list = document.querySelector('ul');
+
+list.addEventListener('click', event => {
+  if (event.target.tagName === 'LI') {
+    console.log('clicked:', event.target.textContent);
+  }
+});
+```
+
+No matter how many `<li>` elements are added later, they're all covered by this single listener.
+
+---
+
+## Summary
+
+The DOM gives JavaScript the ability to read and control what's on the page:
+
+- Select elements with `querySelector` / `querySelectorAll`
+- Modify content and appearance with `textContent`, `innerHTML`, `classList`, and `style`
+- Add and remove elements with `createElement`, `appendChild`, and `remove`
+- Listen for events with `addEventListener` — and use bubbling and delegation to keep event handling efficient

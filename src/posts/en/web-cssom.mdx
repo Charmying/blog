@@ -1,0 +1,228 @@
+export const metadata = {
+  title: 'CSSOM: CSS Object Model',
+  date: '2026-03-26',
+  excerpt: 'A practical guide to the CSSOM — covering how it is built, how to read and modify styles with getComputedStyle, element.style, and classList, and how to avoid Layout Thrashing for better rendering performance.',
+  tags: ['Front-end', 'Web'],
+};
+
+# CSSOM: CSS Object Model
+
+The CSSOM (CSS Object Model) is the tree structure browsers build when they parse CSS, giving JavaScript a way to read and modify page styles.
+
+The CSSOM sits alongside the DOM as a core part of the browser's rendering pipeline. The browser constructs both a DOM Tree and a CSSOM Tree, then merges them into a Render Tree before calculating layout and painting the screen.
+
+```text
+CSSOM
+├─ What Is the CSSOM
+├─ How the CSSOM Is Built
+├─ Working with the CSSOM
+│   ├─ Reading Styles
+│   ├─ Modifying Styles
+│   └─ Working with Stylesheets
+└─ CSSOM and Rendering Performance
+```
+
+- [What Is the CSSOM](#what-is-the-cssom)
+- [How the CSSOM Is Built](#how-the-cssom-is-built)
+- [Working with the CSSOM](#working-with-the-cssom)
+- [CSSOM and Rendering Performance](#cssom-and-rendering-performance)
+
+---
+
+## What Is the CSSOM
+
+When the browser parses CSS, it builds all the style rules into a tree structure — the CSSOM.
+
+```text
+CSS source:
+body { font-size: 16px; }
+p { color: red; }
+p span { font-weight: bold; }
+
+CSSOM Tree:
+StyleSheetList
+└─ CSSStyleSheet
+   ├─ CSSRule: body → { font-size: 16px }
+   ├─ CSSRule: p → { color: red }
+   └─ CSSRule: p span → { font-weight: bold }
+```
+
+The CSSOM holds all style rules from every source:
+- External stylesheets (`<link rel="stylesheet">`)
+- Embedded styles (`<style>`)
+- Inline styles (`style` attribute)
+
+---
+
+## How the CSSOM Is Built
+
+The CSSOM is built in parallel with the DOM, but as a separate process:
+
+```text
+HTML --→ DOM Tree
+CSS  --→ CSSOM Tree
+           ↓
+    DOM + CSSOM → Render Tree
+```
+
+CSS is a render-blocking resource. The browser won't start rendering until the CSSOM is fully built — without knowing all styles, it can't correctly construct the Render Tree. This is why `<link>` tags belong in `<head>`, so CSS starts downloading as early as possible.
+
+JavaScript also interacts with CSSOM construction: a `<script>` tag appearing after a stylesheet will wait for the CSSOM to finish before executing, since the script might query styles.
+
+---
+
+## Working with the CSSOM
+
+### Reading Styles
+
+Reading computed styles
+
+`element.style` only reads inline styles. To get the actual applied styles for an element — the final values after inheritance and cascade — use `getComputedStyle`:
+
+```javascript
+const element = document.querySelector('p');
+
+// Only reads inline styles — empty string if none set
+console.log(element.style.color);
+
+// Reads the final computed styles from all sources
+const computed = window.getComputedStyle(element);
+console.log(computed.color);     // 'rgb(255, 0, 0)'
+console.log(computed.fontSize);  // '16px'
+console.log(computed.display);   // 'block'
+```
+
+`getComputedStyle` returns the resolved value after all inheritance and cascading has been applied.
+
+### Modifying Styles
+
+Via `element.style` (inline styles)
+
+```javascript
+const element = document.querySelector('.box');
+
+// Set individual properties
+element.style.color = 'red';
+element.style.fontSize = '18px';
+element.style.backgroundColor = '#f0f0f0';
+
+// Set multiple at once (triggers one recalculation)
+element.style.cssText = 'color: red; font-size: 18px; background-color: #f0f0f0;';
+
+// Remove an inline style
+element.style.color = '';
+```
+
+Via class manipulation (recommended)
+
+Toggling classes keeps styles in CSS where they belong and is easier to maintain:
+
+```javascript
+element.classList.add('active');
+element.classList.remove('active');
+element.classList.toggle('active');
+```
+
+CSS Custom Properties (CSS Variables)
+
+```javascript
+// Read a CSS variable
+const root = document.documentElement;
+const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color');
+
+// Set a CSS variable
+root.style.setProperty('--primary-color', '#007bff');
+```
+
+### Working with Stylesheets
+
+Accessing stylesheets
+
+```javascript
+// Get all stylesheets on the page
+const stylesheets = document.styleSheets;
+console.log(stylesheets.length);
+
+// Iterate through rules in the first stylesheet
+const rules = document.styleSheets[0].cssRules;
+for (const rule of rules) {
+  console.log(rule.selectorText); // selector
+  console.log(rule.style.color);  // style value
+}
+```
+
+Adding and removing rules dynamically
+
+```javascript
+const sheet = document.styleSheets[0];
+
+// Add a rule
+sheet.insertRule('p { color: blue; }', sheet.cssRules.length);
+
+// Remove a rule
+sheet.deleteRule(0);
+```
+
+Creating a stylesheet dynamically
+
+```javascript
+const style = document.createElement('style');
+style.textContent = `
+  .dynamic {
+    color: purple;
+    font-weight: bold;
+  }
+`;
+document.head.appendChild(style);
+```
+
+---
+
+## CSSOM and Rendering Performance
+
+Certain CSSOM operations can force the browser to recalculate styles, which hurts performance when done carelessly.
+
+### Forced Synchronous Layout
+
+Reading certain properties forces the browser to finish style calculations and layout before it can return a value:
+
+```javascript
+// These trigger a forced layout:
+element.offsetWidth
+element.offsetHeight
+element.getBoundingClientRect()
+window.getComputedStyle(element)
+```
+
+Interleaving reads and writes in a loop causes repeated forced layouts — a problem called Layout Thrashing:
+
+```javascript
+// Bad: each read forces a recalculation
+items.forEach(item => {
+  const width = container.offsetWidth; // forces layout
+  item.style.width = width + 'px';     // modifies styles
+});
+
+// Good: read once, then batch writes
+const width = container.offsetWidth;
+items.forEach(item => {
+  item.style.width = width + 'px';
+});
+```
+
+### Prefer Class Changes Over Inline Style Changes
+
+Toggling a class is more efficient than setting individual `style` properties — the browser can batch the recalculation.
+
+### Use CSS Animations Instead of JavaScript Animations
+
+CSS `transition` and `animation` run on the browser's compositor thread, bypassing layout recalculation entirely. They're significantly faster than animating properties with JavaScript frame by frame.
+
+---
+
+## Summary
+
+- The CSSOM is the tree structure built from parsed CSS; it merges with the DOM to form the Render Tree
+- CSS is render-blocking — the browser waits for a complete CSSOM before rendering
+- Key CSSOM APIs: `element.style` (inline), `classList` (recommended), `getComputedStyle` (reading final values), `document.styleSheets` (stylesheet manipulation)
+- Avoid interleaving style reads and writes in loops to prevent Layout Thrashing

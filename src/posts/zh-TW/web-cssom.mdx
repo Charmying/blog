@@ -1,0 +1,228 @@
+export const metadata = {
+  title: 'CSSOM：CSS 物件模型',
+  date: '2026-03-26',
+  excerpt: '介紹 CSSOM 的建立過程與操作方式，包含 getComputedStyle、element.style、classList、CSS Variables 的使用，以及如何避免 Layout Thrashing 影響渲染效能。',
+  tags: ['前端', 'Web'],
+};
+
+# CSSOM：CSS 物件模型
+
+CSSOM (CSS Object Model，CSS 物件模型) 是瀏覽器將 CSS 解析後建立的樹狀結構，讓 JavaScript 可以讀取和修改頁面的樣式。
+
+CSSOM 和 DOM 並列，是瀏覽器渲染流程的重要組成部分。瀏覽器需要同時建立 DOM Tree 和 CSSOM Tree，再合併成 Render Tree，才能開始計算佈局和繪製畫面。
+
+```text
+CSSOM
+├─ 什麼是 CSSOM
+├─ CSSOM 的建立過程
+├─ 操作 CSSOM
+│   ├─ 讀取樣式
+│   ├─ 修改樣式
+│   └─ 操作樣式表
+└─ CSSOM 與渲染效能
+```
+
+- [什麼是 CSSOM](#什麼是-cssom)
+- [CSSOM 的建立過程](#cssom-的建立過程)
+- [操作 CSSOM](#操作-cssom)
+- [CSSOM 與渲染效能](#cssom-與渲染效能)
+
+---
+
+## 什麼是 CSSOM
+
+當瀏覽器解析 CSS 時，會將所有的樣式規則建立成一個樹狀結構，這就是 CSSOM。
+
+```text
+CSS 原始碼：
+body { font-size: 16px; }
+p { color: red; }
+p span { font-weight: bold; }
+
+CSSOM Tree：
+StyleSheetList
+└─ CSSStyleSheet
+   ├─ CSSRule: body → { font-size: 16px }
+   ├─ CSSRule: p → { color: red }
+   └─ CSSRule: p span → { font-weight: bold }
+```
+
+CSSOM 儲存了所有樣式規則，包含：
+- 外部樣式表 (`<link rel="stylesheet">`)
+- 內嵌樣式 (`<style>`)
+- 行內樣式 (`style` 屬性)
+
+---
+
+## CSSOM 的建立過程
+
+CSSOM 的建立與 DOM 的建立同步進行，但兩者是獨立的過程：
+
+```text
+HTML --→ DOM Tree
+CSS  --→ CSSOM Tree
+           ↓
+    DOM + CSSOM → Render Tree
+```
+
+CSS 是渲染阻塞資源：瀏覽器必須等 CSSOM 完整建立後才開始渲染，因為樣式未確定前無法正確計算 Render Tree。這就是為什麼 `<link>` 要放在 `<head>` 中，讓 CSS 盡早開始下載。
+
+JavaScript 也會阻塞 CSSOM：如果 `<script>` 標籤出現在樣式表之後，JavaScript 執行前必須等待 CSSOM 建立完成，因為 JavaScript 可能會查詢樣式。
+
+---
+
+## 操作 CSSOM
+
+### 讀取樣式
+
+讀取計算後的樣式 (Computed Style)
+
+`element.style` 只能讀取行內樣式，要取得元素實際套用的樣式 (包含所有來源的最終值)，需要使用 `getComputedStyle`：
+
+```javascript
+const element = document.querySelector('p');
+
+// 只能讀取行內樣式
+console.log(element.style.color); // 如果沒有行內樣式，回傳空字串
+
+// 讀取計算後的最終樣式
+const computed = window.getComputedStyle(element);
+console.log(computed.color);       // 'rgb(255, 0, 0)'
+console.log(computed.fontSize);    // '16px'
+console.log(computed.display);     // 'block'
+```
+
+`getComputedStyle` 回傳的是最終計算值，包含繼承、層疊之後的結果。
+
+### 修改樣式
+
+透過 `element.style` 修改行內樣式
+
+```javascript
+const element = document.querySelector('.box');
+
+// 設定單一樣式
+element.style.color = 'red';
+element.style.fontSize = '18px';
+element.style.backgroundColor = '#f0f0f0';
+
+// 批次設定 (只觸發一次重新計算)
+element.style.cssText = 'color: red; font-size: 18px; background-color: #f0f0f0;';
+
+// 移除行內樣式
+element.style.color = '';
+```
+
+透過 class 修改 (推薦)
+
+直接操作 class 比修改 `style` 更好維護，樣式集中在 CSS 中管理：
+
+```javascript
+element.classList.add('active');
+element.classList.remove('active');
+element.classList.toggle('active');
+```
+
+CSS 自訂屬性 (CSS Variables)
+
+```javascript
+// 讀取 CSS 變數
+const root = document.documentElement;
+const primaryColor = getComputedStyle(root).getPropertyValue('--primary-color');
+
+// 設定 CSS 變數
+root.style.setProperty('--primary-color', '#007bff');
+```
+
+### 操作樣式表
+
+存取樣式表清單
+
+```javascript
+// 取得頁面所有的樣式表
+const stylesheets = document.styleSheets;
+console.log(stylesheets.length); // 樣式表數量
+
+// 取得第一個樣式表的所有規則
+const rules = document.styleSheets[0].cssRules;
+for (const rule of rules) {
+  console.log(rule.selectorText); // 選擇器
+  console.log(rule.style.color);  // 樣式值
+}
+```
+
+動態新增和刪除規則
+
+```javascript
+const sheet = document.styleSheets[0];
+
+// 新增規則
+sheet.insertRule('p { color: blue; }', sheet.cssRules.length);
+
+// 刪除規則
+sheet.deleteRule(0);
+```
+
+動態建立樣式表
+
+```javascript
+const style = document.createElement('style');
+style.textContent = `
+  .dynamic {
+    color: purple;
+    font-weight: bold;
+  }
+`;
+document.head.appendChild(style);
+```
+
+---
+
+## CSSOM 與渲染效能
+
+操作 CSSOM 可能觸發瀏覽器重新計算樣式，嚴重時影響效能。
+
+### 強制同步佈局 (Forced Synchronous Layout)
+
+讀取某些 CSSOM 相關的屬性時，瀏覽器必須先完成樣式計算和佈局才能回傳正確的值：
+
+```javascript
+// 這些操作會強制觸發佈局計算：
+element.offsetWidth
+element.offsetHeight
+element.getBoundingClientRect()
+window.getComputedStyle(element)
+```
+
+如果在迴圈中交替讀取和修改，會造成多次強制佈局 (Layout Thrashing)：
+
+```javascript
+// 不好：每次讀取都強制觸發重新計算
+items.forEach(item => {
+  const width = container.offsetWidth; // 強制佈局
+  item.style.width = width + 'px';     // 修改樣式
+});
+
+// 好：先讀取，再批次修改
+const width = container.offsetWidth; // 只計算一次
+items.forEach(item => {
+  item.style.width = width + 'px';
+});
+```
+
+### 優先使用 class 而非行內樣式
+
+修改 class 比逐一修改 `style` 屬性更有效率，瀏覽器可以批次處理。
+
+### 使用 CSS 動畫取代 JavaScript 動畫
+
+CSS 動畫 (`transition`、`animation`) 在瀏覽器的合成執行緒上執行，不需要觸發 JavaScript 和佈局計算，效能遠優於用 JavaScript 逐格修改樣式。
+
+---
+
+## 總結
+
+- CSSOM 是瀏覽器解析 CSS 後建立的樹狀結構，和 DOM 合併成 Render Tree
+- CSS 是渲染阻塞資源，CSSOM 完整建立後才開始渲染
+- 操作樣式的方式：`element.style` (行內)、`classList` (推薦)、`getComputedStyle` (讀取計算值)、`document.styleSheets` (操作樣式表)
+- 避免在迴圈中交替讀寫樣式，防止 Layout Thrashing

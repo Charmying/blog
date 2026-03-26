@@ -1,0 +1,214 @@
+export const metadata = {
+  title: 'Browser Rendering Pipeline：瀏覽器渲染流程',
+  date: '2026-03-27',
+  excerpt: '介紹瀏覽器渲染流程的各個階段，包含 DOM Tree、CSSOM Tree、Render Tree、Layout、Paint、Compositing，以及 Reflow 與 Repaint 的效能影響與優化建議。',
+  tags: ['前端', 'Web'],
+};
+
+# Browser Rendering Pipeline：瀏覽器渲染流程
+
+當瀏覽器載入一個網頁時，從收到 HTML 到畫面顯示，中間經歷了一連串的處理步驟，這個過程稱為 Rendering Pipeline (渲染流程)。
+
+理解渲染流程，能幫助你寫出更高效能的前端程式碼，避免不必要的效能瓶頸。
+
+```text
+Browser Rendering Pipeline
+├─ 1. 解析 HTML → DOM Tree
+├─ 2. 解析 CSS → CSSOM Tree
+├─ 3. 合併 → Render Tree
+├─ 4. Layout (Reflow)
+├─ 5. Paint (Repaint)
+├─ 6. Compositing
+└─ Reflow 與 Repaint 的效能影響
+```
+
+- [解析 HTML → DOM Tree](#1-解析-html--dom-tree)
+- [解析 CSS → CSSOM Tree](#2-解析-css--cssom-tree)
+- [合併 → Render Tree](#3-合併--render-tree)
+- [Layout](#4-layout)
+- [Paint](#5-paint)
+- [Compositing](#6-compositing)
+- [Reflow 與 Repaint 的效能影響](#reflow-與-repaint-的效能影響)
+
+---
+
+## 1. 解析 HTML → DOM Tree
+
+瀏覽器收到 HTML 後，開始從上到下解析，將 HTML 標籤轉換成 DOM Tree (文件物件模型樹)。
+
+```text
+HTML → Tokenization → DOM Tree
+```
+
+解析過程中如果遇到 `<script>` 標籤，預設會暫停 HTML 解析，等 JavaScript 下載並執行完畢才繼續。這就是為什麼 `<script>` 通常放在 `<body>` 底部，或使用 `defer` / `async` 屬性。
+
+```html
+<!-- 阻塞解析 -->
+<script src="app.js"></script>
+
+<!-- 不阻塞，在背景下載，HTML 解析完後執行 -->
+<script src="app.js" defer></script>
+
+<!-- 不阻塞，下載完立即執行，不等待 HTML 解析完成 -->
+<script src="app.js" async></script>
+```
+
+---
+
+## 2. 解析 CSS → CSSOM Tree
+
+瀏覽器同步解析 CSS，建立 CSSOM Tree (CSS 物件模型樹)。
+
+CSSOM 建立完成之前，瀏覽器不會進行渲染，因此 CSS 是渲染阻塞資源 (Render-Blocking Resource)。
+
+`<link>` 標籤放在 `<head>` 中，讓 CSS 盡早開始下載，可以減少渲染阻塞的時間。
+
+---
+
+## 3. 合併 → Render Tree
+
+DOM Tree 和 CSSOM Tree 合併後，形成 Render Tree (渲染樹)。
+
+Render Tree 只包含需要顯示的節點：
+
+- `display: none` 的元素不會出現在 Render Tree 中
+- `visibility: hidden` 的元素會出現在 Render Tree 中 (佔據空間但不顯示)
+- `<head>`、`<script>` 等不可見的元素也不會出現
+
+```text
+DOM Tree + CSSOM Tree → Render Tree
+```
+
+---
+
+## 4. Layout
+
+Layout (也稱為 Reflow) 階段，瀏覽器根據 Render Tree 計算每個元素的位置和尺寸。
+
+這個階段確定：
+
+- 元素的寬高
+- 元素在頁面上的位置
+- 元素之間的相對關係
+
+Layout 是相對耗費資源的操作，因為改變一個元素的尺寸可能會影響其他元素的排列。
+
+---
+
+## 5. Paint
+
+Paint (也稱為 Repaint) 階段，瀏覽器將每個元素繪製成像素，包括：
+
+- 背景顏色
+- 文字
+- 邊框
+- 陰影
+
+Paint 分為多個層 (Layers) ，瀏覽器會對複雜的元素 (例如有 `transform`、`opacity` 的元素) 建立獨立的層。
+
+---
+
+## 6. Compositing
+
+Compositing (合成) 階段，瀏覽器將各個層按照正確的順序合併，輸出最終的畫面。
+
+擁有獨立合成層的元素 (例如使用 `transform: translateZ(0)` 或 `will-change: transform`) 可以在 GPU 上獨立處理，不需要觸發 Layout 和 Paint，效能最好。
+
+```text
+DOM + CSSOM → Render Tree → Layout → Paint → Compositing → 畫面
+```
+
+---
+
+## Reflow 與 Repaint 的效能影響
+
+### Reflow (Layout 重新計算)
+
+以下操作會觸發 Reflow，效能影響最大：
+
+- 修改元素的尺寸 (`width`、`height`、`padding`、`margin`)
+- 新增或移除元素
+- 修改字體大小
+- 讀取某些屬性 (`offsetWidth`、`offsetHeight`、`getBoundingClientRect()`)
+
+讀取這些屬性會強制瀏覽器立即計算 Layout，即使還沒有渲染。
+
+### Repaint (重新繪製)
+
+修改視覺樣式但不影響尺寸和位置，只觸發 Repaint，效能影響較小：
+
+- `color`
+- `background-color`
+- `visibility`
+- `box-shadow`
+
+### 只觸發 Compositing
+
+效能影響最小，只在 GPU 合成層上操作：
+
+- `transform`
+- `opacity`
+
+### 減少 Reflow 的實務建議
+
+批次修改樣式
+
+```javascript
+// 不好：每次修改都可能觸發 Reflow
+element.style.width = '100px';
+element.style.height = '200px';
+element.style.margin = '10px';
+
+// 好：一次修改，只觸發一次 Reflow
+element.className = 'new-style';
+// 或
+element.style.cssText = 'width: 100px; height: 200px; margin: 10px;';
+```
+
+避免在迴圈中讀取和修改
+
+```javascript
+// 不好：讀取和寫入交替，強制多次 Reflow
+for (let i = 0; i < items.length; i++) {
+  items[i].style.width = container.offsetWidth + 'px'; // 每次都讀取 offsetWidth
+}
+
+// 好：先讀取，再批次寫入
+const containerWidth = container.offsetWidth; // 只讀取一次
+for (let i = 0; i < items.length; i++) {
+  items[i].style.width = containerWidth + 'px';
+}
+```
+
+使用 transform 代替改變位置
+
+```javascript
+// 會觸發 Reflow
+element.style.left = '100px';
+
+// 只觸發 Compositing，效能更好
+element.style.transform = 'translateX(100px)';
+```
+
+---
+
+## 總結
+
+渲染流程：
+
+```text
+HTML 解析 → DOM Tree
+CSS 解析  → CSSOM Tree
+          ↓
+       Render Tree
+          ↓
+        Layout (計算位置和尺寸)
+          ↓
+        Paint (繪製像素)
+          ↓
+      Compositing (合成輸出)
+```
+
+效能影響由大到小：Reflow > Repaint > Compositing
+
+寫高效能的前端程式碼，核心原則是：盡量避免觸發 Reflow，優先使用只觸發 Compositing 的屬性 (`transform`、`opacity`)。

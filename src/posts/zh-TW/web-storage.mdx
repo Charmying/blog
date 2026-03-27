@@ -1,0 +1,198 @@
+export const metadata = {
+  title: 'Cookie vs. LocalStorage vs. SessionStorage：瀏覽器儲存方式比較',
+  date: '2026-03-25',
+  excerpt: '比較瀏覽器三種儲存方式的差異，包含 Cookie、LocalStorage、SessionStorage 的特性、操作方式、使用時機，以及儲存敏感資料時需要注意的安全問題。',
+  tags: ['前端', 'Web'],
+};
+
+# Cookie vs. LocalStorage vs. SessionStorage：瀏覽器儲存方式比較
+
+瀏覽器提供了三種在客戶端儲存資料的方式：Cookie、LocalStorage、SessionStorage。
+
+三者的儲存位置都在瀏覽器，但在資料的生命週期、容量、存取方式和安全性上有明顯差異。
+
+```text
+Cookie vs. LocalStorage vs. SessionStorage
+├─ Cookie
+├─ LocalStorage
+├─ SessionStorage
+├─ 差異總覽
+└─ 使用時機
+```
+
+- [Cookie](#cookie)
+- [LocalStorage](#localstorage)
+- [SessionStorage](#sessionstorage)
+- [差異總覽](#差異總覽)
+- [使用時機](#使用時機)
+
+---
+
+## Cookie
+
+Cookie 是最早的瀏覽器儲存方式，主要用途是在伺服器和瀏覽器之間傳遞狀態資訊。
+
+### 特性
+
+- 容量小：約 4KB
+- 每次 HTTP 請求都會自動帶上：瀏覽器會在請求時自動附上對應網域的 Cookie
+- 可以設定過期時間：沒設定則關閉瀏覽器後消失
+- 可以設定 HttpOnly：禁止 JavaScript 存取，防止 XSS 攻擊
+- 可以設定 Secure：只在 HTTPS 連線下傳送
+- 可以設定 SameSite：控制跨站請求時是否傳送 Cookie，防止 CSRF 攻擊
+
+### 基本操作
+
+```javascript
+// 設定 Cookie
+document.cookie = 'username=Charmy';
+
+// 設定帶有過期時間的 Cookie
+document.cookie = 'username=Charmy; expires=Fri, 31 Dec 2025 23:59:59 GMT';
+
+// 設定帶有路徑的 Cookie
+document.cookie = 'username=Charmy; path=/';
+
+// 讀取所有 Cookie (回傳字串，需要自行解析)
+console.log(document.cookie); // "username=Charmy; theme=dark"
+
+// 刪除 Cookie (把過期時間設為過去)
+document.cookie = 'username=; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+```
+
+Cookie 的 JavaScript API 不直覺，實務上通常使用第三方套件 (例如 `js-cookie`) 來操作。
+
+### 主要用途
+
+- 身份驗證 Token (Session ID)
+- 追蹤使用者行為 (分析工具)
+- 記住使用者偏好 (語言、主題)
+
+---
+
+## LocalStorage
+
+LocalStorage 是 HTML5 引入的儲存方式，資料會永久保存在瀏覽器中，除非手動清除。
+
+### 特性
+
+- 容量較大：約 5MB
+- 永久儲存：關閉瀏覽器後資料仍然存在
+- 不會自動傳送給伺服器：只在客戶端使用
+- 同源限制：只有相同網域才能存取
+- 只能儲存字串：物件需要先 `JSON.stringify`
+
+### 基本操作
+
+```javascript
+// 儲存資料
+localStorage.setItem('theme', 'dark');
+
+// 儲存物件 (需要先轉換成字串)
+localStorage.setItem('user', JSON.stringify({ name: 'Charmy', age: 25 }));
+
+// 讀取資料
+const theme = localStorage.getItem('theme');
+console.log(theme); // "dark"
+
+// 讀取物件 (需要解析回來)
+const user = JSON.parse(localStorage.getItem('user'));
+console.log(user.name); // "Charmy"
+
+// 刪除特定資料
+localStorage.removeItem('theme');
+
+// 清除所有資料
+localStorage.clear();
+```
+
+### 主要用途
+
+- 使用者偏好設定 (主題、語言)
+- 購物車資料 (非敏感)
+- 應用程式狀態的暫存
+
+---
+
+## SessionStorage
+
+SessionStorage 與 LocalStorage API 相同，但資料的生命週期只限於當前的瀏覽器分頁，關閉分頁後資料就消失。
+
+### 特性
+
+- 容量較大：約 5MB
+- 分頁關閉後消失：即使是同一個網域，不同分頁之間也不共享資料
+- 不會自動傳送給伺服器
+- 同源且同分頁限制
+
+### 基本操作
+
+```javascript
+// 操作方式與 LocalStorage 完全相同
+sessionStorage.setItem('formData', JSON.stringify({ step: 2 }));
+
+const formData = JSON.parse(sessionStorage.getItem('formData'));
+
+sessionStorage.removeItem('formData');
+
+sessionStorage.clear();
+```
+
+### 主要用途
+
+- 多步驟表單的暫存資料
+- 單次瀏覽的暫時狀態
+- 不需要跨分頁共享的資料
+
+---
+
+## 差異總覽
+
+| | Cookie | LocalStorage | SessionStorage |
+| - | - | - | - |
+| 容量 | ~4KB | ~5MB | ~5MB |
+| 生命週期 | 可設定過期時間 | 永久 (手動清除) | 分頁關閉後消失 |
+| 自動傳送伺服器 | 是 | 否 | 否 |
+| JavaScript 可存取 | 是 (除非 HttpOnly) | 是 | 是 |
+| 跨分頁共享 | 是 | 是 | 否 |
+| 安全性設定 | HttpOnly、Secure、SameSite | 無 | 無 |
+
+---
+
+## 使用時機
+
+### 使用 Cookie
+
+- 需要讓伺服器讀取的資料 (身份驗證 Token)
+- 需要設定過期時間的資料
+- 需要 `HttpOnly` 保護的敏感資料 (防 XSS)
+
+### 使用 LocalStorage
+
+- 需要長期保存在客戶端的非敏感資料
+- 使用者偏好設定 (主題、語言)
+- 不需要傳送給伺服器的應用程式狀態
+
+### 使用 SessionStorage
+
+- 只在當前分頁有效的暫時資料
+- 多步驟流程的暫存狀態
+- 不希望資料在分頁關閉後還存在
+
+### 不要做的事
+
+- 不要把敏感資料 (密碼、信用卡號) 存在任何客戶端儲存
+- 不要把 JWT Token 存在 LocalStorage (容易被 XSS 攻擊竊取)，建議存在 `HttpOnly` Cookie
+- LocalStorage 和 SessionStorage 沒有任何加密，任何可以執行的 JavaScript 都能存取
+
+---
+
+## 總結
+
+三種儲存方式各有適用場景：
+
+- Cookie：需要與伺服器互動、需要安全性設定時使用
+- LocalStorage：長期保存客戶端資料時使用
+- SessionStorage：只需要在當前分頁暫存資料時使用
+
+選擇時最重要的考量是：這份資料的敏感程度和需要存活多久。

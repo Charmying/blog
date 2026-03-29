@@ -1,0 +1,224 @@
+export const metadata = {
+  title: 'CORS: Cross-Origin Resource Sharing',
+  date: '2026-03-30',
+  excerpt: 'A practical guide to CORS — covering the Same-Origin Policy, how CORS headers work, when preflight requests are triggered, common error messages, and how to configure CORS on the server.',
+  tags: ['Front-end', 'Web'],
+};
+
+# CORS: Cross-Origin Resource Sharing
+
+When your frontend tries to fetch data from a different domain, the browser might block the request and show a CORS error in the console.
+
+This article explains what CORS is, why it exists, and how to fix it.
+
+```text
+CORS
+├─ The Same-Origin Policy
+├─ What Is CORS
+├─ Preflight Requests
+├─ Common CORS Errors
+└─ How to Configure CORS
+```
+
+- [The Same-Origin Policy](#the-same-origin-policy)
+- [What Is CORS](#what-is-cors)
+- [Preflight Requests](#preflight-requests)
+- [Common CORS Errors](#common-cors-errors)
+- [How to Configure CORS](#how-to-configure-cors)
+
+---
+
+## The Same-Origin Policy
+
+CORS exists because of the Same-Origin Policy.
+
+The Same-Origin Policy is a browser security rule that restricts web pages from making requests to a different origin. Two URLs share the same origin only if all three of these match:
+
+- Protocol — `http` vs `https`
+- Domain — `example.com` vs `api.example.com`
+- Port — `:3000` vs `:8080`
+
+If any one of these differs, it's a cross-origin request.
+
+```text
+https://example.com → https://example.com/api      same origin ✓
+https://example.com → https://api.example.com      different (subdomain)
+https://example.com → http://example.com           different (protocol)
+https://example.com → https://example.com:3000     different (port)
+```
+
+The Same-Origin Policy protects users from malicious sites stealing data from other sites they're logged into.
+
+---
+
+## What Is CORS
+
+CORS (Cross-Origin Resource Sharing) is an HTTP mechanism that lets servers explicitly declare which origins they allow cross-origin requests from.
+
+When a browser sends a cross-origin request, it automatically includes an `Origin` header:
+
+```
+Origin: https://example.com
+```
+
+If the server allows that origin, it responds with:
+
+```
+Access-Control-Allow-Origin: https://example.com
+```
+
+Or to allow any origin:
+
+```
+Access-Control-Allow-Origin: *
+```
+
+If the response doesn't include `Access-Control-Allow-Origin`, or the origin isn't on the allowed list, the browser blocks the response and logs a CORS error.
+
+Important: CORS is enforced by the browser, not the server. The server received and processed the request — the browser is simply preventing your JavaScript from reading the response.
+
+---
+
+## Preflight Requests
+
+Not all cross-origin requests go straight through. For certain types of requests, the browser first sends a preflight request — an `OPTIONS` request to check whether the server will allow the actual request.
+
+### Simple Requests (no preflight)
+
+Requests that meet all of these criteria go directly, with no preflight:
+
+- Method is `GET`, `POST`, or `HEAD`
+- `Content-Type` is `application/x-www-form-urlencoded`, `multipart/form-data`, or `text/plain`
+- No custom headers
+
+### Non-Simple Requests (preflight required)
+
+These trigger a preflight:
+
+- Method is `PUT`, `DELETE`, or `PATCH`
+- `Content-Type` is `application/json`
+- Custom headers are present (e.g. `Authorization`)
+
+The preflight looks like this:
+
+```
+OPTIONS /api/users HTTP/1.1
+Origin: https://example.com
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: Content-Type, Authorization
+```
+
+The server responds:
+
+```
+Access-Control-Allow-Origin: https://example.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization
+Access-Control-Max-Age: 86400
+```
+
+`Access-Control-Max-Age` tells the browser how long (in seconds) it can cache the preflight result, avoiding a preflight on every single request.
+
+---
+
+## Common CORS Errors
+
+### Missing Access-Control-Allow-Origin
+
+```
+Access to fetch at 'https://api.example.com' from origin 'https://example.com'
+has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header
+is present on the requested resource.
+```
+
+Cause: The server hasn't configured CORS headers.
+Fix: Add `Access-Control-Allow-Origin` to the server response.
+
+### Origin Not Allowed
+
+```
+Access to fetch at 'https://api.example.com' from origin 'https://other.com'
+has been blocked by CORS policy: The 'Access-Control-Allow-Origin' header
+has a value 'https://example.com' that is not equal to the supplied origin.
+```
+
+Cause: The server allows a specific origin, but the request came from a different one.
+Fix: Add the requesting origin to the server's allowed list.
+
+### Preflight Failed
+
+```
+Method DELETE is not allowed by Access-Control-Allow-Methods
+```
+
+Cause: The method isn't included in `Access-Control-Allow-Methods`.
+Fix: Add the required method to the server's CORS configuration.
+
+---
+
+## How to Configure CORS
+
+CORS must be configured on the server. There's no way to fix a CORS error purely from the frontend.
+
+### Node.js / Express
+
+```javascript
+const cors = require('cors');
+
+// allow all origins
+app.use(cors());
+
+// allow a specific origin
+app.use(cors({
+  origin: 'https://example.com',
+}));
+
+// allow multiple origins
+app.use(cors({
+  origin: ['https://example.com', 'https://app.example.com'],
+}));
+```
+
+### Dev Environment Workaround
+
+If you can't modify the backend during development, you can proxy requests through your dev server to avoid CORS:
+
+Vite
+
+```javascript
+// vite.config.js
+export default {
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://api.example.com',
+        changeOrigin: true,
+      },
+    },
+  },
+};
+```
+
+Angular CLI
+
+```json
+// proxy.conf.json
+{
+  "/api": {
+    "target": "https://api.example.com",
+    "changeOrigin": true
+  }
+}
+```
+
+The proxy only works in development. In production, the server still needs proper CORS configuration.
+
+---
+
+## Summary
+
+- The Same-Origin Policy is a browser security rule that restricts cross-origin requests
+- CORS lets servers declare which origins they'll accept requests from
+- CORS errors are the browser blocking the response — the server already handled the request
+- Non-simple requests (`PUT`, `DELETE`, `application/json`, custom headers) trigger a preflight `OPTIONS` request first
+- CORS must be fixed on the server — the dev server proxy is a development-only workaround

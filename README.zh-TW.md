@@ -2,7 +2,7 @@
 
 [English](./README.md) | **繁體中文**
 
-現代化的個人技術部落格平台，採用 Next.js 15+ 與 React 19 構建，支援多語言與深色模式，專注於提供優雅的閱讀體驗與高效的內容管理。
+現代化的個人技術部落格平台，採用 Next.js 16+ 與 React 19 構建，支援多語言與深色模式，專注於提供優雅的閱讀體驗與高效的內容管理。
 
 ---
 
@@ -18,7 +18,7 @@ npm run dev
 ## ✨ 核心特色
 
 ### 技術亮點
-- **Next.js 15+ App Router** — 採用最新 App Router 架構與 React Server Components
+- **Next.js 16+ App Router** — 採用最新 App Router 架構與 React Server Components
 - **React 19 Compiler** — 啟用 React Compiler 自動優化效能
 - **MDX 內容系統** — 基於檔案的 MDX 文章管理，支援豐富的互動元件
 - **多語言支援** — 完整的 i18n 實作 (繁體中文 / English)
@@ -58,9 +58,9 @@ npm run dev
 ```
 blog/
 ├── docs/                             # 專案文檔
-│   ├── structure.md                  # 架構說明與設計決策
-│   ├── dependencies.md               # 套件清單與選擇理由
-│   └── development.md                # 開發環境與規範
+│   ├── STRUCTURE.md                  # 架構說明與設計決策
+│   ├── DEPENDENCIES.md               # 套件清單與選擇理由
+│   └── DEVELOPMENT.md                # 開發環境與規範
 ├── messages/                         # i18n 翻譯檔案
 │   ├── en.json                       # 英文翻譯
 │   └── zh-TW.json                    # 繁體中文翻譯

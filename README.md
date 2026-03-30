@@ -2,7 +2,7 @@
 
 **English** | [繁體中文](./README.zh-TW.md)
 
-A modern personal tech blog platform built with Next.js 15+ and React 19, featuring multilingual support and dark mode, focused on delivering an elegant reading experience and efficient content management.
+A modern personal tech blog platform built with Next.js 16+ and React 19, featuring multilingual support and dark mode, focused on delivering an elegant reading experience and efficient content management.
 
 ---
 
@@ -18,7 +18,7 @@ npm run dev
 ## ✨ Core Features
 
 ### Technical Highlights
-- **Next.js 15+ App Router** — Latest App Router architecture with React Server Components
+- **Next.js 16+ App Router** — Latest App Router architecture with React Server Components
 - **React 19 Compiler** — Automatic performance optimization with React Compiler
 - **MDX Content System** — File-based MDX article management with rich interactive components
 - **Multilingual Support** — Complete i18n implementation (Traditional Chinese / English)
@@ -58,9 +58,9 @@ npm run dev
 ```
 blog/
 ├── docs/                             # Project documentation
-│   ├── structure.md                  # Architecture and design decisions
-│   ├── dependencies.md               # Package list and selection rationale
-│   └── development.md                # Development environment and guidelines
+│   ├── STRUCTURE.md                  # Architecture and design decisions
+│   ├── DEPENDENCIES.md               # Package list and selection rationale
+│   └── DEVELOPMENT.md                # Development environment and guidelines
 ├── messages/                         # i18n translation files
 │   ├── en.json                       # English translations
 │   └── zh-TW.json                    # Traditional Chinese translations

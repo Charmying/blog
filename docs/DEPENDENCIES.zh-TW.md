@@ -117,7 +117,7 @@
 | 項目 | 內容 |
 |------|------|
 | **套件名稱** | `mermaid` |
-| **版本** | `^11` |
+| **版本** | `^11.13.0` |
 | **用途** | 在瀏覽器端將 Mermaid 圖表語法渲染為 SVG |
 | **為什麼選擇** | • 官方 Mermaid 函式庫，語法支援最完整<br>• 客戶端 SVG 渲染，無需建置時依賴<br>• 內建主題系統 (default / dark)<br>• 活躍維護，社群龐大 |
 | **替代方案** | • rehype-mermaid — 伺服器端渲染但需要 Playwright/Puppeteer<br>• mermaid-js/mermaid-live-editor — 線上工具，無法嵌入 |

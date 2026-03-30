@@ -117,7 +117,7 @@ This document explains all npm packages used in the project, including their pur
 | Item | Content |
 |------|---------|
 | **Package** | `mermaid` |
-| **Version** | `^11` |
+| **Version** | `^11.13.0` |
 | **Purpose** | Render Mermaid diagram syntax into SVG in the browser |
 | **Why Chosen** | • Official Mermaid library, most complete dialect support<br>• Client-side SVG rendering, no build-time dependencies<br>• Built-in theme system (default / dark)<br>• Actively maintained with a large community |
 | **Alternatives** | • rehype-mermaid — Server-side rendering but requires Playwright/Puppeteer<br>• mermaid-js/mermaid-live-editor — Online tool only, not embeddable |

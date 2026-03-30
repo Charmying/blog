@@ -11,13 +11,14 @@ export const metadata = {
 
 這篇文章說明 CORS 是什麼、為什麼存在，以及如何正確設定。
 
-```text
-CORS
-├─ 什麼是同源政策
-├─ 什麼是 CORS
-├─ Preflight Request
-├─ 常見的 CORS 錯誤
-└─ 如何設定 CORS
+```mermaid
+mindmap
+  	root((CORS))
+    	什麼是同源政策
+    	什麼是 CORS
+    	Preflight Request
+    	常見的 CORS 錯誤
+    	如何設定 CORS
 ```
 
 - [什麼是同源政策](#什麼是同源政策)
@@ -42,11 +43,13 @@ CORS 的存在是為了配合同源政策 (Same-Origin Policy)。
 
 只要其中一個不同，就是跨來源請求。
 
-```text
-https://example.com 請求 https://example.com/api   → 同源 ✓
-https://example.com 請求 https://api.example.com   → 不同源 (子網域不同)
-https://example.com 請求 http://example.com        → 不同源 (協定不同)
-https://example.com 請求 https://example.com:3000  → 不同源 (埠號不同)
+```mermaid
+flowchart LR
+    src["https://example.com"]
+    src -->|"→ /api"| r1["✓ 同源"]
+    src -->|"→ api.example.com"| r2["✗ 不同源\n(子網域不同)"]
+    src -->|"→ http://..."| r3["✗ 不同源\n(協定不同)"]
+    src -->|"→ :3000"| r4["✗ 不同源\n(埠號不同)"]
 ```
 
 同源政策保護使用者不被惡意網站竊取另一個網站的資料。

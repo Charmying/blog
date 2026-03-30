@@ -9,12 +9,13 @@ export const metadata = {
 
 The DOM (Document Object Model) is the tree-structured representation of an HTML document that browsers build when they load a page. JavaScript uses the DOM API to read and modify a page's content, structure, and styles.
 
-```text
-DOM
-├─ What Is the DOM
-├─ Selecting Elements
-├─ Modifying the DOM
-└─ Event Listeners
+```mermaid
+mindmap
+  	root((DOM))
+    	What Is the DOM
+    	Selecting Elements
+    	Modifying the DOM
+    	Event Listeners
 ```
 
 - [What Is the DOM](#what-is-the-dom)
@@ -41,12 +42,12 @@ Every HTML element becomes a node in the tree. JavaScript can access and manipul
 
 The corresponding DOM tree:
 
-```text
-document
-└─ html
-   └─ body
-      ├─ h1 → "Hello"
-      └─ p  → "World"
+```mermaid
+graph TD
+    doc["document"] --> html["html"]
+    html --> body["body"]
+    body --> h1["h1\n&quot;Hello&quot;"]
+    body --> p["p\n&quot;World&quot;"]
 ```
 
 `document` is the entry point — all DOM operations start there.

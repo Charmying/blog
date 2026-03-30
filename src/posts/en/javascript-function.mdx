@@ -11,12 +11,13 @@ When you find yourself writing the same logic more than once, that's usually a s
 
 Functions let you break a program into small, focused pieces — making your code easier to read, maintain, and reuse.
 
-```text
-Function
-├─ Function Declaration
-├─ Function Expression
-├─ Parameters
-└─ Return Value
+```mermaid
+mindmap
+  	root((Function))
+    	Function Declaration
+    	Function Expression
+    	Parameters
+    	Return Value
 ```
 
 - [What Is a Function](#what-is-a-function)
@@ -41,8 +42,9 @@ A function is a reusable block of code.
 
 You can think of a function as a small tool that encapsulates a piece of logic. At a high level, most functions follow the same pattern:
 
-```text
-Input → Process → Output
+```mermaid
+flowchart LR
+    Input --> Process --> Output
 ```
 
 - Input — data passed into the function (parameters)
@@ -59,10 +61,12 @@ function plus(a, b) {
 
 Breaking it down:
 
-```text
-Input     → a, b
-Process   → a + b
-Output    → the returned value
+```mermaid
+flowchart LR
+    input["Input\na, b"]
+    process["Process\na + b"]
+    output["Output\nthe returned value"]
+    input --> process --> output
 ```
 
 To use it, just call it:

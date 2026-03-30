@@ -13,12 +13,13 @@ export const metadata = {
 
 本文會依序介紹 JavaScript 函式的幾個核心概念：
 
-```text
-函式
-├─ 函式宣告
-├─ 函式表達式
-├─ 函式的參數
-└─ 回傳值
+```mermaid
+mindmap
+  	root((函式))
+    	函式宣告
+    	函式表達式
+    	函式的參數
+    	回傳值
 ```
 
 - [什麼是函式](#什麼是函式)
@@ -47,8 +48,9 @@ export const metadata = {
 
 從概念上來看，一個函式通常包含三個部分：
 
-```text
-Input → Process → Output
+```mermaid
+flowchart LR
+    Input --> Process --> Output
 ```
 
 - Input：函式接收的資料 (參數)
@@ -65,10 +67,12 @@ function plus(a, b) {
 
 這個函式的流程可以理解為：
 
-```text
-輸入 (Input)     -> a, b
-處理 (Process)   -> a + b
-輸出 (Output)    -> 回傳結果
+```mermaid
+flowchart LR
+    input["輸入 Input\na, b"]
+    process["處理 Process\na + b"]
+    output["輸出 Output\n回傳結果"]
+    input --> process --> output
 ```
 
 使用時只需要呼叫：

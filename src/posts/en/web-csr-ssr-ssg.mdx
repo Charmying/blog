@@ -15,13 +15,14 @@ There are three main ways to render a web application, and they differ in one fu
 
 The choice affects load speed, SEO, infrastructure costs, and deployment complexity.
 
-```text
-CSR vs SSR vs SSG
-├─ CSR
-├─ SSR
-├─ SSG
-├─ Quick Reference
-└─ When to Use Each
+```mermaid
+mindmap
+    root((CSR vs SSR vs SSG))
+        CSR
+        SSR
+        SSG
+        Quick Reference
+        When to Use Each
 ```
 
 - [CSR](#csr)
@@ -44,8 +45,9 @@ CSR is the default for React, Vue, and Angular SPAs.
 4. JavaScript calls the API to fetch data
 5. JavaScript generates and renders the HTML in the browser
 
-```text
-Request → Empty HTML + JS → Execute JS → Fetch API → Render
+```mermaid
+flowchart LR
+    req["Request"] --> html["Empty HTML + JS"] --> js["Execute JS"] --> api["Fetch API"] --> render["Render"]
 ```
 
 ### Pros
@@ -80,8 +82,9 @@ With SSR, every request triggers the server to generate a full HTML page on the 
 4. Browser receives fully rendered HTML and displays it immediately
 5. JavaScript downloads and takes over interactivity (Hydration)
 
-```text
-Request → Server fetches data → Generates HTML → Full HTML → Displays
+```mermaid
+flowchart LR
+    req["Request"] --> fetch["Server fetches data"] --> gen["Generates HTML"] --> full["Full HTML"] --> show["Displays"]
 ```
 
 ### Pros
@@ -115,9 +118,14 @@ With SSG, all pages are pre-generated at build time. The server just serves stat
 3. Files are deployed to a CDN or static file server
 4. When users request a page, they get the pre-built HTML instantly
 
-```text
-Build time: Fetch data → Generate all HTML files
-User request → CDN serves static HTML instantly
+```mermaid
+flowchart TD
+    subgraph build["Build time"]
+        fetch["Fetch data"] --> gen["Generate all HTML files"]
+    end
+    subgraph runtime["User request"]
+        req["User request"] --> cdn["CDN serves static HTML instantly"]
+    end
 ```
 
 ### Pros

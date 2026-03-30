@@ -11,13 +11,14 @@ Before JavaScript runs any code, it sets up an environment to manage variables, 
 
 That environment is called the execution context.
 
-```text
-Execution Context
-├─ What Is an Execution Context
-├─ Types of Execution Context
-├─ The Two Phases
-├─ The Call Stack
-└─ Connection to Hoisting, Scope, and Closures
+```mermaid
+mindmap
+  	root((Execution Context))
+    	What Is an Execution Context
+    	Types of Execution Context
+    	The Two Phases
+    	The Call Stack
+    	Connection to Hoisting Scope and Closures
 ```
 
 - [What Is an Execution Context](#what-is-an-execution-context)
@@ -130,13 +131,15 @@ first();
 
 Step by step:
 
-```text
-1. Global execution context pushed onto the stack
-2. first() called → its context pushed on top
-3. second() called → its context pushed on top
-4. second() finishes → its context popped off
-5. first() finishes → its context popped off
-6. Back to the global execution context
+```mermaid
+flowchart TD
+    s1["1. Global EC pushed onto the stack"]
+    s2["2. first() called → its EC pushed"]
+    s3["3. second() called → its EC pushed"]
+    s4["4. second() finishes → EC popped"]
+    s5["5. first() finishes → EC popped"]
+    s6["6. Back to Global EC"]
+    s1 --> s2 --> s3 --> s4 --> s5 --> s6
 ```
 
 If a function keeps calling itself recursively without stopping, the stack grows until it hits the limit and throws: `RangeError: Maximum call stack size exceeded`.

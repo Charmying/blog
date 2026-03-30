@@ -11,12 +11,13 @@ export const metadata = {
 
 這個查找機制就是 Scope Chain (作用域鏈)。
 
-```text
-作用域鏈
-├─ 什麼是作用域鏈
-├─ 查找方向：只往外，不往內
-├─ 遮蔽效果 (Variable Shadowing)
-└─ 作用域鏈與靜態作用域
+```mermaid
+mindmap
+  	root((作用域鏈))
+    	什麼是作用域鏈
+    	查找方向：只往外，不往內
+    	遮蔽效果 Variable Shadowing
+    	作用域鏈與靜態作用域
 ```
 
 - [什麼是作用域鏈](#什麼是作用域鏈)
@@ -53,8 +54,9 @@ outer();
 
 查找順序：
 
-```text
-inner → outer → 全域
+```mermaid
+flowchart LR
+    inner["inner"] --> outer["outer"] --> global["全域"]
 ```
 
 JavaScript 沿著這條鏈從內往外尋找，找到就停止，找不到就繼續往外，一直到全域作用域。
@@ -168,8 +170,9 @@ main();
 
 `printName` 定義在全域，它的作用域鏈是：
 
-```text
-printName → 全域
+```mermaid
+flowchart LR
+    printName["printName"] --> global["全域"]
 ```
 
 即使 `printName` 是在 `main` 內被呼叫，它也不會存取 `main` 的 `name`，因為 `main` 不在它的作用域鏈上。

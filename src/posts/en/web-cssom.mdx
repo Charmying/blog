@@ -11,15 +11,16 @@ The CSSOM (CSS Object Model) is the tree structure browsers build when they pars
 
 The CSSOM sits alongside the DOM as a core part of the browser's rendering pipeline. The browser constructs both a DOM Tree and a CSSOM Tree, then merges them into a Render Tree before calculating layout and painting the screen.
 
-```text
-CSSOM
-├─ What Is the CSSOM
-├─ How the CSSOM Is Built
-├─ Working with the CSSOM
-│   ├─ Reading Styles
-│   ├─ Modifying Styles
-│   └─ Working with Stylesheets
-└─ CSSOM and Rendering Performance
+```mermaid
+mindmap
+  	root((CSSOM))
+    	What Is the CSSOM
+    	How the CSSOM Is Built
+    	Working with the CSSOM
+      		Reading Styles
+      		Modifying Styles
+      		Working with Stylesheets
+    	CSSOM and Rendering Performance
 ```
 
 - [What Is the CSSOM](#what-is-the-cssom)
@@ -33,18 +34,25 @@ CSSOM
 
 When the browser parses CSS, it builds all the style rules into a tree structure — the CSSOM.
 
-```text
-CSS source:
+```css
+/* CSS source */
 body { font-size: 16px; }
 p { color: red; }
 p span { font-weight: bold; }
+```
 
-CSSOM Tree:
-StyleSheetList
-└─ CSSStyleSheet
-   ├─ CSSRule: body → { font-size: 16px }
-   ├─ CSSRule: p → { color: red }
-   └─ CSSRule: p span → { font-weight: bold }
+```mermaid
+graph TD
+    ssl["StyleSheetList"]
+    sheet["CSSStyleSheet"]
+    rule1["CSSRule: body\n{ font-size: 16px }"]
+    rule2["CSSRule: p\n{ color: red }"]
+    rule3["CSSRule: p span\n{ font-weight: bold }"]
+
+    ssl --> sheet
+    sheet --> rule1
+    sheet --> rule2
+    sheet --> rule3
 ```
 
 The CSSOM holds all style rules from every source:
@@ -58,11 +66,12 @@ The CSSOM holds all style rules from every source:
 
 The CSSOM is built in parallel with the DOM, but as a separate process:
 
-```text
-HTML --→ DOM Tree
-CSS  --→ CSSOM Tree
-           ↓
-    DOM + CSSOM → Render Tree
+```mermaid
+flowchart TD
+    html["HTML"] --> dom["DOM Tree"]
+    css["CSS"] --> cssom["CSSOM Tree"]
+    dom --> render["Render Tree"]
+    cssom --> render
 ```
 
 CSS is a render-blocking resource. The browser won't start rendering until the CSSOM is fully built — without knowing all styles, it can't correctly construct the Render Tree. This is why `<link>` tags belong in `<head>`, so CSS starts downloading as early as possible.

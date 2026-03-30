@@ -14,16 +14,17 @@ export const metadata = {
 - Shallow Copy (淺拷貝)：只複製第一層，巢狀物件仍然共享參考
 - Deep Copy (深拷貝)：完整複製所有層級，不共享任何參考
 
-```text
-淺拷貝 vs. 深拷貝
-├─ 淺拷貝
-│   ├─ Spread Operator
-│   ├─ Object.assign
-│   └─ 淺拷貝的限制
-├─ 深拷貝
-│   ├─ structuredClone
-│   └─ JSON.parse / JSON.stringify
-└─ 使用時機
+```mermaid
+mindmap
+  	root((淺拷貝 vs. 深拷貝))
+    	淺拷貝
+      		Spread Operator
+      		Object.assign
+      		淺拷貝的限制
+    	深拷貝
+      		structuredClone
+      		JSON.parse / JSON.stringify
+    	使用時機
 ```
 
 - [淺拷貝](#淺拷貝)

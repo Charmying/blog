@@ -24,6 +24,7 @@ npm run dev
 - **多語言支援** — 完整的 i18n 實作 (繁體中文 / English)
 - **深色模式** — 精心設計的明暗主題切換系統
 - **語法高亮** — 整合 highlight.js 提供專業的程式碼展示
+- **Mermaid 圖表** — 在文章中直接渲染流程圖與架構圖，自動跟隨明暗主題切換
 
 ### 使用者體驗
 - **響應式設計** — 完整支援桌面、平板與行動裝置
@@ -80,7 +81,8 @@ blog/
 │   │   ├── article/                  # 文章相關元件
 │   │   │   ├── code-block.tsx        # 程式碼區塊
 │   │   │   ├── comments.tsx          # 留言元件
-│   │   │   └── mdx-components.tsx    # MDX 自訂元件
+│   │   │   ├── mdx-components.tsx    # MDX 自訂元件
+│   │   │   └── mermaid-chart.tsx     # Mermaid 圖表元件
 │   │   ├── layout/                   # 佈局元件
 │   │   │   ├── main-nav.tsx          # 主導航列
 │   │   │   ├── mobile-menu.tsx       # 行動版選單
@@ -208,6 +210,7 @@ src/posts/
 - **標籤聚合** — 自動收集與分類所有標籤
 - **日期排序** — 文章按日期自動排序
 - **語法高亮** — 程式碼區塊自動高亮
+- **Mermaid 圖表渲染** — 客戶端渲染圖表，自動適配主題樣式
 
 ---
 

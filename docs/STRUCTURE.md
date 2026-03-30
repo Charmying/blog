@@ -160,7 +160,8 @@ app/
 components/
 ├── article/                       # Article-related components
 │   ├── code-block.tsx             # Code block
-│   └── mdx-components.tsx         # Custom MDX components
+│   ├── mdx-components.tsx         # Custom MDX components
+│   └── mermaid-chart.tsx          # Mermaid diagram component
 ├── layout/                        # Layout components
 │   ├── main-nav.tsx               # Main navigation
 │   ├── mobile-menu.tsx            # Mobile menu

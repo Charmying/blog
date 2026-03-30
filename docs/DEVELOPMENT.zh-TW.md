@@ -433,6 +433,16 @@ export const metadata = {
 ```typescript
 const example = "程式碼範例";
 ```
+
+## 架構圖
+
+使用 Mermaid 語法嵌入圖表：
+
+```mermaid
+graph LR
+    Client --> Server
+    Server --> Database
+```
 ```
 
 **3. 驗證文章**

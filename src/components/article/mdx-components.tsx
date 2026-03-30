@@ -10,6 +10,7 @@ export const mdxComponents = {
     const code = child?.children;
 
     if (language === "mermaid") {
+      if (!code) return null;
       return <MermaidChart>{code}</MermaidChart>;
     }
 

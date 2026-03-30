@@ -24,8 +24,10 @@ export function MermaidChart({ children }: MermaidChartProps) {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    let cancelled = false;
+
     const render = async () => {
-      if (!containerRef.current) return;
+      if (cancelled || !containerRef.current) return;
 
       const isDark = document.documentElement.dataset.theme === "dark";
 
@@ -40,12 +42,12 @@ export function MermaidChart({ children }: MermaidChartProps) {
 
       try {
         const { svg } = await mermaid.render(diagramId, diagram);
-        if (containerRef.current) {
+        if (!cancelled && containerRef.current) {
           containerRef.current.innerHTML = svg;
         }
       } catch (err) {
         console.error("[MermaidChart] render failed:", err);
-        if (containerRef.current) {
+        if (!cancelled && containerRef.current) {
           containerRef.current.innerHTML = `<pre class="mermaid-chart__error">${diagram}</pre>`;
         }
       }
@@ -59,7 +61,10 @@ export function MermaidChart({ children }: MermaidChartProps) {
       attributeFilter: ["data-theme"],
     });
 
-    return () => observer.disconnect();
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
   }, [children, diagramId]);
 
   return <div ref={containerRef} className="mermaid-chart" />;

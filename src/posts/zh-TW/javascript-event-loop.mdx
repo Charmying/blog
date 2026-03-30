@@ -11,16 +11,17 @@ JavaScript 是單執行緒語言，同一時間只能執行一件事。但它卻
 
 這背後的機制就是 Event Loop (事件循環)。
 
-```text
-Event Loop
-├─ JavaScript 的執行環境
-│   ├─ Call Stack
-│   ├─ Web APIs
-│   ├─ Task Queue (Macrotask Queue)
-│   └─ Microtask Queue
-├─ Event Loop 的運作方式
-├─ Macrotask vs Microtask
-└─ 執行順序總覽
+```mermaid
+mindmap
+  	root((Event Loop))
+    	JavaScript 的執行環境
+      		Call Stack
+      		Web APIs
+      		Task Queue (Macrotask Queue)
+      		Microtask Queue
+    	Event Loop 的運作方式
+    	Macrotask vs Microtask
+    	執行順序總覽
 ```
 
 - [JavaScript 的執行環境](#javascript-的執行環境)
@@ -56,12 +57,14 @@ first();
 
 執行過程：
 
-```text
-1. first() 推入 Call Stack
-2. second() 推入 Call Stack
-3. console.log("Hello") 執行並移除
-4. second() 執行完畢，移除
-5. first() 執行完畢，移除
+```mermaid
+flowchart TD
+    s1["1. first() 推入 Call Stack"]
+    s2["2. second() 推入 Call Stack"]
+    s3["3. console.log('Hello') 執行並移除"]
+    s4["4. second() 執行完畢，移除"]
+    s5["5. first() 執行完畢，移除"]
+    s1 --> s2 --> s3 --> s4 --> s5
 ```
 
 ### Web APIs
@@ -97,10 +100,13 @@ Microtask Queue 的優先權高於 Task Queue，每次 Call Stack 清空後，Ja
 
 Event Loop 持續執行以下流程：
 
-1. 執行 Call Stack 中的所有同步程式碼
-2. Call Stack 清空後，處理 Microtask Queue 中的所有任務
-3. Microtask Queue 清空後，從 Task Queue 取出一個任務推入 Call Stack
-4. 重複以上步驟
+```mermaid
+flowchart TD
+    s1["執行所有同步程式碼\n(Call Stack)"]
+    s2["清空 Microtask Queue\n(Promise callbacks 等)"]
+    s3["從 Task Queue 取出一個任務\n推入 Call Stack"]
+    s1 --> s2 --> s3 --> s1
+```
 
 用程式碼來理解：
 

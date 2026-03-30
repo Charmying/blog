@@ -11,16 +11,17 @@ JavaScript is single-threaded — it can only do one thing at a time. Yet it han
 
 The mechanism that makes this possible is the Event Loop.
 
-```text
-Event Loop
-├─ JavaScript's Runtime Environment
-│   ├─ Call Stack
-│   ├─ Web APIs
-│   ├─ Task Queue (Macrotask Queue)
-│   └─ Microtask Queue
-├─ How the Event Loop Works
-├─ Macrotasks vs Microtasks
-└─ Execution Order in Practice
+```mermaid
+mindmap
+  	root((Event Loop))
+    	JavaScript's Runtime Environment
+      		Call Stack
+      		Web APIs
+      		Task Queue (Macrotask Queue)
+      		Microtask Queue
+    	How the Event Loop Works
+    	Macrotasks vs Microtasks
+    	Execution Order in Practice
 ```
 
 - [JavaScript's Runtime Environment](#javascripts-runtime-environment)
@@ -54,12 +55,14 @@ first();
 
 What happens on the stack:
 
-```text
-1. first() pushed onto the stack
-2. second() pushed onto the stack
-3. console.log("Hello") runs and is removed
-4. second() finishes, removed
-5. first() finishes, removed
+```mermaid
+flowchart TD
+    s1["1. first() pushed onto the stack"]
+    s2["2. second() pushed onto the stack"]
+    s3["3. console.log('Hello') runs and is removed"]
+    s4["4. second() finishes, removed"]
+    s5["5. first() finishes, removed"]
+    s1 --> s2 --> s3 --> s4 --> s5
 ```
 
 ### Web APIs
@@ -95,10 +98,13 @@ Common sources of microtasks:
 
 The Event Loop runs a continuous cycle:
 
-1. Run all synchronous code on the Call Stack
-2. Once the Call Stack is empty, drain the Microtask Queue completely
-3. Pick one task from the Task Queue and push it onto the Call Stack
-4. Repeat
+```mermaid
+flowchart TD
+    s1["Run all synchronous code\n(Call Stack)"]
+    s2["Drain the Microtask Queue\n(Promise callbacks, etc.)"]
+    s3["Pick one task from the Task Queue\nand push it onto the Call Stack"]
+    s1 --> s2 --> s3 --> s1
+```
 
 Here's a simple example:
 

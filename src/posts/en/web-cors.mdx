@@ -11,13 +11,14 @@ When your frontend tries to fetch data from a different domain, the browser migh
 
 This article explains what CORS is, why it exists, and how to fix it.
 
-```text
-CORS
-├─ The Same-Origin Policy
-├─ What Is CORS
-├─ Preflight Requests
-├─ Common CORS Errors
-└─ How to Configure CORS
+```mermaid
+mindmap
+  	root((CORS))
+    	The Same-Origin Policy
+    	What Is CORS
+    	Preflight Requests
+    	Common CORS Errors
+    	How to Configure CORS
 ```
 
 - [The Same-Origin Policy](#the-same-origin-policy)
@@ -40,11 +41,13 @@ The Same-Origin Policy is a browser security rule that restricts web pages from 
 
 If any one of these differs, it's a cross-origin request.
 
-```text
-https://example.com → https://example.com/api      same origin ✓
-https://example.com → https://api.example.com      different (subdomain)
-https://example.com → http://example.com           different (protocol)
-https://example.com → https://example.com:3000     different (port)
+```mermaid
+flowchart LR
+    src["https://example.com"]
+    src -->|"→ /api"| r1["✓ Same Origin"]
+    src -->|"→ api.example.com"| r2["✗ Different\n(subdomain)"]
+    src -->|"→ http://..."| r3["✗ Different\n(protocol)"]
+    src -->|"→ :3000"| r4["✗ Different\n(port)"]
 ```
 
 The Same-Origin Policy protects users from malicious sites stealing data from other sites they're logged into.

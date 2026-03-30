@@ -14,12 +14,13 @@ There are two types, and the distinction comes down to which side the proxy repr
 - Forward Proxy — acts on behalf of the client
 - Reverse Proxy — acts on behalf of the server
 
-```text
-Proxy
-├─ Forward Proxy
-├─ Reverse Proxy
-├─ Forward vs Reverse: Key Differences
-└─ Dev Server Proxy in Frontend Development
+```mermaid
+mindmap
+  	root((Proxy))
+    	Forward Proxy
+    	Reverse Proxy
+    	Forward vs Reverse Key Differences
+    	Dev Server Proxy in Frontend Development
 ```
 
 - [Forward Proxy](#forward-proxy)
@@ -33,8 +34,9 @@ Proxy
 
 A forward proxy sits on the client side and sends requests to external servers on the client's behalf.
 
-```text
-Client → Forward Proxy → Target Server
+```mermaid
+flowchart LR
+    client["Client"] --> proxy["Forward Proxy"] --> server["Target Server"]
 ```
 
 The target server sees the proxy's IP address, not the client's.
@@ -63,8 +65,9 @@ A forward proxy can cache frequently accessed external resources, reducing repea
 
 A reverse proxy sits on the server side and accepts incoming requests from clients, forwarding them to internal backend servers.
 
-```text
-Client → Reverse Proxy → Backend Server
+```mermaid
+flowchart LR
+    client["Client"] --> proxy["Reverse Proxy"] --> server["Backend Server"]
 ```
 
 The client only knows the reverse proxy exists — it has no visibility into what's behind it.
@@ -138,8 +141,9 @@ In frontend development, the dev server proxy is a specialized forward proxy use
 
 When your frontend on `localhost:4200` needs to call an API at `https://api.example.com`, the browser blocks the request due to cross-origin restrictions. The dev server proxy intercepts the request and forwards it on your behalf — the browser only sees `localhost:4200`, so no CORS error is triggered.
 
-```text
-Browser → localhost:4200/api → Dev Server Proxy → https://api.example.com
+```mermaid
+flowchart LR
+    browser["Browser"] --> dev["localhost:4200/api"] --> proxy["Dev Server Proxy"] --> api["https://api.example.com"]
 ```
 
 ### Vite

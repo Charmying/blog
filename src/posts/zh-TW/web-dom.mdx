@@ -9,12 +9,13 @@ export const metadata = {
 
 DOM (Document Object Model，文件物件模型) 是瀏覽器將 HTML 文件解析後建立的樹狀結構，讓 JavaScript 可以讀取和修改頁面的內容、結構和樣式。
 
-```text
-DOM
-├─ 什麼是 DOM
-├─ 選取元素
-├─ 修改 DOM
-└─ 事件監聽
+```mermaid
+mindmap
+  	root((DOM))
+    	什麼是 DOM
+    	選取元素
+    	修改 DOM
+    	事件監聽
 ```
 
 - [什麼是 DOM](#什麼是-dom)
@@ -41,12 +42,12 @@ DOM
 
 對應的 DOM 樹：
 
-```text
-document
-└─ html
-   └─ body
-      ├─ h1 → "Hello"
-      └─ p  → "World"
+```mermaid
+graph TD
+    doc["document"] --> html["html"]
+    html --> body["body"]
+    body --> h1["h1\n&quot;Hello&quot;"]
+    body --> p["p\n&quot;World&quot;"]
 ```
 
 `document` 是 DOM 的入口，所有操作都從它開始。

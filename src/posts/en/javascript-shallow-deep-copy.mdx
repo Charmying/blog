@@ -14,16 +14,17 @@ Objects are reference types — assigning one to another variable just copies th
 - Shallow copy — copies the top level only; nested objects still share a reference
 - Deep copy — copies everything, all the way down; no shared references
 
-```text
-Shallow Copy vs. Deep Copy
-├─ Shallow Copy
-│   ├─ Spread Operator
-│   ├─ Object.assign
-│   └─ The Limitation
-├─ Deep Copy
-│   ├─ structuredClone
-│   └─ JSON.parse / JSON.stringify
-└─ When to Use Each
+```mermaid
+mindmap
+  	root((Shallow Copy vs. Deep Copy))
+    	Shallow Copy
+      		Spread Operator
+      		Object.assign
+      		The Limitation
+    	Deep Copy
+      		structuredClone
+      		JSON.parse / JSON.stringify
+    	When to Use Each
 ```
 
 - [Shallow Copy](#shallow-copy)

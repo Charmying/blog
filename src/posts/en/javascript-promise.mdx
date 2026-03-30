@@ -11,19 +11,20 @@ Promises were introduced in ES6 to solve the Callback Hell problem and give asyn
 
 The idea: a Promise represents an operation that hasn't completed yet, but will produce a result — either a success or a failure — in the future.
 
-```text
-Promises
-├─ What Is a Promise
-├─ The Three States
-├─ Creating a Promise
-├─ .then, .catch, .finally
-├─ Promise Chaining
-├─ Static Methods
-│   ├─ Promise.all
-│   ├─ Promise.allSettled
-│   ├─ Promise.race
-│   └─ Promise.any
-└─ Promises vs Callbacks
+```mermaid
+mindmap
+  	root((Promises))
+    	What Is a Promise
+    	The Three States
+    	Creating a Promise
+    	.then .catch .finally
+    	Promise Chaining
+    	Static Methods
+      		Promise.all
+      		Promise.allSettled
+      		Promise.race
+      		Promise.any
+    	Promises vs Callbacks
 ```
 
 - [What Is a Promise](#what-is-a-promise)
@@ -54,9 +55,11 @@ Every Promise is in exactly one of three states:
 
 Once a Promise moves from Pending to either Fulfilled or Rejected, it stays there. The state can't change again.
 
-```text
-Pending → Fulfilled
-Pending → Rejected
+```mermaid
+stateDiagram-v2
+    [*] --> Pending
+    Pending --> Fulfilled : resolve
+    Pending --> Rejected : reject
 ```
 
 ---

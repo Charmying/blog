@@ -11,15 +11,16 @@ When a browser loads a webpage, a lot happens between receiving the HTML and put
 
 Understanding it helps you write more performant frontend code and avoid common bottlenecks.
 
-```text
-Browser Rendering Pipeline
-├─ 1. Parse HTML → DOM Tree
-├─ 2. Parse CSS → CSSOM Tree
-├─ 3. Combine → Render Tree
-├─ 4. Layout (Reflow)
-├─ 5. Paint (Repaint)
-├─ 6. Compositing
-└─ Performance: Reflow vs. Repaint vs. Compositing
+```mermaid
+mindmap
+  	root((Browser Rendering Pipeline))
+    	1. Parse HTML → DOM Tree
+    	2. Parse CSS → CSSOM Tree
+    	3. Combine → Render Tree
+    	4. Layout Reflow
+    	5. Paint Repaint
+    	6. Compositing
+    	Performance Reflow vs Repaint vs Compositing
 ```
 
 - [Parse HTML → DOM Tree](#1-parse-html--dom-tree)
@@ -36,8 +37,9 @@ Browser Rendering Pipeline
 
 The browser parses the HTML from top to bottom, converting tags into the DOM Tree.
 
-```text
-HTML → Tokenization → DOM Tree
+```mermaid
+flowchart LR
+    html["HTML"] --> token["Tokenization"] --> dom["DOM Tree"]
 ```
 
 When the parser hits a `<script>` tag, it pauses by default — the script has to download and execute before parsing continues. That's why scripts are typically placed at the bottom of `<body>`, or use `defer` / `async`.
@@ -75,8 +77,10 @@ The Render Tree only includes visible nodes:
 - Elements with `visibility: hidden` are included — they're invisible but still occupy space
 - Non-visual elements like `<head>` and `<script>` are excluded
 
-```text
-DOM Tree + CSSOM Tree → Render Tree
+```mermaid
+flowchart LR
+    dom["DOM Tree"] --> render["Render Tree"]
+    cssom["CSSOM Tree"] --> render
 ```
 
 ---
@@ -114,8 +118,9 @@ In the Compositing phase, the browser takes all the layers and combines them in 
 
 Elements on their own compositor layer (achieved with `transform: translateZ(0)` or `will-change: transform`) can be processed entirely on the GPU, skipping Layout and Paint entirely — which makes them the most performant to animate.
 
-```text
-DOM + CSSOM → Render Tree → Layout → Paint → Compositing → Screen
+```mermaid
+flowchart LR
+    dom["DOM + CSSOM"] --> render["Render Tree"] --> layout["Layout"] --> paint["Paint"] --> compositing["Compositing"] --> screen["Screen"]
 ```
 
 ---
@@ -196,17 +201,15 @@ element.style.transform = 'translateX(100px)';
 
 The rendering pipeline in order:
 
-```text
-HTML parsing  → DOM Tree
-CSS parsing   → CSSOM Tree
-              ↓
-          Render Tree
-              ↓
-           Layout  (calculate positions and sizes)
-              ↓
-            Paint  (fill in pixels)
-              ↓
-        Compositing  (combine layers → screen)
+```mermaid
+flowchart TD
+    html["HTML parsing"] --> domtree["DOM Tree"]
+    css["CSS parsing"] --> cssomtree["CSSOM Tree"]
+    domtree --> render["Render Tree"]
+    cssomtree --> render
+    render --> layout["Layout\n(calculate positions and sizes)"]
+    layout --> paint["Paint\n(fill in pixels)"]
+    paint --> compositing["Compositing\n(combine layers → screen)"]
 ```
 
 Performance cost from highest to lowest: Reflow > Repaint > Compositing

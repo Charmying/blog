@@ -11,12 +11,13 @@ When JavaScript looks up a variable, it doesn't just check the current scope. It
 
 That lookup process is called the scope chain.
 
-```text
-Scope Chain
-├─ What Is the Scope Chain
-├─ Lookup Direction: Outward Only
-├─ Variable Shadowing
-└─ Scope Chain and Lexical Scope
+```mermaid
+mindmap
+  	root((Scope Chain))
+    	What Is the Scope Chain
+    	Lookup Direction Outward Only
+    	Variable Shadowing
+    	Scope Chain and Lexical Scope
 ```
 
 - [What Is the Scope Chain](#what-is-the-scope-chain)
@@ -53,8 +54,9 @@ outer();
 
 The lookup order is:
 
-```text
-inner → outer → global
+```mermaid
+flowchart LR
+    inner["inner"] --> outer["outer"] --> global["global"]
 ```
 
 JavaScript walks up the chain from the inside out. As soon as it finds the variable, it stops. If it reaches the global scope without finding it, it throws a `ReferenceError`:
@@ -164,8 +166,9 @@ main();
 
 `printName` is defined in the global scope, so its scope chain is:
 
-```text
-printName → global
+```mermaid
+flowchart LR
+    printName["printName"] --> global["global"]
 ```
 
 Even though `printName` is called inside `main`, it doesn't have access to `main`'s `name`. `main` is simply not part of `printName`'s scope chain.

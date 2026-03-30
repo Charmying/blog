@@ -11,13 +11,14 @@ JavaScript 在執行程式碼之前，會先建立一個環境來管理變數、
 
 這個環境就是 Execution Context (執行環境)。
 
-```text
-Execution Context
-├─ 什麼是 Execution Context
-├─ Execution Context 的種類
-├─ Execution Context 的兩個階段
-├─ Call Stack
-└─ Execution Context 與 Hoisting、Scope、Closure 的關係
+```mermaid
+mindmap
+  	root((Execution Context))
+    	什麼是 Execution Context
+    	Execution Context 的種類
+    	Execution Context 的兩個階段
+    	Call Stack
+    	與 Hoisting、Scope、Closure 的關係
 ```
 
 - [什麼是 Execution Context](#什麼是-execution-context)
@@ -134,13 +135,15 @@ first();
 
 執行過程：
 
-```text
-1. Global Execution Context 推入 Call Stack
-2. 呼叫 first() → First Execution Context 推入
-3. 呼叫 second() → Second Execution Context 推入
-4. second() 執行完畢 → Second Execution Context 移除
-5. first() 執行完畢 → First Execution Context 移除
-6. 回到 Global Execution Context
+```mermaid
+flowchart TD
+    s1["1. Global EC 推入 Call Stack"]
+    s2["2. first() 呼叫 → First EC 推入"]
+    s3["3. second() 呼叫 → Second EC 推入"]
+    s4["4. second() 結束 → Second EC 移除"]
+    s5["5. first() 結束 → First EC 移除"]
+    s6["6. 回到 Global EC"]
+    s1 --> s2 --> s3 --> s4 --> s5 --> s6
 ```
 
 如果函式不斷遞迴呼叫自己，Call Stack 會一直增長，最終超過上限，拋出 `RangeError: Maximum call stack size exceeded`。

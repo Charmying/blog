@@ -13,15 +13,16 @@ export const metadata = {
 
 無論採用 CSR、SSR 還是 SSG，瀏覽器最終都要走過這套流程 —— 差別只在於初始 HTML 帶不帶有完整內容。
 
-```text
-Browser Rendering Pipeline
-├─ 1. 解析 HTML → DOM Tree
-├─ 2. 解析 CSS → CSSOM Tree
-├─ 3. 合併 → Render Tree
-├─ 4. Layout (Reflow)
-├─ 5. Paint (Repaint)
-├─ 6. Compositing
-└─ Reflow 與 Repaint 的效能影響
+```mermaid
+mindmap
+  	root((Browser Rendering Pipeline))
+    	1. 解析 HTML → DOM Tree
+    	2. 解析 CSS → CSSOM Tree
+    	3. 合併 → Render Tree
+    	4. Layout Reflow
+    	5. Paint Repaint
+    	6. Compositing
+    	Reflow 與 Repaint 的效能影響
 ```
 
 - [解析 HTML → DOM Tree](#1-解析-html--dom-tree)
@@ -38,8 +39,9 @@ Browser Rendering Pipeline
 
 瀏覽器收到 HTML 後，開始從上到下解析，將 HTML 標籤轉換成 DOM Tree (文件物件模型樹)。
 
-```text
-HTML → Tokenization → DOM Tree
+```mermaid
+flowchart LR
+    html["HTML"] --> token["Tokenization"] --> dom["DOM Tree"]
 ```
 
 解析過程中如果遇到 `<script>` 標籤，預設會暫停 HTML 解析，等 JavaScript 下載並執行完畢才繼續。這就是為什麼 `<script>` 通常放在 `<body>` 底部，或使用 `defer` / `async` 屬性。
@@ -77,8 +79,10 @@ Render Tree 只包含需要顯示的節點：
 - `visibility: hidden` 的元素會出現在 Render Tree 中 (佔據空間但不顯示)
 - `<head>`、`<script>` 等不可見的元素也不會出現
 
-```text
-DOM Tree + CSSOM Tree → Render Tree
+```mermaid
+flowchart LR
+    dom["DOM Tree"] --> render["Render Tree"]
+    cssom["CSSOM Tree"] --> render
 ```
 
 ---
@@ -116,8 +120,9 @@ Compositing (合成) 階段，瀏覽器將各個層按照正確的順序合併�
 
 擁有獨立合成層的元素 (例如使用 `transform: translateZ(0)` 或 `will-change: transform`) 可以在 GPU 上獨立處理，不需要觸發 Layout 和 Paint，效能最好。
 
-```text
-DOM + CSSOM → Render Tree → Layout → Paint → Compositing → 畫面
+```mermaid
+flowchart LR
+    dom["DOM + CSSOM"] --> render["Render Tree"] --> layout["Layout"] --> paint["Paint"] --> compositing["Compositing"] --> screen["畫面"]
 ```
 
 ---
@@ -198,17 +203,15 @@ element.style.transform = 'translateX(100px)';
 
 渲染流程：
 
-```text
-HTML 解析 → DOM Tree
-CSS 解析  → CSSOM Tree
-          ↓
-       Render Tree
-          ↓
-        Layout (計算位置和尺寸)
-          ↓
-        Paint (繪製像素)
-          ↓
-      Compositing (合成輸出)
+```mermaid
+flowchart TD
+    html["HTML 解析"] --> domtree["DOM Tree"]
+    css["CSS 解析"] --> cssomtree["CSSOM Tree"]
+    domtree --> render["Render Tree"]
+    cssomtree --> render
+    render --> layout["Layout\n(計算位置和尺寸)"]
+    layout --> paint["Paint\n(繪製像素)"]
+    paint --> compositing["Compositing\n(合成輸出)"]
 ```
 
 效能影響由大到小：Reflow > Repaint > Compositing

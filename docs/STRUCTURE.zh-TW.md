@@ -160,7 +160,8 @@ app/
 components/
 ├── article/                       # 文章相關元件
 │   ├── code-block.tsx             # 程式碼區塊
-│   └── mdx-components.tsx         # MDX 自訂元件
+│   ├── mdx-components.tsx         # MDX 自訂元件
+│   └── mermaid-chart.tsx          # Mermaid 圖表元件
 ├── layout/                        # 佈局元件
 │   ├── main-nav.tsx               # 主導航列
 │   ├── mobile-menu.tsx            # 行動版選單

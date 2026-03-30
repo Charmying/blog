@@ -24,6 +24,7 @@ npm run dev
 - **Multilingual Support** — Complete i18n implementation (Traditional Chinese / English)
 - **Dark Mode** — Carefully designed light/dark theme switching system
 - **Syntax Highlighting** — Professional code display with highlight.js integration
+- **Mermaid Diagrams** — Flowcharts and diagrams rendered directly in articles, with automatic light/dark theme switching
 
 ### User Experience
 - **Responsive Design** — Full support for desktop, tablet, and mobile devices
@@ -80,7 +81,8 @@ blog/
 │   │   ├── article/                  # Article-related components
 │   │   │   ├── code-block.tsx        # Code block component
 │   │   │   ├── comments.tsx          # Comments component
-│   │   │   └── mdx-components.tsx    # Custom MDX components
+│   │   │   ├── mdx-components.tsx    # Custom MDX components
+│   │   │   └── mermaid-chart.tsx     # Mermaid diagram component
 │   │   ├── layout/                   # Layout components
 │   │   │   ├── main-nav.tsx          # Main navigation
 │   │   │   ├── mobile-menu.tsx       # Mobile menu
@@ -208,6 +210,7 @@ src/posts/
 - **Tag Aggregation** — Automatic collection and categorization of all tags
 - **Date Sorting** — Articles automatically sorted by date
 - **Syntax Highlighting** — Automatic code block highlighting
+- **Mermaid Diagram Rendering** — Diagrams rendered client-side with theme-aware styling
 
 ---
 

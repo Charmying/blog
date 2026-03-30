@@ -112,6 +112,19 @@ This document explains all npm packages used in the project, including their pur
 
 ---
 
+### mermaid
+
+| Item | Content |
+|------|---------|
+| **Package** | `mermaid` |
+| **Version** | `^11` |
+| **Purpose** | Render Mermaid diagram syntax into SVG in the browser |
+| **Why Chosen** | • Official Mermaid library, most complete dialect support<br>• Client-side SVG rendering, no build-time dependencies<br>• Built-in theme system (default / dark)<br>• Actively maintained with a large community |
+| **Alternatives** | • rehype-mermaid — Server-side rendering but requires Playwright/Puppeteer<br>• mermaid-js/mermaid-live-editor — Online tool only, not embeddable |
+| **Use Cases** | • Flowcharts, sequence diagrams, class diagrams in articles<br>• Automatic light/dark theme switching<br>• Graceful error fallback |
+
+---
+
 ## Internationalization
 
 ### next-intl
@@ -225,7 +238,9 @@ Next.js
     └─ next-mdx-remote (MDX)
         ├─ remark-gfm (Markdown extensions)
         ├─ rehype-slug (Heading IDs)
-        └─ rehype-autolink-headings (Heading links)
+        ├─ rehype-autolink-headings (Heading links)
+        ├─ highlight.js (Code syntax highlighting)
+        └─ mermaid (Diagram rendering)
 ```
 
 ### Development Toolchain

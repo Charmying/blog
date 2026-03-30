@@ -433,6 +433,16 @@ More content...
 ```typescript
 const example = "code example";
 ```
+
+## Architecture Diagram
+
+Use Mermaid syntax to embed diagrams:
+
+```mermaid
+graph LR
+    Client --> Server
+    Server --> Database
+```
 ```
 
 **3. Verify article**

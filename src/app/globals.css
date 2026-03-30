@@ -1206,3 +1206,29 @@ body.theme-ready {
     font-size: 0.75rem;
   }
 }
+
+/* ========================= 15. Mermaid Chart ========================= */
+
+.mermaid-chart {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: center;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mermaid-chart svg {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.75rem;
+}
+
+.mermaid-chart__error {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+  opacity: 0.7;
+  white-space: pre-wrap;
+  word-break: break-all;
+}

@@ -17,15 +17,7 @@
     "introHighlight": "web experiences",
     "introDesc": "Focused on frontend development, dedicated to creating intuitive, elegant, and performant user interfaces.",
     "introSubDesc": "Combining modern technology with design aesthetics, pursuing perfection from concept to execution.",
-    "learnMore": "Learn more",
-    "philosophyTitle": "Design Philosophy",
-    "philosophySubtitle": "Simplicity isn't the absence of things, but the removal of the unnecessary so the essential can stand out",
-    "philSimpleTitle": "Simple",
-    "philSimpleDesc": "Remove the redundant, focus on essence",
-    "philIntuitiveTitle": "Intuitive",
-    "philIntuitiveDesc": "User experience above all",
-    "philCraftTitle": "Crafted",
-    "philCraftDesc": "Details define quality"
+    "learnMore": "Learn more"
   },
   "AboutPage": {
     "title": "About",

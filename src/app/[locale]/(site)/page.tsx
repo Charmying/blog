@@ -71,32 +71,6 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
           </Link>
         </div>
       </section>
-      {/* Philosophy */}
-      <section className="px-4 py-12 xs:py-14 sm:py-16">
-        <div className="mx-auto max-w-4xl">
-          <div className="mb-12 text-center">
-            <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold tracking-[-0.025em] leading-[1.1] mb-6">
-              {t("philosophyTitle")}
-            </h2>
-            <p className="mx-auto max-w-2xl text-lg xs:text-xl leading-[1.5] opacity-80">
-              {t("philosophySubtitle")}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {([
-              { titleKey: "philSimpleTitle", descKey: "philSimpleDesc", icon: "✨" },
-              { titleKey: "philIntuitiveTitle", descKey: "philIntuitiveDesc", icon: "🎯" },
-              { titleKey: "philCraftTitle", descKey: "philCraftDesc", icon: "🔍" },
-            ] as const).map((item) => (
-              <div key={item.titleKey} className="rounded-xl border p-6 text-center transition-all duration-300 hover:scale-[1.02]" style={{ backgroundColor: "var(--card-bg)", borderColor: "var(--border)" }}>
-                <div className="mb-4 text-3xl">{item.icon}</div>
-                <h3 className="mb-3 text-xl font-semibold tracking-tight">{t(item.titleKey)}</h3>
-                <p className="text-sm opacity-70 leading-[1.5]">{t(item.descKey)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </>
   );
 }

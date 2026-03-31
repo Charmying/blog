@@ -1232,3 +1232,67 @@ body.theme-ready {
   white-space: pre-wrap;
   word-break: break-all;
 }
+
+.mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) path.node-bkg,
+.mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) rect,
+.mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) circle,
+.mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) ellipse,
+.mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) polygon {
+  fill: #1d1d1f !important;
+  stroke: rgba(255, 255, 255, 0.08) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) foreignObject * {
+  color: #f5f5f7 !important;
+}
+
+.mermaid-chart svg .section-root path.node-bkg,
+.mermaid-chart svg .section--1 path.node-bkg,
+.mermaid-chart svg .section-root circle,
+.mermaid-chart svg .section--1 circle,
+.mermaid-chart svg .section-root rect,
+.mermaid-chart svg .section--1 rect {
+  fill: #f5f5f7 !important;
+  stroke: rgba(245, 245, 247, 0.15) !important;
+  stroke-width: 1px !important;
+}
+
+.mermaid-chart svg .section-root foreignObject *,
+.mermaid-chart svg .section--1 foreignObject * {
+  color: #000000 !important;
+  font-weight: 600 !important;
+}
+
+/* ============ 16. Light mode overrides ============ */
+
+[data-theme="light"] .mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) path.node-bkg,
+[data-theme="light"] .mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) rect,
+[data-theme="light"] .mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) circle,
+[data-theme="light"] .mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) ellipse,
+[data-theme="light"] .mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) polygon {
+  fill: #f5f5f7 !important;
+  stroke: rgba(0, 0, 0, 0.08) !important;
+  stroke-width: 1px !important;
+}
+
+[data-theme="light"] .mermaid-chart svg .mindmap-node:not(.section-root):not(.section--1) foreignObject * {
+  color: #1d1d1f !important;
+}
+
+[data-theme="light"] .mermaid-chart svg .section-root path.node-bkg,
+[data-theme="light"] .mermaid-chart svg .section--1 path.node-bkg,
+[data-theme="light"] .mermaid-chart svg .section-root circle,
+[data-theme="light"] .mermaid-chart svg .section--1 circle,
+[data-theme="light"] .mermaid-chart svg .section-root rect,
+[data-theme="light"] .mermaid-chart svg .section--1 rect {
+  fill: #1d1d1f !important;
+  stroke: rgba(29, 29, 31, 0.15) !important;
+  stroke-width: 1px !important;
+}
+
+[data-theme="light"] .mermaid-chart svg .section-root foreignObject *,
+[data-theme="light"] .mermaid-chart svg .section--1 foreignObject * {
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}

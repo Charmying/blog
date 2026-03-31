@@ -17,7 +17,10 @@
     "introHighlight": "web experiences",
     "introDesc": "Focused on frontend development, dedicated to creating intuitive, elegant, and performant user interfaces.",
     "introSubDesc": "Combining modern technology with design aesthetics, pursuing perfection from concept to execution.",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "latestTitle": "Latest Articles",
+    "viewAll": "View all articles",
+    "readingTime": "{time} min read"
   },
   "AboutPage": {
     "title": "About",

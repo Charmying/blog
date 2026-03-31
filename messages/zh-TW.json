@@ -17,7 +17,10 @@
     "introHighlight": "網頁體驗",
     "introDesc": "專注於前端開發，致力於創造直觀、優雅且高效能的使用者介面。",
     "introSubDesc": "結合現代技術與設計美學，從概念到實現，每個細節都追求完美。",
-    "learnMore": "了解更多"
+    "learnMore": "了解更多",
+    "latestTitle": "最新文章",
+    "viewAll": "查看全部文章",
+    "readingTime": "{time} 分鐘"
   },
   "AboutPage": {
     "title": "關於我",

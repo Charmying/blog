@@ -73,7 +73,7 @@ type TimelineItem = {
 const timeline: TimelineItem[] = [
   {
     startDate: '2024.05',
-    endDate: 'Incumbent',
+    endDate: '2026.03',
     titleZh: 'Angular 前端工程師',
     titleEn: 'Angular Front-end Engineer',
     orgZh: '網際威信股份有限公司',

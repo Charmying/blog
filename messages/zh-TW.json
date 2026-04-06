@@ -1,7 +1,7 @@
 {
   "Site": {
     "title": "Charmy's Lab",
-    "description": "Charmy 部落格，專注於想法、專案、設計與筆記的個人部落格。"
+    "description": "Charmy (曾韋翰) 的前端工程師技術部落格，分享前端開發、React、Next.js、TypeScript、Angular、Vue.js 等技術筆記與學習心得。"
   },
   "Nav": {
     "home": "首頁",
@@ -10,7 +10,7 @@
   },
   "HomePage": {
     "title": "首頁",
-    "description": "Charmy 部落格，專注於前端、網頁、軟體開發。",
+    "description": "Charmy 前端部落格｜Charmy 的技術分享，涵蓋前端開發等技術文章與筆記。",
     "heroTitle": "你好，我是 Charmy",
     "heroSubtitle": "Frontend Developer & Digital Creator",
     "introHeading": "打造精緻的",
@@ -24,7 +24,7 @@
   },
   "AboutPage": {
     "title": "關於我",
-    "description": "Charmy 部落格關於我頁面，包含個人簡介、技術能力、工作經驗、學習歷程與聯絡方式。",
+    "description": "關於前端工程師 Charmy (曾韋翰)｜台灣前端開發者，擅長 React、Next.js、TypeScript、Angular、Vue.js，具備企業級金融系統前端開發與維運經驗。",
     "heroTitle": "About Me",
     "heroSubtitle": "熱愛技術的前端開發者",
     "name": "曾韋翰",
@@ -67,7 +67,7 @@
   },
   "ArticlesPage": {
     "title": "文章",
-    "description": "Charmy 部落格文章列表。",
+    "description": "Charmy 前端部落格文章列表｜收錄前端開發、網路協定、Web 技術、React、Next.js、TypeScript 等技術筆記、教學文章與學習心得。",
     "heroTitle": "技術文章",
     "heroSubtitle": "探索程式開發的世界",
     "all": "全部",

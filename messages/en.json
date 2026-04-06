@@ -1,7 +1,7 @@
 {
   "Site": {
     "title": "Charmy's Lab",
-    "description": "Charmy's personal blog focused on ideas, projects, design, and notes."
+    "description": "Charmy's frontend development blog — technical notes on React, Next.js, TypeScript, Angular, Vue.js, and modern web development."
   },
   "Nav": {
     "home": "Home",
@@ -10,7 +10,7 @@
   },
   "HomePage": {
     "title": "Home",
-    "description": "Charmy's personal blog focused on frontend, web, and software development.",
+    "description": "Charmy's frontend blog — a frontend developer sharing articles.",
     "heroTitle": "Hello, I'm Charmy",
     "heroSubtitle": "Frontend Developer & Digital Creator",
     "introHeading": "Crafting refined ",
@@ -24,7 +24,7 @@
   },
   "AboutPage": {
     "title": "About",
-    "description": "Charmy's personal blog about page, including personal introduction, technical skills, work experience, learning journey, and contact information.",
+    "description": "About Charmy — a frontend developer from Taiwan experienced in React, Next.js, TypeScript, Angular, Vue.js, and enterprise-level financial system development.",
     "heroTitle": "About Me",
     "heroSubtitle": "A passionate frontend developer",
     "name": "Charmy",
@@ -67,7 +67,7 @@
   },
   "ArticlesPage": {
     "title": "Articles",
-    "description": "Charmy's blog article list.",
+    "description": "Charmy's frontend blog — technical articles on frontend development, web protocols, React, Next.js, TypeScript, network engineering, and modern web technologies.",
     "heroTitle": "Articles",
     "heroSubtitle": "Exploring the world of programming and development",
     "all": "All",

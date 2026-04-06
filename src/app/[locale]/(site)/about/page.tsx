@@ -3,25 +3,32 @@ import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { generatePersonSchema, getCanonicalUrl, getLocaleCode } from "@/lib/seo";
+import { generatePersonSchema, generateBreadcrumbSchema, getCanonicalUrl, getLocaleCode } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }>; }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "AboutPage" });
   const url = getCanonicalUrl("/about", locale);
+  const isZh = locale === 'zh-TW';
 
   return {
     title: t("title"),
     description: t("description"),
+    keywords: isZh ? ['Charmy', 'charmying', '曾韋翰', 'Charmy Tseng', '前端工程師', '前端開發者', '台灣前端工程師', '前端開發', '關於我', 'Charmy 部落格'] : ['Charmy', 'charmying', 'Charmy Tseng', '曾韋翰', 'frontend developer', 'frontend engineer', 'Taiwan frontend developer', 'front-end developer', 'about'],
     alternates: {
       canonical: url,
       languages: {
         'zh-TW': getCanonicalUrl("/about", "zh-TW"),
         'en': getCanonicalUrl("/about", "en"),
+        'x-default': getCanonicalUrl("/about", "zh-TW"),
       },
     },
     openGraph: {
+      type: 'profile',
       locale: getLocaleCode(locale),
+      firstName: 'Charmy',
+      lastName: 'Tseng',
+      username: 'charmying',
     },
   };
 }
@@ -352,9 +359,15 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
   const t = useTranslations("AboutPage");
   const isZh = locale === "zh-TW";
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: isZh ? '首頁' : 'Home', url: getCanonicalUrl('/', locale) },
+    { name: t("title"), url: getCanonicalUrl('/about', locale) },
+  ]);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generatePersonSchema()) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {/* Hero */}
       <section className="px-4 pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-16 sm:pb-20 text-center">
         <div className="mx-auto max-w-4xl">

@@ -27,15 +27,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
   const url = getCanonicalUrl("/", locale);
+  const isZh = locale === 'zh-TW';
 
   return {
     title: t("title"),
     description: t("description"),
+    keywords: isZh ? ['Charmy', 'charmying', '曾韋翰', 'Charmy 部落格', '前端', '前端開發', '前端工程師', '前端部落格', '部落格', '技術部落格', '網頁開發', '台灣前端工程師'] : ['Charmy', 'charmying', 'Charmy Tseng', 'Charmy blog', 'frontend', 'front-end', 'frontend developer', 'frontend blog', 'blog', 'tech blog', 'web development'],
     alternates: {
       canonical: url,
       languages: {
         'zh-TW': getCanonicalUrl("/", "zh-TW"),
         'en': getCanonicalUrl("/", "en"),
+        'x-default': getCanonicalUrl("/", "zh-TW"),
       },
     },
     openGraph: {

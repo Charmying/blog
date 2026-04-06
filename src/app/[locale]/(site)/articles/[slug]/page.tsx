@@ -7,7 +7,7 @@ import { getAllPostSlugs, getPostMetadata, getPostContent } from "@/lib/posts";
 import { routing, type Locale } from "@/i18n/routing";
 import { mdxComponents } from "@/components/article/mdx-components";
 import { Comments } from "@/components/article/comments";
-import { generateArticleMetadata, generateArticleSchema, getLocaleCode, getSEOConfig } from "@/lib/seo";
+import { generateArticleMetadata, generateArticleSchema, generateBreadcrumbSchema, getCanonicalUrl, getLocaleCode, getSEOConfig } from "@/lib/seo";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
@@ -89,9 +89,16 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
     authorName,
   });
 
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: locale === 'zh-TW' ? '首頁' : 'Home', url: getCanonicalUrl('/', locale) },
+    { name: locale === 'zh-TW' ? '文章' : 'Articles', url: getCanonicalUrl('/articles', locale) },
+    { name: post.title, url: getCanonicalUrl(`/articles/${decodedSlug}`, locale) },
+  ]);
+
   return (
     <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
       {/* Header */}
       <header className="pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-14 sm:pb-16 px-4 text-center">
         <div className="mx-auto max-w-3xl">

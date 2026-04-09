@@ -1,0 +1,175 @@
+export const metadata = {
+  title: 'The OSI Model: A Framework for Network Communication',
+  date: '2026-04-10',
+  excerpt: 'A practical guide to the OSI model — covering all seven layers, their responsibilities and common protocols, how data flows through encapsulation and decapsulation, and how OSI maps to the TCP/IP model.',
+  tags: ['NetWork'],
+};
+
+# The OSI Model: A Framework for Network Communication
+
+The OSI (Open Systems Interconnection) model is a conceptual framework that breaks network communication into seven distinct layers, each with a clearly defined responsibility.
+
+OSI isn't a set of protocols you actually install — it's a reference model used to understand, discuss, and design network systems.
+
+```mermaid
+mindmap
+  root((The OSI Model))
+    The Seven Layers
+    Each Layer Explained
+    How Data Flows Through the Layers
+    OSI vs. TCP/IP
+```
+
+- [The Seven Layers](#the-seven-layers)
+- [Each Layer Explained](#each-layer-explained)
+- [How Data Flows Through the Layers](#how-data-flows-through-the-layers)
+- [OSI vs. TCP/IP](#osi-vs-tcpip)
+
+---
+
+## The Seven Layers
+
+From closest to the hardware at the bottom, to closest to the user at the top:
+
+```mermaid
+flowchart TD
+    L7["Layer 7 — Application Layer"] --- L6["Layer 6 — Presentation Layer"] --- L5["Layer 5 — Session Layer"] --- L4["Layer 4 — Transport Layer"] --- L3["Layer 3 — Network Layer"] --- L2["Layer 2 — Data Link Layer"] --- L1["Layer 1 — Physical Layer"]
+```
+
+A common mnemonic (top to bottom): All People Seem To Need Data Processing
+
+---
+
+## Each Layer Explained
+
+### Layer 7: Application Layer
+
+The layer closest to the user. It provides the interface between applications and the network.
+
+- Responsibility: Defines how applications communicate over the network
+- Common protocols: HTTP, HTTPS, FTP, SMTP, DNS
+- Example: A browser sending an HTTP request; an email client using SMTP to send a message
+
+### Layer 6: Presentation Layer
+
+Handles data formatting, encryption, and compression so both sides can understand each other's data.
+
+- Responsibility: Format translation, encryption/decryption, compression/decompression
+- Common protocols: TLS/SSL, JPEG, PNG, ASCII, UTF-8
+- Example: TLS encryption in HTTPS happens at this layer
+
+### Layer 5: Session Layer
+
+Manages the session — establishing, maintaining, and terminating communication between two devices.
+
+- Responsibility: Opening and closing sessions, handling recovery after interruptions
+- Common protocols: NetBIOS, RPC (Remote Procedure Call)
+- Example: Managing the connection state of a video call
+
+### Layer 4: Transport Layer
+
+Responsible for end-to-end data delivery — how data reliably gets from source to destination.
+
+- Responsibility: Segmentation and reassembly, error control, flow control
+- Common protocols: TCP, UDP
+- Example: TCP's three-way handshake for reliable connections; UDP's connectionless delivery for streaming
+
+### Layer 3: Network Layer
+
+Handles logical addressing and routing — how packets travel across different networks.
+
+- Responsibility: IP addressing, route selection, packet forwarding
+- Common protocols: IP (IPv4, IPv6), ICMP
+- Example: A router uses IP addresses at this layer to decide where to forward a packet
+
+### Layer 2: Data Link Layer
+
+Responsible for data transfer between two nodes on the same network, with error detection.
+
+- Responsibility: MAC addressing, frame creation and parsing, error detection
+- Common protocols: Ethernet, Wi-Fi (802.11), ARP
+- Example: A network switch forwards frames based on MAC addresses at this layer
+
+### Layer 1: Physical Layer
+
+The bottom layer — responsible for the actual transmission of raw bits over a physical medium.
+
+- Responsibility: Defines voltage levels, signal timing, transmission rates, connector specifications
+- Examples: Ethernet cables (Cat5e, Cat6), fiber optic cables, Wi-Fi radio waves
+- Example: An Ethernet cable transmitting electrical signals; a fiber cable transmitting light
+
+---
+
+## How Data Flows Through the Layers
+
+When you type a URL in a browser, the request travels through all seven OSI layers.
+
+Sending (top to bottom)
+
+Each layer adds its own header before passing data to the layer below:
+
+```mermaid
+flowchart TD
+    A["Application: HTTP request (raw data)"] --> B["Presentation: Encrypt (TLS)"]
+    B --> C["Session: Establish session"]
+    C --> D["Transport: Add TCP header (source/dest port)"]
+    D --> E["Network: Add IP header (source/dest IP)"]
+    E --> F["Data Link: Add Frame header (MAC address)"]
+    F --> G["Physical: Convert to electrical/optical signals"]
+```
+
+Receiving (bottom to top)
+
+Each layer strips its header and passes the data up:
+
+```mermaid
+flowchart TD
+    A["Physical: Receive signal, convert to bits"] --> B["Data Link: Strip Frame header"]
+    B --> C["Network: Strip IP header"]
+    C --> D["Transport: Strip TCP header, reassemble data"]
+    D --> E["Session: Manage session state"]
+    E --> F["Presentation: Decrypt"]
+    F --> G["Application: Browser receives HTTP response, renders the page"]
+```
+
+---
+
+## OSI vs. TCP/IP
+
+OSI is a conceptual model. The actual internet runs on the TCP/IP four-layer model. Here's how they map to each other:
+
+```mermaid
+flowchart LR
+    subgraph OSI["OSI (7 layers)"]
+        direction TB
+        L7["7. Application"] --- L6["6. Presentation"] --- L5["5. Session"] --- L4["4. Transport"] --- L3["3. Network"] --- L2["2. Data Link"] --- L1["1. Physical"]
+    end
+    subgraph TCPIP["TCP/IP (4 layers)"]
+        direction TB
+        T1["Application"] --- T2["Transport"] --- T3["Internet"] --- T4["Link"]
+    end
+    L7 & L6 & L5 --> T1
+    L4 --> T2
+    L3 --> T3
+    L2 & L1 --> T4
+```
+
+TCP/IP merges OSI's Application, Presentation, and Session layers into one Application layer, and combines Data Link and Physical into the Link layer.
+
+| | OSI Model | TCP/IP Model |
+| - | - | - |
+| Layers | 7 | 4 |
+| Purpose | Conceptual reference for understanding | Practical standard for the internet |
+| Flexibility | Higher (each layer independently defined) | Optimized for real-world deployment |
+
+---
+
+## Summary
+
+The OSI model is a useful mental framework for understanding network communication:
+
+- Each layer has a single, well-defined responsibility
+- Data is encapsulated layer by layer going down, transmitted at the Physical layer, then decapsulated layer by layer going back up
+- The actual internet uses the TCP/IP four-layer model; OSI is the reference model used for understanding and discussion
+
+The real value of learning OSI is building a clear mental model of how networks work. When something goes wrong, knowing which layer to look at makes troubleshooting much faster.

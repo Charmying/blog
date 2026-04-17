@@ -79,6 +79,33 @@ type TimelineItem = {
 
 const timeline: TimelineItem[] = [
   {
+    startDate: '2026.04',
+    endDate: 'Incumbent',
+    titleZh: '工程師',
+    titleEn: 'Engineer',
+    orgZh: '外包團隊',
+    orgEn: 'Outsourced Team',
+    locationZh: '臺中市',
+    locationEn: 'Taichung City, Taiwan',
+    skills: ['HTML5', 'CSS3', 'SCSS', 'Tailwind CSS', 'JavaScript', 'TypeScript', 'Angular', 'React', 'Electron', 'SEO', 'Git'],
+    summaryZh: '負責金融相關網站 SEO 與效能優化，包含技術分析、自動化工具開發與優化策略制定',
+    summaryEn: 'Responsible for SEO and performance optimization of financial-related websites, including technical analysis, automation tooling, and optimization strategy planning',
+    highlightsZh: [
+      { title: '開發自動化 Lighthouse 分析工具，輸入網址即可批次產出效能報告與 Excel 分析結果' },
+      { title: '根據 Lighthouse 與實際網站狀況，進行 SEO 與效能問題診斷' },
+      { title: '制定優化策略與優先順序，協助客戶聚焦關鍵改善項目' },
+      { title: '主導技術說明與優化建議會議，與客戶討論改善方向與實作策略' },
+      { title: '處理與修正前端相關 issue，持續優化網站表現' },
+    ],
+    highlightsEn: [
+      { title: 'Built an automated Lighthouse analysis tool to generate performance reports and Excel outputs from URLs' },
+      { title: 'Diagnosed SEO and performance issues based on Lighthouse data and real-world site behavior' },
+      { title: 'Defined optimization strategies and prioritized improvement actions' },
+      { title: 'Led technical discussions with clients, presenting findings and optimization plans' },
+      { title: 'Resolved frontend issues and continuously improved site performance' },
+    ],
+  },
+  {
     startDate: '2024.05',
     endDate: '2026.03',
     titleZh: 'Angular 前端工程師',

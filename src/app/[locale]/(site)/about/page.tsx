@@ -304,6 +304,13 @@ type JourneyItem = {
 const journey: JourneyItem[] = [
   {
     year: '2026',
+    titleZh: '實作 SEO',
+    titleEn: 'Implementing SEO',
+    descZh: '因爲工作需要實作 SEO 優化，開始學習 SEO 相關知識與技術並開發自動化 Lighthouse 分析工具',
+    descEn: 'Because of work requirements, I started learning SEO-related knowledge and technologies and developed an automated Lighthouse analysis tool.',
+  },
+  {
+    year: '2026',
     titleZh: '初學 React',
     titleEn: 'Learning React',
     descZh: '因 React 為目前最熱門前端框架而自學',

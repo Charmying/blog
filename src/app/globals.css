@@ -816,6 +816,49 @@ body.theme-ready {
   font-weight: 600;
 }
 
+/* Series filter chips — slightly distinct from tag chips */
+.article-tag--series {
+  border-color: rgba(167, 139, 250, 0.3);
+}
+
+/* Non-active series chip hover: purple tint instead of generic grey */
+.article-tag--series:not(.article-tag--active):hover {
+  background: rgba(167, 139, 250, 0.12);
+  border-color: rgba(167, 139, 250, 0.55);
+}
+
+.article-tag--series.article-tag--active {
+  background: linear-gradient(135deg, #8B5CF6, #7C3AED);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* Prevent base .article-tag:hover from overwriting the gradient */
+.article-tag--series.article-tag--active:hover {
+  background: linear-gradient(135deg, #9D6FFC, #8040E8);
+  transform: translateY(-1px);
+}
+
+/* Light mode overrides */
+[data-theme="light"] .article-tag--series {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+[data-theme="light"] .article-tag--series:not(.article-tag--active):hover {
+  background: rgba(124, 58, 237, 0.08);
+  border-color: rgba(124, 58, 237, 0.4);
+}
+
+[data-theme="light"] .article-tag--series.article-tag--active {
+  background: linear-gradient(135deg, #7C3AED, #6D28D9);
+  box-shadow: 0 2px 12px rgba(109, 40, 217, 0.25);
+}
+
+[data-theme="light"] .article-tag--series.article-tag--active:hover {
+  background: linear-gradient(135deg, #8B4AE8, #7B34D4);
+}
+
 /* View Toggle */
 .view-toggle {
   display: flex;
@@ -1084,6 +1127,38 @@ body.theme-ready {
   opacity: 0.3;
 }
 
+/* Series breadcrumb displayed above the card title */
+.article-card__series {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Dark mode default: bright/soft purple (↑ contrast on dark bg) */
+.article-card__series-name {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #A78BFA;
+  text-transform: uppercase;
+}
+
+/* Light mode: deep purple (↑ contrast on white bg) */
+[data-theme="light"] .article-card__series-name {
+  color: #7C3AED;
+}
+
+.article-card__series-sep {
+  font-size: 0.6875rem;
+  color: #A78BFA;
+  opacity: 0.5;
+}
+
+[data-theme="light"] .article-card__series-sep {
+  color: #7C3AED;
+}
+
 /* Article List */
 .article-list {
   display: flex;
@@ -1174,6 +1249,22 @@ body.theme-ready {
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Series path shown above the title in list rows */
+/* Dark mode default: bright/soft purple */
+.article-row__series {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #A78BFA;
+  text-transform: uppercase;
+  margin: 0 0 0.25rem 0;
+}
+
+/* Light mode: deep purple */
+[data-theme="light"] .article-row__series {
+  color: #7C3AED;
 }
 
 .article-row__tags {

@@ -1,6 +1,6 @@
 import { setRequestLocale } from "next-intl/server";
 import { getTranslations } from "next-intl/server";
-import { getAllPosts, getAllTags } from "@/lib/posts";
+import { getAllPosts, getAllTags, getAllSeries } from "@/lib/posts";
 import type { Locale } from "@/i18n/routing";
 import { ArticleList } from "./article-list";
 import { getCanonicalUrl, getLocaleCode, generateBreadcrumbSchema } from "@/lib/seo";
@@ -35,6 +35,7 @@ export default async function ArticlesPage({ params }: { params: Promise<{ local
   const t = await getTranslations({ locale, namespace: "ArticlesPage" });
   const posts = getAllPosts(locale as Locale);
   const tags = getAllTags(locale as Locale);
+  const series = getAllSeries(locale as Locale);
 
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: locale === 'zh-TW' ? '首頁' : 'Home', url: getCanonicalUrl('/', locale) },
@@ -55,7 +56,7 @@ export default async function ArticlesPage({ params }: { params: Promise<{ local
           </p>
         </div>
       </section>
-      <ArticleList posts={posts} tags={tags} />
+      <ArticleList posts={posts} tags={tags} series={series} />
     </>
   );
 }

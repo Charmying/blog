@@ -81,6 +81,8 @@
     "sortByDate": "Sort by date",
     "sortByTitle": "Sort by title",
     "sortByReadingTime": "Sort by reading time",
-    "noArticles": "No articles found"
+    "noArticles": "No articles found",
+    "seriesFilter": "Series",
+    "allSeries": "All"
   }
 }

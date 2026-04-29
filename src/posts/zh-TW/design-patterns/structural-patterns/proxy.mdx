@@ -1,0 +1,118 @@
+export const metadata = {
+  title: '設計模式：代理模式 (Proxy)',
+  date: '2026-03-28',
+  excerpt: '介紹結構型設計模式中的代理模式——如何透過一個代理物件控制對原始物件的存取，實現恐慧載入、存取控制、繯存等功能。',
+  tags: ['軟體設計', '設計模式', 'OOP'],
+};
+
+# 設計模式：代理模式 (Proxy)
+
+Proxy 建立一個代理物件，控制對另一個物件的存取。客戶端以為在與原始物件互動，實際上只是在和代理互動。
+
+```mermaid
+mindmap
+    root((Proxy))
+        意圖與用途
+        代理的類型
+        實作範例
+        適用情境
+        總結
+```
+
+- [意圖與用途](#意圖與用途)
+- [代理的類型](#代理的類型)
+- [實作範例：繯存代理](#實作範例繯存代理)
+- [適用情境](#適用情境)
+- [總結](#總結)
+
+---
+
+## 意圖與用途
+
+Proxy 提供和原始物件相同的介面，在不改變客戶端使用方式的前提下，在中間進行額外操作。
+
+三種主要應用場景：
+
+- **虜擬代理 (Virtual Proxy)**：延遲建立費時的物件，需要時才真正建立
+- **保護代理 (Protection Proxy)**：控制存取權限
+- **遠程代理 (Remote Proxy)**：封裝遠程呼叫的細節
+
+---
+
+## 代理的類型
+
+**繯存代理**：保存結果，避免重複費時操作。這是實務中最常見的應用。
+
+---
+
+## 實作範例：繯存代理
+
+```typescript
+interface DataService {
+  fetchUser(id: string): Promise<User>;
+}
+
+// 真實的資料服務
+ class RealDataService implements DataService {
+  async fetchUser(id: string): Promise<User> {
+    console.log(`呼叫 API: /users/${id}`);
+    // 假設這是一個慢的網路請求
+    return { id, name: 'Alice', email: 'alice@example.com' };
+  }
+}
+
+// 繯存 Proxy——相同介面，增加繯存機制
+class CachedDataService implements DataService {
+  private cache = new Map<string, User>();
+
+  constructor(private realService: DataService) {}
+
+  async fetchUser(id: string): Promise<User> {
+    if (this.cache.has(id)) {
+      console.log(`繯存命中: ${id}`);
+      return this.cache.get(id)!;
+    }
+    const user = await this.realService.fetchUser(id);
+    this.cache.set(id, user);
+    return user;
+  }
+}
+
+// 客戶端只知道 DataService 介面
+async function main() {
+  const service: DataService = new CachedDataService(new RealDataService());
+
+  await service.fetchUser('123'); // 呼叫 API
+  await service.fetchUser('123'); // 繯存命中
+  await service.fetchUser('456'); // 呼叫 API
+  await service.fetchUser('456'); // 繯存命中
+}
+
+main();
+```
+
+客戶端完全不知道繯存存在。`CachedDataService` 與 `RealDataService` 介面完全相同，可以自由替換。
+
+---
+
+## 適用情境
+
+**適用時機**
+
+- 延遲建立費時資源（虜擬代理）
+- 存取控制與權限驗證（保護代理）
+- 結果繯存（繯存代理）
+- 記錄操作日誌
+
+**與 Decorator 的差別**
+
+Proxy 的目的是控制**存取**，Decorator 的目的是**援展行為**。兩者結構相似，但意圖不同。
+
+---
+
+## 總結
+
+Proxy 在現代前端廫極為常見：
+JavaScript 的 `Proxy` 內建物件、Vue.js 的反應式系統、Angular 的 `HttpClient` 拦截器都是這個模式的實踐。
+
+核心訳訣：**在不改變介面的前提下，控制對物件的存取與行為。**

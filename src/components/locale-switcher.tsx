@@ -27,7 +27,10 @@ export function LocaleSwitcher({ availableSlugs }: { availableSlugs?: Record<Loc
         return;
       }
     }
-    router.replace(pathname, { locale: nextLocale });
+    // Preserve query string (e.g. ?series=design-patterns&tag=TypeScript).
+    // window.location.search is safe here — this runs only inside a click handler.
+    const qs = typeof window !== "undefined" ? window.location.search : "";
+    router.replace(qs ? `${pathname}${qs}` : pathname, { locale: nextLocale });
   }
 
   return (

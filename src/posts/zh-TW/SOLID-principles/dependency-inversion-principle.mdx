@@ -1,0 +1,171 @@
+export const metadata = {
+  title: 'SOLID 原則：依賴反轉原則 (DIP)',
+  date: '2026-04-16',
+  excerpt: '介紹 SOLID 五大原則中的依賴反轉原則，說明高層模組為何不應該直接依賴低層實作，以及如何透過抽象介面和依賴注入解耆。',
+  tags: ['軟體設計', '最佳實踐', 'OOP'],
+};
+
+# SOLID 原則：依賴反轉原則 (DIP)
+
+依賴反轉原則 (Dependency Inversion Principle，DIP) 是 SOLID 的第五條：
+
+> 1. 高層模組不應該依賴低層模組，兩者都應該依賴抽象之物。
+> 2. 抽象不應該依賴細節，細節應該依賴抽象。
+
+「反轉」的意思不是倒過來依賴，而是**抽象限定了依賴方向**——高層模組定義它需要的东西，低層實作則尻就這些需求。
+
+```mermaid
+mindmap
+    root((DIP))
+        什麼是依賴反轉原則
+        直接依賴的問題
+        依賴抽象
+        依賴注入
+        總結
+```
+
+- [什麼是依賴反轉原則](#什麼是依賴反轉原則)
+- [直接依賴的問題](#直接依賴的問題)
+- [依賴抽象](#依賴抽象)
+- [依賴注入](#依賴注入)
+- [總結](#總結)
+
+---
+
+## 什麼是依賴反轉原則
+
+想象一個訂單服務需要建立資料庫連線、發送 email、記錄日誌。如果直接在服務類別內建立這些依賴，就是所謂的高層依賴低層。
+
+**高層模組**：訂單服務——負責業務邏輯
+**低層模組**：資料庫、email、log ——負責實作細節
+
+DIP 說：這兩層不應直接相依賴，應該都依賴抽象。
+
+---
+
+## 直接依賴的問題
+
+```typescript
+class MySQLUserRepository {
+  save(user: User): void {
+    // 直接操作 MySQL
+    mysql.query(`INSERT INTO users ...`);
+  }
+}
+
+class SMTPNotifier {
+  send(to: string, message: string): void {
+    // 直接使用 SMTP
+    smtp.sendMail({ to, text: message });
+  }
+}
+
+// 高層模組直接依賴低層的實作
+class OrderService {
+  private repo = new MySQLUserRepository();  // 直接 new
+  private notifier = new SMTPNotifier();      // 直接 new
+
+  placeOrder(userId: string, items: Item[]): void {
+    const order = buildOrder(userId, items);
+    this.repo.save(order);
+    this.notifier.send(userId, '訂單建立成功');
+  }
+}
+```
+
+問題：
+
+- `OrderService` 和 `MySQLUserRepository` 緊耦合，換 PostgreSQL 就要改 `OrderService`
+- 測試 `OrderService` 需要真實的 MySQL 連線和 SMTP 伺服器
+- 模組之間的依賴方向：`OrderService` → 具體實作，高層依賴低層
+
+---
+
+## 依賴抽象
+
+將依賴的目標改為抽象：
+
+```typescript
+// 高層模組定義它需要什麼——抽象介面
+interface UserRepository {
+  save(user: User): void;
+}
+
+interface Notifier {
+  send(to: string, message: string): void;
+}
+
+// 低層模組實作抽象介面
+class MySQLUserRepository implements UserRepository {
+  save(user: User): void {
+    mysql.query(`INSERT INTO users ...`);
+  }
+}
+
+class SMTPNotifier implements Notifier {
+  send(to: string, message: string): void {
+    smtp.sendMail({ to, text: message });
+  }
+}
+
+// 高層模組依賴抽象，不依賴實作
+class OrderService {
+  constructor(
+    private repo: UserRepository,   // 介面，不是具體類別
+    private notifier: Notifier,      // 介面，不是具體類別
+  ) {}
+
+  placeOrder(userId: string, items: Item[]): void {
+    const order = buildOrder(userId, items);
+    this.repo.save(order);
+    this.notifier.send(userId, '訂單建立成功');
+  }
+}
+```
+
+現在依賴方向式：`OrderService` 和 `MySQLUserRepository` 兩者都依賴 `UserRepository` 抽象，而不是相互依賴。
+
+---
+
+## 依賴注入
+
+依賴反轉原則常透過依賴注入 (Dependency Injection，DI) 實現。不在模組內部建立依賴，而是從外部傳入：
+
+```typescript
+// 建立實作類別
+const repo = new MySQLUserRepository();
+const notifier = new SMTPNotifier();
+
+// 將依賴注入 OrderService
+const orderService = new OrderService(repo, notifier);
+```
+
+測試時，只需注入 mock 實作：
+
+```typescript
+// mock 實作
+const mockRepo: UserRepository = {
+  save: jest.fn(),
+};
+
+const mockNotifier: Notifier = {
+  send: jest.fn(),
+};
+
+// 不需要真實資料庫或 SMTP——完全可控
+const orderService = new OrderService(mockRepo, mockNotifier);
+```
+
+測試獨立、決定性強。有需要時替換實作也很自然。
+
+---
+
+## 總結
+
+DIP 的核心：
+
+- **高層模組定義抽象**，低層實作資己適應
+- 抽象成為了高層模組和低層實作之間的「防火牆」
+- 摧掴高層 / 低層的固定相依關係，使两者都可以独立演展和測試
+
+DIP 是依賴注入容器 (IoC Container)、服務定位 (Service Locator) 等更進階模式的基礎。SOLID 五條原則至此完整，彼此独立卻又相互強化。

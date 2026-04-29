@@ -1,0 +1,247 @@
+export const metadata = {
+  title: 'Base64 Encoding',
+  date: '2026-03-31',
+  excerpt: 'A practical guide to Base64 encoding — covering how the encoding works, padding, the Base64URL variant, usage in JavaScript and Python, and common use cases including JWT, email attachments, and HTTP Basic Auth.',
+  tags: ['Security', 'Network'],
+};
+
+# Base64 Encoding
+
+Base64 is a way to encode binary data as plain text, making it safe to transmit in environments that only support text.
+
+Base64 is not encryption. It's just encoding — anyone can decode it to recover the original data.
+
+```mermaid
+mindmap
+  root((Base64))
+    What Is Base64
+    How Base64 Encoding Works
+    Base64URL
+    Using Base64
+    Common Use Cases
+```
+
+- [What Is Base64](#what-is-base64)
+- [How Base64 Encoding Works](#how-base64-encoding-works)
+- [Base64URL](#base64url)
+- [Using Base64](#using-base64)
+- [Common Use Cases](#common-use-cases)
+
+---
+
+## What Is Base64
+
+Base64 uses 64 printable ASCII characters (A-Z, a-z, 0-9, +, /) to represent binary data. Every 3 bytes of input are encoded into 4 characters of output.
+
+The name "Base64" comes from the size of its character set: 64.
+
+```text
+Input:  any binary data
+Output: a string containing only A-Z, a-z, 0-9, +, /, and =
+```
+
+Encoded data is about 4/3 the size of the original — roughly a 33% size increase.
+
+---
+
+## How Base64 Encoding Works
+
+Base64 takes every 3 bytes (24 bits) of input and splits them into four 6-bit groups. Each group maps to one character in the Base64 alphabet.
+
+### Step by Step
+
+Encoding `"Man"`:
+
+Step 1: Get the ASCII values
+
+```
+'M' = 77
+'a' = 97
+'n' = 110
+```
+
+Step 2: Convert to binary
+
+```
+M: 01001101
+a: 01100001
+n: 01101110
+```
+
+Step 3: Split 24 bits into four 6-bit groups
+
+```
+01001101 01100001 01101110
+→ 010011 | 010110 | 000101 | 101110
+→ 19     | 22     | 5      | 46
+```
+
+Step 4: Map to the Base64 alphabet
+
+```
+19 → T
+22 → W
+5  → F
+46 → u
+```
+
+Result: `"Man"` → `"TWFu"`
+
+### Padding
+
+When the input length isn't a multiple of 3, `=` is used as padding:
+
+- 2 leftover bytes → 3 output characters + `=`
+- 1 leftover byte → 2 output characters + `==`
+
+```
+"Ma" → "TWE="
+"M"  → "TQ=="
+```
+
+---
+
+## Base64URL
+
+Standard Base64 uses `+` and `/`, which have special meaning in URLs. Placing them in a URL directly causes problems.
+
+Base64URL is a URL-safe variant that swaps:
+- `+` → `-`
+- `/` → `_`
+- Trailing `=` padding is typically omitted
+
+```text
+Base64:    TWFu+abc/def==
+Base64URL: TWFu-abc_def
+```
+
+JWT uses Base64URL encoding — that's why a JWT can be placed directly in a URL query parameter without needing to be escaped.
+
+---
+
+## Using Base64
+
+### JavaScript
+
+```javascript
+// Encode (string to Base64)
+const encoded = btoa('Hello World');
+console.log(encoded); // SGVsbG8gV29ybGQ=
+
+// Decode (Base64 to string)
+const decoded = atob('SGVsbG8gV29ybGQ=');
+console.log(decoded); // Hello World
+
+// For non-ASCII characters, encode first
+const text = 'こんにちは';
+const encoded = btoa(encodeURIComponent(text));
+const decoded = decodeURIComponent(atob(encoded));
+```
+
+In Node.js, use Buffer:
+
+```javascript
+// Encode
+const encoded = Buffer.from('Hello World').toString('base64');
+
+// Decode
+const decoded = Buffer.from('SGVsbG8gV29ybGQ=', 'base64').toString('utf8');
+
+// Base64URL
+const encodedURL = Buffer.from('Hello World').toString('base64url');
+```
+
+### Python
+
+```python
+import base64
+
+# Encode
+encoded = base64.b64encode(b'Hello World')
+print(encoded)  # b'SGVsbG8gV29ybGQ='
+
+# Decode
+decoded = base64.b64decode(b'SGVsbG8gV29ybGQ=')
+print(decoded)  # b'Hello World'
+
+# Base64URL
+encoded_url = base64.urlsafe_b64encode(b'Hello World')
+```
+
+### Command Line
+
+```bash
+# Encode
+echo -n "Hello World" | base64
+# SGVsbG8gV29ybGQ=
+
+# Decode
+echo "SGVsbG8gV29ybGQ=" | base64 --decode
+# Hello World
+```
+
+---
+
+## Common Use Cases
+
+### Email Attachments (MIME)
+
+Email (SMTP) was originally designed for ASCII text only. Binary attachments like images and documents need to be Base64-encoded before they can be included in a message.
+
+### Embedding Images in HTML / CSS
+
+Convert an image to Base64 and embed it directly in HTML or CSS, eliminating the extra HTTP request:
+
+```html
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." />
+```
+
+```css
+.icon {
+  background-image: url('data:image/svg+xml;base64,PHN2Zy...');
+}
+```
+
+### JWT (JSON Web Token)
+
+The Header and Payload of a JWT are both Base64URL encoded:
+
+```
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMjMifQ.signature
+```
+
+Decoding the Payload:
+
+```javascript
+const payload = atob('eyJ1c2VySWQiOiIxMjMifQ==');
+// {"userId":"123"}
+```
+
+### HTTP Basic Authentication
+
+HTTP Basic Auth encodes the username and password with Base64 and places them in the request header:
+
+```
+Authorization: Basic dXNlcjpwYXNzd29yZA==
+```
+
+Decoded: `user:password`.
+
+Note: Base64 is not encryption. This scheme is only safe over HTTPS.
+
+### Transmitting Binary Data in Text Protocols
+
+Anywhere you need to pass binary data through a text-only channel:
+
+- Images or files in a JSON API
+- Binary data embedded in XML
+- Credentials stored in environment variables (e.g. SSL certificates)
+
+---
+
+## Conclusion
+
+- Base64 is encoding, not encryption — anyone can decode it
+- Every 3 bytes of input become 4 characters of output, increasing size by ~33%
+- Base64URL is the URL-safe variant — replaces `+` with `-` and `/` with `_`
+- Common uses: email attachments, HTML image embedding, JWT, HTTP Basic Auth

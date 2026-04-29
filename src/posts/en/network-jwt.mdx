@@ -1,0 +1,207 @@
+export const metadata = {
+  title: 'JWT (JSON Web Token)',
+  date: '2026-03-31',
+  excerpt: 'A practical guide to JWT — covering the three-part structure, how verification works, signing algorithms, the Refresh Token pattern, and the security trade-offs of different storage options.',
+  tags: ['Security', 'Network'],
+};
+
+# JWT (JSON Web Token)
+
+JWT (JSON Web Token) is an open standard (RFC 7519) for securely transmitting information between two parties. Its most common use is authentication — the server issues a JWT after login, and the client includes it with every subsequent request so the server can verify the user's identity.
+
+```mermaid
+mindmap
+  root((JWT))
+    Structure
+      Header
+      Payload
+      Signature
+    How JWT Works
+    Signing Algorithms
+    Things to Get Right
+    JWT vs Sessions
+```
+
+- [Structure](#structure)
+- [How JWT Works](#how-jwt-works)
+- [Signing Algorithms](#signing-algorithms)
+- [Things to Get Right](#things-to-get-right)
+- [JWT vs Sessions](#jwt-vs-sessions)
+
+---
+
+## Structure
+
+A JWT has three parts separated by dots:
+
+```
+Header.Payload.Signature
+```
+
+A real JWT looks like this:
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkNoYXJteSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+Each part is Base64Url encoded — not encrypted. Anyone can decode and read it.
+
+### Header
+
+Contains the token type and signing algorithm:
+
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+### Payload
+
+Contains claims — the actual information the token carries:
+
+```json
+{
+  "sub": "1234567890",
+  "name": "Charmy",
+  "role": "admin",
+  "iat": 1516239022,
+  "exp": 1516242622
+}
+```
+
+Common standard claims:
+
+| Claim | Description |
+| - | - |
+| `sub` | Subject — who the token is about (usually a user ID) |
+| `iss` | Issuer — who issued the token |
+| `aud` | Audience — who the token is intended for |
+| `exp` | Expiration time (Unix timestamp) |
+| `iat` | Issued at time |
+| `nbf` | Not before — token is invalid before this time |
+
+The Payload is not encrypted. Anyone can Base64Url decode it and read the contents. Never put passwords, credit card numbers, or other sensitive data in a JWT payload.
+
+### Signature
+
+The signature ensures the token hasn't been tampered with:
+
+```
+HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),
+  secret
+)
+```
+
+The server signs the Header and Payload with a secret key. To verify, the server recomputes the signature and compares it to the one in the token. If someone modifies the payload (e.g. changing `role: "user"` to `role: "admin"`), the signature check will fail.
+
+---
+
+## How JWT Works
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant Server
+    Client->>Server: credentials (login)
+    Server-->>Client: JWT
+    Note over Client: Stores JWT
+    Client->>Server: Authorization: Bearer JWT
+    alt Valid
+        Note over Server: Process the request
+    else Invalid
+        Server-->>Client: 401 Unauthorized
+    end
+```
+
+JWT is stateless — the server doesn't store session data. Everything needed to verify the user is in the token itself. This makes JWT particularly well-suited for distributed systems and microservices.
+
+---
+
+## Signing Algorithms
+
+JWT supports two categories of signing algorithms:
+
+### Symmetric (HMAC)
+
+| Algorithm | Description |
+| - | - |
+| HS256 | HMAC-SHA256 — same secret signs and verifies |
+| HS384 | HMAC-SHA384 |
+| HS512 | HMAC-SHA512 |
+
+Best for: signing and verification happening in the same service, where the secret doesn't need to be shared.
+
+### Asymmetric (RSA / ECC)
+
+| Algorithm | Description |
+| - | - |
+| RS256 | RSA-SHA256 — private key signs, public key verifies |
+| RS384 | RSA-SHA384 |
+| RS512 | RSA-SHA512 |
+| ES256 | ECDSA-SHA256 — private key signs, public key verifies |
+| ES384 | ECDSA-SHA384 |
+
+Best for: signing and verification in different services — for example, an Auth Server signs and an API Server verifies. The public key can be shared safely with any verifier.
+
+---
+
+## Things to Get Right
+
+### Don't Store JWTs in localStorage
+
+localStorage is accessible to any JavaScript on the page. If the site has an XSS vulnerability, an attacker can steal the JWT.
+
+The safer option is an HttpOnly Cookie — JavaScript can't access HttpOnly cookies, which prevents XSS from stealing tokens.
+
+Using cookies requires handling CSRF (Cross-Site Request Forgery) separately. Use the `SameSite` cookie attribute or a CSRF token.
+
+### Set a Short Expiry
+
+A JWT can't be revoked before it expires — not without implementing a blocklist. Keep `exp` short:
+
+- Short-lived access tokens: 15 minutes to 1 hour
+- Pair with a Refresh Token for longer sessions
+
+### Refresh Token Pattern
+
+To balance security (short-lived tokens) with user experience (not constantly re-logging in), use a Refresh Token:
+
+1. On login, issue two tokens:
+    - Access Token (short-lived, e.g. 15 minutes)
+    - Refresh Token (long-lived, e.g. 7 days, stored securely)
+2. When the Access Token expires, use the Refresh Token to get a new one
+3. When the Refresh Token expires, require re-login
+
+Refresh Tokens are typically stored server-side (in a database) so they can be revoked at any time.
+
+### Never Allow alg: none
+
+The JWT spec permits `alg: none`, which means no signature verification. This is dangerous — an attacker can forge any token.
+
+When validating JWTs, always explicitly specify which algorithms are allowed and reject `none`.
+
+---
+
+## JWT vs Sessions
+
+| | JWT | Session |
+| - | - | - |
+| State stored | Client (token carries the data) | Server (session store) |
+| Statefulness | Stateless | Stateful |
+| Revocation | Difficult (requires a blocklist) | Easy (delete the session) |
+| Scalability | Good (no shared session store needed) | Requires shared store (e.g. Redis) |
+| Best for | Distributed systems, microservices, APIs | Traditional web apps |
+
+---
+
+## Summary
+
+- A JWT has three parts: Header, Payload, Signature — separated by dots
+- The Payload is Base64Url encoded, not encrypted — never put sensitive data in it
+- The Signature ensures the token hasn't been modified
+- JWT is stateless, great for distributed systems, but hard to revoke
+- Store in HttpOnly cookies, not localStorage
+- Use short expiry times and pair with a Refresh Token for longer sessions

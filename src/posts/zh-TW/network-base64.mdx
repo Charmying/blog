@@ -1,0 +1,247 @@
+export const metadata = {
+  title: 'Base64 編碼',
+  date: '2026-03-31',
+  excerpt: '介紹 Base64 編碼的核心概念，包含編碼原理、填充符號、Base64URL 變體，以及在 JavaScript、Python 中的使用方式，還有電子郵件附件、HTML 嵌入圖片、JWT、HTTP Basic Auth 等常見應用場景。',
+  tags: ['資訊安全', '網路'],
+};
+
+# Base64 編碼
+
+Base64 是一種將二進位資料轉換成純文字的編碼方式，讓二進位資料可以在只支援文字的環境中安全傳輸。
+
+Base64 不是加密，只是一種編碼，任何人都可以解碼還原原始資料。
+
+```mermaid
+mindmap
+  root((Base64))
+    什麼是 Base64
+    Base64 的編碼原理
+    Base64URL
+    使用 Base64
+    常見應用場景
+```
+
+- [什麼是 Base64](#什麼是-base64)
+- [Base64 的編碼原理](#base64-的編碼原理)
+- [Base64URL](#base64url)
+- [使用 Base64](#使用-base64)
+- [常見應用場景](#常見應用場景)
+
+---
+
+## 什麼是 Base64
+
+Base64 使用 64 個可列印的 ASCII 字元 (A-Z、a-z、0-9、+、/) 來表示二進位資料，每 3 個位元組的輸入會被編碼成 4 個字元的輸出。
+
+名稱「Base64」代表它的字符集大小是 64。
+
+```text
+輸入：任意二進位資料
+輸出：只包含 A-Z、a-z、0-9、+、/ 和 = 的文字字串
+```
+
+編碼後的資料大小約是原始資料的 4/3 倍 (約增加 33%)。
+
+---
+
+## Base64 的編碼原理
+
+Base64 的核心是將每 3 個位元組 (24 位元) 拆分成 4 個 6 位元的群組，每個群組對應 Base64 字符集中的一個字元。
+
+### 編碼步驟
+
+以編碼 `"Man"` 為例：
+
+步驟一：取得每個字元的 ASCII 值 (十進位)
+
+```
+'M' = 77
+'a' = 97
+'n' = 110
+```
+
+步驟二：轉換成二進位
+
+```
+M: 01001101
+a: 01100001
+n: 01101110
+```
+
+步驟三：將 24 位元拆成 4 個 6 位元群組
+
+```
+01001101 01100001 01101110
+→ 010011 | 010110 | 000101 | 101110
+→ 19     | 22     | 5      | 46
+```
+
+步驟四：對應 Base64 字符集
+
+```
+19 → T
+22 → W
+5  → F
+46 → u
+```
+
+結果：`"Man"` → `"TWFu"`
+
+### 填充 (Padding)
+
+當輸入的長度不是 3 的倍數時，用 `=` 作為填充符號：
+
+- 輸入剩 2 個位元組 → 輸出 3 個字元 + `=` (一個填充)
+- 輸入剩 1 個位元組 → 輸出 2 個字元 + `==` (兩個填充)
+
+```
+"Ma"  → "TWE="
+"M"   → "TQ=="
+```
+
+---
+
+## Base64URL
+
+標準 Base64 使用 `+` 和 `/` 兩個字元，這些字元在 URL 中有特殊意義，直接放在 URL 裡會造成問題。
+
+Base64URL 是 Base64 的變體，把：
+- `+` 換成 `-`
+- `/` 換成 `_`
+- 通常省略末尾的 `=` 填充
+
+```text
+Base64：  TWFu+abc/def==
+Base64URL：TWFu-abc_def
+```
+
+JWT 使用的就是 Base64URL，這也是為什麼 JWT 可以直接放在 URL 的查詢參數中。
+
+---
+
+## 使用 Base64
+
+### JavaScript
+
+```javascript
+// 編碼 (字串轉 Base64)
+const encoded = btoa('Hello World');
+console.log(encoded); // SGVsbG8gV29ybGQ=
+
+// 解碼 (Base64 轉字串)
+const decoded = atob('SGVsbG8gV29ybGQ=');
+console.log(decoded); // Hello World
+
+// 處理非 ASCII 字元 (例如中文)，需要先編碼
+const text = '你好';
+const encoded = btoa(encodeURIComponent(text));
+const decoded = decodeURIComponent(atob(encoded));
+```
+
+Node.js 使用 Buffer：
+
+```javascript
+// 編碼
+const encoded = Buffer.from('Hello World').toString('base64');
+
+// 解碼
+const decoded = Buffer.from('SGVsbG8gV29ybGQ=', 'base64').toString('utf8');
+
+// Base64URL
+const encodedURL = Buffer.from('Hello World').toString('base64url');
+```
+
+### Python
+
+```python
+import base64
+
+# 編碼
+encoded = base64.b64encode(b'Hello World')
+print(encoded)  # b'SGVsbG8gV29ybGQ='
+
+# 解碼
+decoded = base64.b64decode(b'SGVsbG8gV29ybGQ=')
+print(decoded)  # b'Hello World'
+
+# Base64URL
+encoded_url = base64.urlsafe_b64encode(b'Hello World')
+```
+
+### 命令列
+
+```bash
+# 編碼
+echo -n "Hello World" | base64
+# SGVsbG8gV29ybGQ=
+
+# 解碼
+echo "SGVsbG8gV29ybGQ=" | base64 --decode
+# Hello World
+```
+
+---
+
+## 常見應用場景
+
+### 電子郵件附件 (MIME)
+
+電子郵件協定 (SMTP) 最初只設計來傳輸 ASCII 文字，二進位的圖片或文件需要用 Base64 編碼後才能附加在郵件中。
+
+### 在 HTML / CSS 中嵌入圖片
+
+將圖片轉成 Base64，直接嵌入 HTML 或 CSS，避免額外的 HTTP 請求：
+
+```html
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." />
+```
+
+```css
+.icon {
+  background-image: url('data:image/svg+xml;base64,PHN2Zy...');
+}
+```
+
+### JWT (JSON Web Token)
+
+JWT 的 Header 和 Payload 都是 Base64URL 編碼：
+
+```
+eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiIxMjMifQ.signature
+```
+
+解碼 Payload 部分：
+
+```javascript
+const payload = atob('eyJ1c2VySWQiOiIxMjMifQ==');
+// {"userId":"123"}
+```
+
+### API 認證 (HTTP Basic Auth)
+
+HTTP Basic Authentication 將使用者名稱和密碼用 Base64 編碼後放在請求標頭中：
+
+```
+Authorization: Basic dXNlcjpwYXNzd29yZA==
+```
+
+解碼後是 `user:password`。
+
+注意：Base64 不是加密，這個方案只有在 HTTPS 下才安全。
+
+### 在文字協定中傳輸二進位資料
+
+任何需要在純文字環境中傳遞二進位資料的場景，都可以用 Base64：
+
+- 在 JSON API 中傳輸圖片或檔案
+- 在 XML 中嵌入二進位資料
+- 在環境變數中儲存憑證 (例如 SSL 憑證)
+
+---
+
+## 總結
+
+- Base64 是編碼，不是加密，可以被任何人解碼
+- 將 3 個位元組的輸入編碼成 4 個字元，資料大小增加約 33%
+- Base64URL 是 URL 安全的變體，將 `+` 換成 `-`、`/` 換成 `_`
+- 常見用途：電子郵件附件、HTML 嵌入圖片、JWT、HTTP Basic Auth

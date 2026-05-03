@@ -1,0 +1,211 @@
+export const metadata = {
+  title: 'JWT (JSON Web Token)',
+  date: '2026-05-04',
+  excerpt: '介紹 JWT 的結構與運作原理，包含 Header、Payload、Signature 的組成、簽章演算法的選擇、Refresh Token 機制，以及儲存位置和安全注意事項。',
+  tags: ['資訊安全', '網路'],
+};
+
+# JWT (JSON Web Token)
+
+JWT (JSON Web Token) 是一種開放標準 (RFC 7519)，用來在雙方之間安全地傳遞資訊。它最常見的用途是身份驗證——伺服器簽發一個 JWT 給客戶端，客戶端之後的每次請求都帶上這個 Token，伺服器驗證後即可確認使用者的身份。
+
+```mermaid
+mindmap
+    root((JWT))
+        JWT 的結構
+            Header
+            Payload
+            Signature
+        JWT 的運作流程
+        簽章演算法
+        JWT 的注意事項
+        JWT vs Session
+```
+
+- [JWT 的結構](#jwt-的結構)
+- [JWT 的運作流程](#jwt-的運作流程)
+- [簽章演算法](#簽章演算法)
+- [JWT 的注意事項](#jwt-的注意事項)
+- [JWT vs Session](#jwt-vs-session)
+
+---
+
+## JWT 的結構
+
+JWT 由三個部分組成，以 `.` 分隔：
+
+```
+Header.Payload.Signature
+```
+
+實際的 JWT 看起來像這樣：
+
+```
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkNoYXJteSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+```
+
+每個部分都是 Base64Url 編碼 (不是加密)，可以直接解碼讀取。
+
+### Header
+
+包含 Token 的類型和簽章演算法：
+
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+Base64Url 編碼後：`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9`
+
+### Payload
+
+包含聲明 (Claims)，是 JWT 傳遞的實際資訊：
+
+```json
+{
+  "sub": "1234567890",
+  "name": "Charmy",
+  "role": "admin",
+  "iat": 1516239022,
+  "exp": 1516242622
+}
+```
+
+常用的標準聲明：
+
+| 聲明 | 說明 |
+| - | - |
+| `sub` | Subject，Token 的主體 (通常是使用者 ID) |
+| `iss` | Issuer，簽發者 |
+| `aud` | Audience，接收對象 |
+| `exp` | Expiration Time，過期時間 (Unix 時間戳) |
+| `iat` | Issued At，簽發時間 |
+| `nbf` | Not Before，在此時間之前 Token 無效 |
+
+Payload 不是加密的，任何人都可以 Base64Url 解碼後讀取。不要在 Payload 中放入密碼、信用卡號等敏感資訊。
+
+### Signature
+
+Signature 確保 Token 未被篡改：
+
+```
+HMACSHA256(
+  base64UrlEncode(header) + "." + base64UrlEncode(payload),
+  secret
+)
+```
+
+伺服器用密鑰 (Secret) 對 Header 和 Payload 計算簽章。驗證時，伺服器重新計算簽章，與 Token 中的簽章比對，若一致則 Token 有效。
+
+如果有人篡改了 Payload (例如把 `role: "user"` 改成 `role: "admin"`)，簽章就無法通過驗證。
+
+---
+
+## JWT 的運作流程
+
+```mermaid
+sequenceDiagram
+    participant 客戶端
+    participant 伺服器
+    客戶端->>伺服器: 帳號密碼（登入）
+    伺服器-->>客戶端: JWT
+    Note over 客戶端: 儲存 JWT
+    客戶端->>伺服器: Authorization: Bearer JWT
+    alt 有效
+        Note over 伺服器: 處理請求
+    else 無效
+        伺服器-->>客戶端: 401 Unauthorized
+    end
+```
+
+JWT 是無狀態 (Stateless) 的，伺服器不需要儲存 Session，所有需要的資訊都在 Token 中。這讓 JWT 特別適合分散式系統和微服務架構。
+
+---
+
+## 簽章演算法
+
+JWT 支援多種簽章演算法，分為對稱和非對稱兩類：
+
+### 對稱演算法 (HMAC)
+
+| 演算法 | 說明 |
+| - | - |
+| HS256 | HMAC-SHA256，使用同一個 Secret 簽署和驗證 |
+| HS384 | HMAC-SHA384 |
+| HS512 | HMAC-SHA512 |
+
+適合場景：簽署和驗證都在同一個服務，Secret 不需要共享。
+
+### 非對稱演算法 (RSA / ECC)
+
+| 演算法 | 說明 |
+| - | - |
+| RS256 | RSA-SHA256，私鑰簽署，公鑰驗證 |
+| RS384 | RSA-SHA384 |
+| RS512 | RSA-SHA512 |
+| ES256 | ECDSA-SHA256，私鑰簽署，公鑰驗證 |
+| ES384 | ECDSA-SHA384 |
+
+適合場景：簽署和驗證在不同服務 (例如 Auth Server 簽署，API Server 驗證)，公鑰可以安全地分享給驗證方。
+
+---
+
+## JWT 的注意事項
+
+### 不要把 JWT 存在 localStorage
+
+localStorage 可以被頁面上的 JavaScript 存取，如果網站有 XSS 漏洞，攻擊者可以竊取 JWT。
+
+更安全的做法是存在 HttpOnly Cookie，JavaScript 無法存取 HttpOnly Cookie，有效防止 XSS 攻擊竊取 Token。
+
+但使用 Cookie 儲存 JWT 需要額外處理 CSRF (跨站請求偽造) 攻擊，可以用 SameSite Cookie 屬性或 CSRF Token 防護。
+
+### 設定合理的過期時間
+
+JWT 一旦簽發，在過期之前無法被撤銷 (除非實作額外的黑名單機制)。因此 `exp` 的時間不應太長：
+
+- 短期 Token：15 分鐘到 1 小時
+- 搭配 Refresh Token 延長有效期 (詳見下方)
+
+### Refresh Token 機制
+
+為了兼顧安全性 (短有效期) 和使用者體驗 (不頻繁要求重新登入)，通常搭配 Refresh Token：
+
+1. 登入時簽發兩個 Token：
+    - Access Token (短有效期，例如 15 分鐘)
+    - Refresh Token (長有效期，例如 7 天，存在安全處)
+2. Access Token 過期後，用 Refresh Token 換取新的 Access Token
+3. Refresh Token 過期，要求重新登入
+
+Refresh Token 通常存在伺服器端 (資料庫)，可以隨時撤銷。
+
+### 不要使用 alg: none
+
+JWT 規範允許 `alg: none`，表示不驗證簽章。這是一個危險的設定，攻擊者可以偽造任意 Token。
+
+驗證 JWT 時，必須明確指定允許的演算法，拒絕 `none`。
+
+---
+
+## JWT vs Session
+
+| | JWT | Session |
+| - | - | - |
+| 儲存位置 | 客戶端 (Token 本身攜帶資訊) | 伺服器端 (Session Store) |
+| 狀態 | 無狀態 (Stateless) | 有狀態 (Stateful) |
+| 撤銷 | 困難 (需要黑名單機制) | 容易 (刪除 Session 即可) |
+| 擴展性 | 好 (不需要共享 Session Store) | 需要共享 Session Store (例如 Redis) |
+| 適合場景 | 分散式系統、微服務、API | 傳統 Web 應用 |
+
+---
+
+## 總結
+
+- JWT 由 Header、Payload、Signature 三部分組成，以 `.` 分隔
+- Payload 是 Base64Url 編碼，不是加密，不要存放敏感資訊
+- Signature 確保 Token 未被篡改
+- JWT 是無狀態的，適合分散式系統，但撤銷困難
+- 不要存在 localStorage，優先考慮 HttpOnly Cookie
+- 設定短有效期，搭配 Refresh Token 機制

@@ -31,7 +31,7 @@ export function LocaleSwitcher({ availableSlugs }: { availableSlugs?: Record<Loc
   }
 
   return (
-    <button type="button" onClick={handleSwitch} className="inline-flex items-center justify-center h-9 px-2.5  text-[13px] font-medium text-[var(--foreground)] cursor-pointer transition-colors duration-200">
+    <button type="button" onClick={handleSwitch} className="inline-flex items-center justify-center h-9 px-2.5  text-[13px] font-medium text-foreground cursor-pointer transition-colors duration-200">
       {localeLabels[nextLocale]}
     </button>
   );

@@ -88,8 +88,8 @@ const timeline: TimelineItem[] = [
     locationZh: '臺中市',
     locationEn: 'Taichung City, Taiwan',
     skills: ['HTML5', 'CSS3', 'SCSS', 'Tailwind CSS', 'JavaScript', 'TypeScript', 'Angular', 'React', 'Electron', 'SEO', 'Git'],
-    summaryZh: '負責金融相關網站 SEO 與效能優化，包含技術分析、自動化工具開發與優化策略制定，以及開發內部 AI 系統',
-    summaryEn: 'Responsible for SEO and performance optimization of financial-related websites, including technical analysis, automation tooling, optimization strategy planning, and internal AI system development',
+    summaryZh: '負責金融相關網站 SEO 與效能優化，包含技術分析、自動化工具開發與優化策略制定，以及開發內部 AI 系統。',
+    summaryEn: 'Responsible for SEO and performance optimization of financial-related websites, including technical analysis, automation tooling, optimization strategy planning, and internal AI system development.',
     highlightsZh: [
       { title: '主導技術說明與優化建議會議，與客戶討論改善方向與實作策略' },
       { title: '根據 Lighthouse、Screaming Frog、ahrefs 與實際網站狀況，進行 SEO 與效能問題診斷' },
@@ -117,8 +117,8 @@ const timeline: TimelineItem[] = [
     locationZh: '臺中市',
     locationEn: 'Taichung City, Taiwan',
     skills: ['HTML5', 'CSS3', 'SCSS', 'Tailwind CSS', 'JavaScript', 'TypeScript', 'Angular', 'Cordova', 'App', 'Git'],
-    summaryZh: "銀行企網銀系統 Web 與 App 開發",
-    summaryEn: "Web and App development for corporate online banking systems",
+    summaryZh: "銀行企網銀系統 Web 與 App 開發。",
+    summaryEn: "Web and App development for corporate online banking systems.",
     highlightsZh: [
       {
         title: '負責企網銀 App / Web 前端功能開發與維運',

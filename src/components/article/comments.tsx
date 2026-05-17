@@ -54,7 +54,7 @@ export function Comments() {
   }, []);
 
   return (
-    <div className="mt-16 pt-8 border-t border-[var(--border)]">
+    <div className="mt-16 pt-8 border-t border-(--border)">
       <div ref={ref} className="giscus" />
     </div>
   );

@@ -23,8 +23,8 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
   return (
     <MobileMenuProvider>
       <div className="min-h-screen">
-        <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--nav-bg)] backdrop-blur-xl backdrop-saturate-150">
-          <div className="mx-auto flex h-[52px] max-w-[1200px] items-center px-4">
+        <header className="sticky top-0 z-50 border-b border-(--border) bg-(--nav-bg) backdrop-blur-xl backdrop-saturate-150">
+          <div className="mx-auto flex h-13 max-w-xl items-center px-4">
             <SiteTitle />
             <div className="ml-auto flex items-center gap-4">
               <MainNav />
@@ -35,7 +35,7 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
           </div>
         </header>
         <MobileMenu />
-        <main className="mx-auto max-w-[1200px] px-4 py-6">{children}</main>
+        <main className="mx-auto max-w-xl px-4 py-6">{children}</main>
         <BackToTop />
       </div>
     </MobileMenuProvider>

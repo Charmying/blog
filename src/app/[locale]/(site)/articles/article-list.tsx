@@ -93,10 +93,10 @@ export function ArticleList({ posts, tags }: ArticleListProps) {
               <div className="flex items-center gap-3">
                 <div className="view-toggle">
                   <button onClick={() => setViewMode("grid")} className={`view-toggle__btn ${viewMode === "grid" ? "view-toggle__btn--active" : ""}`} title={t("viewGrid")}>
-                    <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
                   </button>
                   <button onClick={() => setViewMode("list")} className={`view-toggle__btn ${viewMode === "list" ? "view-toggle__btn--active" : ""}`} title={t("viewList")}>
-                    <svg className="w-[18px] h-[18px]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6" strokeLinecap="round"/><line x1="8" y1="12" x2="21" y2="12" strokeLinecap="round"/><line x1="8" y1="18" x2="21" y2="18" strokeLinecap="round"/><rect x="3" y="4.5" width="2" height="3" rx="0.5"/><rect x="3" y="10.5" width="2" height="3" rx="0.5"/><rect x="3" y="16.5" width="2" height="3" rx="0.5"/></svg>
+                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6" strokeLinecap="round"/><line x1="8" y1="12" x2="21" y2="12" strokeLinecap="round"/><line x1="8" y1="18" x2="21" y2="18" strokeLinecap="round"/><rect x="3" y="4.5" width="2" height="3" rx="0.5"/><rect x="3" y="10.5" width="2" height="3" rx="0.5"/><rect x="3" y="16.5" width="2" height="3" rx="0.5"/></svg>
                   </button>
                 </div>
                 <div className="sort-dropdown" ref={dropdownRef}>

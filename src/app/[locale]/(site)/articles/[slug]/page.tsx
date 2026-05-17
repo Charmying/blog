@@ -106,7 +106,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
             <BackArrow />
             <span>{t("backToArticles")}</span>
           </Link>
-          <h1 className="text-3xl xs:text-4xl sm:text-5xl font-bold tracking-[-0.025em] leading-[1.1] mb-6 break-words">
+          <h1 className="text-3xl xs:text-4xl sm:text-5xl font-bold tracking-[-0.025em] leading-[1.1] mb-6 wrap-break-word">
             {post.title}
           </h1>
           <div className="flex flex-wrap justify-center items-center gap-4 text-xs sm:text-sm opacity-60 mb-6">
@@ -115,7 +115,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
           </div>
           <div className="flex flex-wrap justify-center gap-1.5">
             {post.tags.map((tag) => (
-              <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full font-medium bg-[var(--button-bg)]">
+              <span key={tag} className="text-[11px] px-2.5 py-1 rounded-full font-medium bg-(--button-bg)">
                 {tag}
               </span>
             ))}
@@ -144,7 +144,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
       </div>
       {/* Footer */}
       <footer className="mx-auto max-w-3xl px-4 pb-16 sm:pb-20">
-        <div className="border-t border-[var(--border)] pt-10">
+        <div className="border-t border-(--border) pt-10">
           <Link href="/articles" className="inline-flex items-center text-[15px] sm:text-[17px] font-medium hover:opacity-60 hover:-translate-x-1 transition-all duration-300 no-underline">
             <BackArrow />
             <span>{t("backToArticles")}</span>

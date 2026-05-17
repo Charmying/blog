@@ -71,12 +71,12 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold tracking-[-0.03em] leading-[0.95] mb-6">
             <span>{t("introHeading")}</span>
-            <span className="bg-gradient-to-r from-[#8B5CF6] via-[#A78BFA] to-[#7C3AED] dark:from-[#C4B5FD] dark:via-[#A78BFA] dark:to-[#8B5CF6] bg-clip-text text-transparent font-medium">
+            <span className="bg-linear-to-r from-[#8B5CF6] via-[#A78BFA] to-[#7C3AED] dark:from-[#C4B5FD] dark:via-[#A78BFA] dark:to-[#8B5CF6] bg-clip-text text-transparent font-medium">
               {t("introHighlight")}
             </span>
           </h2>
           <div className="mx-auto mb-8 max-w-2xl space-y-3">
-            <p className="text-lg xs:text-xl leading-[1.5] opacity-85">{t("introDesc")}</p>
+            <p className="text-lg xs:text-xl leading-normal opacity-85">{t("introDesc")}</p>
             <p className="text-base leading-[1.6] opacity-70">{t("introSubDesc")}</p>
           </div>
           <Link href="/about" className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-[15px] font-semibold no-underline transition-all duration-200 hover:opacity-90 hover:scale-[1.02] active:scale-[0.98]" style={{ backgroundColor: "var(--foreground)", color: "var(--background)" }}>

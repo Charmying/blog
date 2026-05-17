@@ -418,26 +418,26 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
       {/* Introduction Card */}
       <section className="px-4 py-12 xs:py-14 sm:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 sm:p-8">
+          <div className="rounded-2xl border border-(--border) bg-(--card-bg) p-6 sm:p-8">
             {/* Profile header */}
             <div className="flex flex-col sm:flex-row items-center gap-6">
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden flex-shrink-0 bg-[var(--button-bg)]">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden shrink-0 bg-(--button-bg)">
                 <Image src="/Charmy.png" alt={t("name")} width={128} height={128} className="w-full h-full object-cover" priority />
               </div>
               <div className="flex-1 text-center sm:text-left">
                 <h2 className="text-2xl sm:text-3xl font-bold mb-1">
                   {t("name")}
                 </h2>
-                <p className="text-lg text-[var(--secondary)] mb-3">
+                <p className="text-lg text-(--secondary) mb-3">
                   {t("role")}
                 </p>
-                <p className="text-sm text-[var(--secondary)]">
+                <p className="text-sm text-(--secondary)">
                   {t("location")}
                 </p>
               </div>
             </div>
             {/* Structured bio */}
-            <div className="mt-6 pt-6 border-t border-[var(--border)]">
+            <div className="mt-6 pt-6 border-t border-(--border)">
               <div className="mb-8">
                 <h3 className="text-lg font-semibold mb-2">{t("greeting")}</h3>
                 <p className="leading-relaxed">{t("bio")}</p>
@@ -450,7 +450,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                   <ul className="space-y-1.5">
                     {(["aboutMe1", "aboutMe2", "aboutMe3"] as const).map((key) => (
                       <li key={key} className="flex items-start gap-2">
-                        <span className="mt-1 flex-shrink-0 opacity-50">
+                        <span className="mt-1 shrink-0 opacity-50">
                           •
                         </span>
                         <span className="leading-relaxed">{t(key)}</span>
@@ -465,7 +465,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                   <ul className="space-y-1.5">
                     {(["devFocus1", "devFocus2", "devFocus3"] as const).map((key) => (
                       <li key={key} className="flex items-start gap-2">
-                        <span className="mt-1 flex-shrink-0 opacity-50">
+                        <span className="mt-1 shrink-0 opacity-50">
                           •
                         </span>
                         <span className="leading-relaxed">{t(key)}</span>
@@ -486,7 +486,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                       ] as const
                     ).map((key) => (
                       <li key={key} className="flex items-start gap-2">
-                        <span className="mt-1 flex-shrink-0 opacity-50">
+                        <span className="mt-1 shrink-0 opacity-50">
                           •
                         </span>
                         <span className="leading-relaxed">{t(key)}</span>
@@ -495,7 +495,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                   </ul>
                 </div>
                 <div>
-                  <p className="leading-relaxed text-[var(--secondary)]">
+                  <p className="leading-relaxed text-(--secondary)">
                     {t("personalMission")}
                   </p>
                 </div>
@@ -517,7 +517,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {skills.map((skill) => (
-              <div key={skill.name} className="rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4 text-center transition-all duration-300 hover:scale-[1.05] group">
+              <div key={skill.name} className="rounded-xl border border-(--border) bg-(--card-bg) p-4 text-center transition-all duration-300 hover:scale-[1.05] group">
                 <div className="flex justify-center mb-2">
                   <Image src={skill.icon} alt={skill.name} width={32} height={32} loading="lazy" className="group-hover:scale-110 transition-transform duration-300" />
                 </div>
@@ -541,7 +541,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
             </p>
           </div>
           <div className="relative">
-            <div className="absolute left-8 md:left-16 top-0 bottom-0 w-0.5 bg-[var(--foreground)] opacity-20" />
+            <div className="absolute left-8 md:left-16 top-0 bottom-0 w-0.5 bg-foreground opacity-20" />
             <div className="space-y-8 sm:space-y-12 md:space-y-16">
               {timeline.map((item, index) => {
                 const title = isZh ? item.titleZh : item.titleEn;
@@ -555,12 +555,12 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                     <div className="absolute left-6 md:left-14 w-4 h-4 rounded-full border-2 z-10 group-hover:scale-125 transition-all duration-300" style={{ backgroundColor: "var(--background)", borderColor: "var(--foreground)", opacity: 0.8 }}/>
                     <div className="ml-20 md:ml-32">
                       <div className="group-hover:translate-x-1 transition-all duration-300">
-                        <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border border-[var(--border)] bg-[var(--background)] mb-4 sm:mb-6">
+                        <div className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium border border-(--border) bg-background mb-4 sm:mb-6">
                           <span>{item.startDate}</span>
                           <span className="mx-3 opacity-50">—</span>
                           <span>{endDate}</span>
                         </div>
-                        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-6 sm:p-8 md:p-10 group-hover:shadow-lg transition-all duration-300">
+                        <div className="rounded-2xl border border-(--border) bg-(--card-bg) p-6 sm:p-8 md:p-10 group-hover:shadow-lg transition-all duration-300">
                           <div className="grid grid-cols-1 xl:grid-cols-5 xl:gap-6">
                             <div className="xl:col-span-2">
                               <div className={item.skills && item.skills.length > 0 ? "mb-4 sm:mb-6" : "mb-2 sm:mb-4"}>
@@ -574,7 +574,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                               {item.skills && item.skills.length > 0 && (
                                 <div className="flex flex-wrap gap-2 mb-4 xl:mb-0">
                                   {item.skills.map((skill) => (
-                                    <span key={skill} className="px-3 py-1.5 text-sm rounded-full font-medium border border-[var(--border)] bg-[var(--background)] hover:scale-105 transition-transform duration-200">
+                                    <span key={skill} className="px-3 py-1.5 text-sm rounded-full font-medium border border-(--border) bg-background hover:scale-105 transition-transform duration-200">
                                       {skill}
                                     </span>
                                   ))}
@@ -591,7 +591,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                                     <li key={i} className="flex items-start gap-2">
                                       {typeof h === "string" ? (
                                         <>
-                                          <span className="mt-1 flex-shrink-0 opacity-50">
+                                          <span className="mt-1 shrink-0 opacity-50">
                                             •
                                           </span>
                                           <span className="leading-relaxed">
@@ -601,7 +601,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                                       ) : (
                                         <div className="w-full">
                                           <div className="flex items-start gap-2 mb-1">
-                                            <span className="mt-1 flex-shrink-0 opacity-50">
+                                            <span className="mt-1 shrink-0 opacity-50">
                                               •
                                             </span>
                                             <span className="font-medium leading-relaxed">
@@ -612,7 +612,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
                                             <ul className="ml-4 space-y-0.5 sm:space-y-1">
                                               {h.items.map((sub, si) => (
                                                 <li key={si} className="flex items-start gap-2">
-                                                  <span className="mt-1 flex-shrink-0 opacity-40">
+                                                  <span className="mt-1 shrink-0 opacity-40">
                                                     ◦
                                                   </span>
                                                   <span className="leading-relaxed">
@@ -652,11 +652,11 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
             </p>
           </div>
           <div className="relative">
-            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-[var(--foreground)] opacity-20" />
+            <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-foreground opacity-20" />
             <div className="space-y-8 sm:space-y-12">
               {journey.map((item, index) => (
                 <div key={index} className="flex gap-4 sm:gap-6 group hover:translate-x-2 transition-transform duration-300">
-                  <div className="flex-shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-bold text-base sm:text-lg relative z-10" style={{ backgroundColor: "var(--foreground)", color: "var(--background)" }}>
+                  <div className="shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-bold text-base sm:text-lg relative z-10" style={{ backgroundColor: "var(--foreground)", color: "var(--background)" }}>
                     {item.year}
                   </div>
                   <div className="flex-1 pt-2 sm:pt-3">
@@ -676,7 +676,7 @@ export default function AboutPage({ params }: { params: Promise<{ locale: string
       {/* Contact */}
       <section className="px-4 py-12 xs:py-14 sm:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card-bg)] p-8 text-center transition-all duration-300 hover:scale-[1.01]">
+          <div className="rounded-2xl border border-(--border) bg-(--card-bg) p-8 text-center transition-all duration-300 hover:scale-[1.01]">
             <h2 className="text-3xl xs:text-4xl sm:text-5xl font-bold tracking-[-0.025em] leading-[1.1] mb-6">
               {t("contactTitle")}
             </h2>

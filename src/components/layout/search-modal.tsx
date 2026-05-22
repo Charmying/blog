@@ -133,7 +133,7 @@ export function SearchModal({ posts, tags }: SearchModalProps) {
                         {t("articles")}
                       </div>
                       {results.map((item) => (
-                        <button key={item.slug} onClick={() => navigate(`/articles/${encodeURIComponent(item.slug)}`,)} className="w-full text-left p-3 rounded-xl hover:bg-[var(--button-bg)] mb-2 last:mb-0 transition-colors duration-300 cursor-pointer">
+                        <button key={item.slug} onClick={() => navigate(`/articles/${item.slug}`)} className="w-full text-left p-3 rounded-xl hover:bg-[var(--button-bg)] mb-2 last:mb-0 transition-colors duration-300 cursor-pointer">
                           <div className="text-[14px] font-medium mb-1">
                             {item.title}
                           </div>

@@ -81,6 +81,8 @@
     "sortByDate": "依日期排序",
     "sortByTitle": "依標題排序",
     "sortByReadingTime": "依閱讀時間排序",
-    "noArticles": "目前沒有文章"
+    "noArticles": "目前沒有文章",
+    "seriesFilter": "系列",
+    "allSeries": "全部"
   }
 }

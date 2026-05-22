@@ -16,7 +16,7 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
   const availableSlugs = Object.fromEntries(
     routing.locales.map((loc) => [
       loc,
-      getAllPostSlugs(loc).map((p) => p.slug),
+      getAllPostSlugs(loc).map((p) => p.slugParts.join("/")),
     ]),
   ) as Record<Locale, string[]>;
 

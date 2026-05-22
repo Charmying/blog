@@ -4,6 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Link } from "@/i18n/navigation";
 import { getAllPostSlugs, getPostMetadata, getPostContent } from "@/lib/posts";
+import { getSeriesName } from "@/lib/series-utils";
 import { routing, type Locale } from "@/i18n/routing";
 import { mdxComponents } from "@/components/article/mdx-components";
 import { Comments } from "@/components/article/comments";
@@ -16,16 +17,18 @@ export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
     getAllPostSlugs(locale).map((post) => ({
       locale,
-      slug: post.slug,
+      slug: post.slugParts,
     })),
   );
 }
 
 export const dynamicParams = false;
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string; slug: string }>; }) {
-  const { locale, slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+export async function generateMetadata({ params }: {
+  params: Promise<{ locale: string; slug: string[] }>;
+}) {
+  const { locale, slug: slugParts } = await params;
+  const decodedSlug = slugParts.map(decodeURIComponent).join("/");
 
   try {
     const post = getPostMetadata(locale as Locale, decodedSlug);
@@ -61,9 +64,19 @@ function BackArrow() {
   );
 }
 
-export default async function ArticlePage({ params }: { params: Promise<{ locale: string; slug: string }>; }) {
-  const { locale, slug } = await params;
-  const decodedSlug = decodeURIComponent(slug);
+function ChevronRight() {
+  return (
+    <svg className="w-3.5 h-3.5 opacity-40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 18l6-6-6-6" />
+    </svg>
+  );
+}
+
+export default async function ArticlePage({ params }: {
+  params: Promise<{ locale: string; slug: string[] }>;
+}) {
+  const { locale, slug: slugParts } = await params;
+  const decodedSlug = slugParts.map(decodeURIComponent).join("/");
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "ArticlesPage" });
 
@@ -78,6 +91,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
   }
 
   const { authorName } = getSEOConfig();
+
   const articleSchema = generateArticleSchema({
     title: post.title,
     description: post.excerpt,
@@ -89,23 +103,79 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
     authorName,
   });
 
-  const breadcrumbSchema = generateBreadcrumbSchema([
-    { name: locale === 'zh-TW' ? '首頁' : 'Home', url: getCanonicalUrl('/', locale) },
-    { name: locale === 'zh-TW' ? '文章' : 'Articles', url: getCanonicalUrl('/articles', locale) },
-    { name: post.title, url: getCanonicalUrl(`/articles/${decodedSlug}`, locale) },
-  ]);
+  const articlesLabel = t("title");
+  const articlesUrl = getCanonicalUrl("/articles", locale);
+  const breadcrumbItems: { name: string; url: string }[] = [
+    { name: locale === "zh-TW" ? "首頁" : "Home", url: getCanonicalUrl("/", locale) },
+    { name: articlesLabel, url: articlesUrl },
+  ];
+
+  if (post.series) {
+    breadcrumbItems.push({
+      name: getSeriesName(post.series, locale),
+      url: getCanonicalUrl(`/articles?series=${post.series}`, locale),
+    });
+  }
+
+  if (post.category) {
+    breadcrumbItems.push({
+      name: getSeriesName(post.category, locale),
+      // Point to the series-filtered list; category-level filtering is not yet implemented
+      url: getCanonicalUrl(`/articles?series=${post.series}`, locale),
+    });
+  }
+
+  breadcrumbItems.push({
+    name: post.title,
+    url: getCanonicalUrl(`/articles/${decodedSlug}`, locale),
+  });
+
+  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
+
+  const seriesBreadcrumbs = post.series
+    ? ([
+        { label: articlesLabel, href: "/articles" as const },
+        {
+          label: getSeriesName(post.series, locale),
+          href: `/articles?series=${post.series}` as const,
+        },
+        ...(post.category
+          ? [
+              {
+                label: getSeriesName(post.category, locale),
+                href: `/articles?series=${post.series}` as const,
+              },
+            ]
+          : []),
+      ] as { label: string; href: string }[])
+    : null;
 
   return (
     <article>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
-      {/* Header */}
+
+      {/* ── Header ── */}
       <header className="pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-14 sm:pb-16 px-4 text-center">
         <div className="mx-auto max-w-3xl">
-          <Link href="/articles" className="inline-flex items-center text-sm font-medium opacity-60 hover:opacity-100 hover:-translate-x-1 transition-all duration-300 mb-8 no-underline">
-            <BackArrow />
-            <span>{t("backToArticles")}</span>
-          </Link>
+          {seriesBreadcrumbs ? (
+            <nav aria-label="breadcrumb" className="inline-flex items-center flex-wrap justify-center gap-1.5 text-sm font-medium mb-8">
+              {seriesBreadcrumbs.map((crumb, i) => (
+                <span key={crumb.label} className="inline-flex items-center gap-1.5">
+                  {i > 0 && <ChevronRight />}
+                  <Link href={crumb.href} className="opacity-60 hover:opacity-100 transition-opacity duration-200 no-underline">
+                    {crumb.label}
+                  </Link>
+                </span>
+              ))}
+            </nav>
+          ) : (
+            <Link href="/articles" className="inline-flex items-center text-sm font-medium opacity-60 hover:opacity-100 hover:-translate-x-1 transition-all duration-300 mb-8 no-underline">
+              <BackArrow />
+              <span>{t("backToArticles")}</span>
+            </Link>
+          )}
+
           <h1 className="text-3xl xs:text-4xl sm:text-5xl font-bold tracking-[-0.025em] leading-[1.1] mb-6 wrap-break-word">
             {post.title}
           </h1>
@@ -122,7 +192,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
           </div>
         </div>
       </header>
-      {/* Content */}
+
+      {/* ── Content ── */}
       <div className="mx-auto max-w-3xl px-4 py-12 xs:py-14 sm:py-16 prose-custom">
         <MDXRemote
           source={content}
@@ -138,11 +209,13 @@ export default async function ArticlePage({ params }: { params: Promise<{ locale
           }}
         />
       </div>
-      {/* Comments */}
+
+      {/* ── Comments ── */}
       <div className="mx-auto max-w-3xl px-4">
         <Comments />
       </div>
-      {/* Footer */}
+
+      {/* ── Footer ── */}
       <footer className="mx-auto max-w-3xl px-4 pb-16 sm:pb-20">
         <div className="border-t border-(--border) pt-10">
           <Link href="/articles" className="inline-flex items-center text-[15px] sm:text-[17px] font-medium hover:opacity-60 hover:-translate-x-1 transition-all duration-300 no-underline">

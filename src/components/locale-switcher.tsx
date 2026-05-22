@@ -27,7 +27,9 @@ export function LocaleSwitcher({ availableSlugs }: { availableSlugs?: Record<Loc
         return;
       }
     }
-    router.replace(pathname, { locale: nextLocale });
+
+    const qs = typeof window !== "undefined" ? window.location.search : "";
+    router.replace(qs ? `${pathname}${qs}` : pathname, { locale: nextLocale });
   }
 
   return (

@@ -104,7 +104,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
             {recentPosts.map((post) => (
               <Link
                 key={post.slug}
-                href={`/articles/${encodeURIComponent(post.slug)}`}
+                href={`/articles/${post.slug}`}
                 className="home-article-item"
               >
                 <div className="home-article-item__content">

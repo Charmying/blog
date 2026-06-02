@@ -96,7 +96,7 @@ const timeline: TimelineItem[] = [
       { title: '開發自動化 Lighthouse 分析工具，輸入網址即可批次產出效能報告與 Excel 分析結果' },
       { title: '制定優化策略與優先順序，協助客戶聚焦關鍵改善項目' },
       { title: '處理與修正前端相關 issue，持續優化網站表現' },
-      { title: '使用 React 開發內部 AI 系統' },
+      { title: '使用 React 開發和維護內部 AI 應用程式，協作實現功能並與 AI 相關服務整合' },
     ],
     highlightsEn: [
       { title: 'Led technical discussions with clients, presenting findings and optimization plans' },
@@ -104,7 +104,7 @@ const timeline: TimelineItem[] = [
       { title: 'Built an automated Lighthouse analysis tool to generate performance reports and Excel outputs from URLs' },
       { title: 'Defined optimization strategies and prioritized improvement actions' },
       { title: 'Resolved frontend issues and continuously improved site performance' },
-      { title: 'Developed internal AI system using React' },
+      { title: 'Developed and maintained internal AI applications using React, collaborating on feature implementation and integration with AI-related services' },
     ],
   },
   {

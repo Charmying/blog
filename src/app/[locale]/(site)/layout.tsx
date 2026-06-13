@@ -23,7 +23,10 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
   return (
     <MobileMenuProvider>
       <div className="min-h-screen">
-        <header className="sticky top-0 z-50 border-b border-(--border) bg-(--nav-bg) backdrop-blur-xl backdrop-saturate-150">
+        <a href="#main-content" className="skip-link">
+          {locale === "zh-TW" ? "跳至主要內容" : "Skip to main content"}
+        </a>
+        <header role="banner" className="sticky top-0 z-50 border-b border-(--border) bg-(--nav-bg) backdrop-blur-xl backdrop-saturate-150">
           <div className="mx-auto flex h-13 max-w-xl items-center px-4">
             <SiteTitle />
             <div className="ml-auto flex items-center gap-4">
@@ -35,7 +38,7 @@ export default async function SiteLayout({ children, params }: Readonly<{ childr
           </div>
         </header>
         <MobileMenu />
-        <main className="mx-auto max-w-xl px-4 py-6">{children}</main>
+        <main id="main-content" className="mx-auto max-w-xl px-4 py-6">{children}</main>
         <BackToTop />
       </div>
     </MobileMenuProvider>

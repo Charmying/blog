@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 
@@ -9,12 +9,18 @@ const localeLabels: Record<Locale, string> = {
   en: "EN",
 };
 
+const localeNames: Record<Locale, string> = {
+  "zh-TW": "繁體中文",
+  en: "English",
+};
+
 const ARTICLE_PATTERN = /^\/articles\/(.+)$/;
 
 export function LocaleSwitcher({ availableSlugs }: { availableSlugs?: Record<Locale, string[]>; }) {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("Nav");
   const nextLocale: Locale = locale === "zh-TW" ? "en" : "zh-TW";
 
   function handleSwitch() {
@@ -33,7 +39,12 @@ export function LocaleSwitcher({ availableSlugs }: { availableSlugs?: Record<Loc
   }
 
   return (
-    <button type="button" onClick={handleSwitch} className="inline-flex items-center justify-center h-9 px-2.5  text-[13px] font-medium text-foreground cursor-pointer transition-colors duration-200">
+    <button
+      type="button"
+      onClick={handleSwitch}
+      aria-label={t("switchLocale", { locale: localeNames[nextLocale] })}
+      className="inline-flex items-center justify-center h-9 px-2.5 text-[13px] font-medium text-foreground cursor-pointer transition-colors duration-200"
+    >
       {localeLabels[nextLocale]}
     </button>
   );

@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: {
 
 function BackArrow() {
   return (
-    <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-4 h-4 sm:w-5 sm:h-5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
     </svg>
   );
@@ -66,7 +66,7 @@ function BackArrow() {
 
 function ChevronRight() {
   return (
-    <svg className="w-3.5 h-3.5 opacity-40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-3.5 h-3.5 opacity-40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 18l6-6-6-6" />
     </svg>
   );
@@ -159,15 +159,21 @@ export default async function ArticlePage({ params }: {
       <header className="pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-14 sm:pb-16 px-4 text-center">
         <div className="mx-auto max-w-3xl">
           {seriesBreadcrumbs ? (
-            <nav aria-label="breadcrumb" className="inline-flex items-center flex-wrap justify-center gap-1.5 text-sm font-medium mb-8">
-              {seriesBreadcrumbs.map((crumb, i) => (
-                <span key={crumb.label} className="inline-flex items-center gap-1.5">
-                  {i > 0 && <ChevronRight />}
-                  <Link href={crumb.href} className="opacity-60 hover:opacity-100 transition-opacity duration-200 no-underline">
-                    {crumb.label}
-                  </Link>
-                </span>
-              ))}
+            <nav aria-label="breadcrumb" className="mb-8">
+              <ol className="inline-flex items-center flex-wrap justify-center gap-1.5 text-sm font-medium list-none p-0 m-0">
+                {seriesBreadcrumbs.map((crumb, i) => (
+                  <li key={crumb.label} className="inline-flex items-center gap-1.5">
+                    {i > 0 && <ChevronRight />}
+                    <Link href={crumb.href} className="opacity-60 hover:opacity-100 transition-opacity duration-200 no-underline">
+                      {crumb.label}
+                    </Link>
+                  </li>
+                ))}
+                <li className="inline-flex items-center gap-1.5" aria-current="page">
+                  <ChevronRight />
+                  <span className="opacity-60 max-w-[20ch] truncate">{post.title}</span>
+                </li>
+              </ol>
             </nav>
           ) : (
             <Link href="/articles" className="inline-flex items-center text-sm font-medium opacity-60 hover:opacity-100 hover:-translate-x-1 transition-all duration-300 mb-8 no-underline">

@@ -1,39 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
-import hljs from "highlight.js/lib/core";
-import bash from "highlight.js/lib/languages/bash";
-import css from "highlight.js/lib/languages/css";
-import javascript from "highlight.js/lib/languages/javascript";
-import json from "highlight.js/lib/languages/json";
-import plaintext from "highlight.js/lib/languages/plaintext";
-import python from "highlight.js/lib/languages/python";
-import shell from "highlight.js/lib/languages/shell";
-import sql from "highlight.js/lib/languages/sql";
-import typescript from "highlight.js/lib/languages/typescript";
-import xml from "highlight.js/lib/languages/xml";
-import yaml from "highlight.js/lib/languages/yaml";
-
-hljs.registerLanguage("bash", bash);
-hljs.registerLanguage("console", shell);
-hljs.registerLanguage("css", css);
-hljs.registerLanguage("html", xml);
-hljs.registerLanguage("javascript", javascript);
-hljs.registerLanguage("js", javascript);
-hljs.registerLanguage("json", json);
-hljs.registerLanguage("jsx", javascript);
-hljs.registerLanguage("plaintext", plaintext);
-hljs.registerLanguage("python", python);
-hljs.registerLanguage("shell", shell);
-hljs.registerLanguage("sql", sql);
-hljs.registerLanguage("text", plaintext);
-hljs.registerLanguage("txt", plaintext);
-hljs.registerLanguage("ts", typescript);
-hljs.registerLanguage("tsx", javascript);
-hljs.registerLanguage("typescript", typescript);
-hljs.registerLanguage("xml", xml);
-hljs.registerLanguage("yaml", yaml);
 
 const LANGUAGE_DISPLAY: Record<string, string> = {
   javascript: "JavaScript",
@@ -57,6 +25,28 @@ const LANGUAGE_DISPLAY: Record<string, string> = {
   txt: "Text",
 };
 
+function normalizeCode(raw: string): string {
+  const decoded = raw
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&amp;/g, "&");
+
+  const lines = decoded.split("\n");
+  const nonEmpty = lines.filter((l) => l.trim());
+  if (nonEmpty.length === 0) return "";
+
+  const minIndent = Math.min(
+    ...nonEmpty.map((l) => l.match(/^\s*/)?.[0].length ?? 0),
+  );
+
+  return lines
+    .map((l) => l.slice(minIndent))
+    .join("\n")
+    .trim();
+}
+
 interface CodeBlockProps {
   children: string;
   language?: string;
@@ -66,59 +56,106 @@ export function CodeBlock({ children, language = "text" }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
   const t = useTranslations("CodeBlock");
 
-  const normalizedCode = useMemo(() => {
-    const decoded = children
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .replace(/&quot;/g, '"')
-      .replace(/&#39;/g, "'")
-      .replace(/&amp;/g, "&");
+  const plain = normalizeCode(children);
 
-    const lines = decoded.split("\n");
-    const nonEmpty = lines.filter((l) => l.trim());
-    if (nonEmpty.length === 0) return "";
+  const [highlightedCode, setHighlightedCode] = useState(plain);
 
-    const minIndent = Math.min(
-      ...nonEmpty.map((l) => l.match(/^\s*/)?.[0].length ?? 0),
-    );
-
-    return lines
-      .map((l) => l.slice(minIndent))
-      .join("\n")
-      .trim();
-  }, [children]);
-
-  const highlightedCode = useMemo(() => {
-    if (!normalizedCode) return "";
-    try {
-      const lang = hljs.getLanguage(language) ? language : "plaintext";
-      return hljs.highlight(normalizedCode, {
-        language: lang,
-        ignoreIllegals: true,
-      }).value;
-    } catch {
-      return normalizedCode;
+  useEffect(() => {
+    if (!plain) {
+      setHighlightedCode("");
+      return;
     }
-  }, [normalizedCode, language]);
+    let cancelled = false;
+    import("highlight.js/lib/core").then(async ({ default: hljs }) => {
+      if (cancelled) return;
+      const [
+        { default: bash },
+        { default: css },
+        { default: javascript },
+        { default: json },
+        { default: plaintext },
+        { default: python },
+        { default: shell },
+        { default: sql },
+        { default: typescript },
+        { default: xml },
+        { default: yaml },
+      ] = await Promise.all([
+        import("highlight.js/lib/languages/bash"),
+        import("highlight.js/lib/languages/css"),
+        import("highlight.js/lib/languages/javascript"),
+        import("highlight.js/lib/languages/json"),
+        import("highlight.js/lib/languages/plaintext"),
+        import("highlight.js/lib/languages/python"),
+        import("highlight.js/lib/languages/shell"),
+        import("highlight.js/lib/languages/sql"),
+        import("highlight.js/lib/languages/typescript"),
+        import("highlight.js/lib/languages/xml"),
+        import("highlight.js/lib/languages/yaml"),
+      ]);
+      if (cancelled) return;
+
+      if (!hljs.getLanguage("bash")) hljs.registerLanguage("bash", bash);
+      if (!hljs.getLanguage("console")) hljs.registerLanguage("console", shell);
+      if (!hljs.getLanguage("css")) hljs.registerLanguage("css", css);
+      if (!hljs.getLanguage("html")) hljs.registerLanguage("html", xml);
+      if (!hljs.getLanguage("javascript")) hljs.registerLanguage("javascript", javascript);
+      if (!hljs.getLanguage("js")) hljs.registerLanguage("js", javascript);
+      if (!hljs.getLanguage("json")) hljs.registerLanguage("json", json);
+      if (!hljs.getLanguage("jsx")) hljs.registerLanguage("jsx", javascript);
+      if (!hljs.getLanguage("plaintext")) hljs.registerLanguage("plaintext", plaintext);
+      if (!hljs.getLanguage("python")) hljs.registerLanguage("python", python);
+      if (!hljs.getLanguage("shell")) hljs.registerLanguage("shell", shell);
+      if (!hljs.getLanguage("sql")) hljs.registerLanguage("sql", sql);
+      if (!hljs.getLanguage("text")) hljs.registerLanguage("text", plaintext);
+      if (!hljs.getLanguage("txt")) hljs.registerLanguage("txt", plaintext);
+      if (!hljs.getLanguage("ts")) hljs.registerLanguage("ts", typescript);
+      if (!hljs.getLanguage("tsx")) hljs.registerLanguage("tsx", javascript);
+      if (!hljs.getLanguage("typescript")) hljs.registerLanguage("typescript", typescript);
+      if (!hljs.getLanguage("xml")) hljs.registerLanguage("xml", xml);
+      if (!hljs.getLanguage("yaml")) hljs.registerLanguage("yaml", yaml);
+
+      try {
+        const lang = hljs.getLanguage(language) ? language : "plaintext";
+        const result = hljs.highlight(plain, { language: lang, ignoreIllegals: true }).value;
+        if (!cancelled) setHighlightedCode(result);
+      } catch {
+        if (!cancelled) setHighlightedCode(plain);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [plain, language]);
 
   const copy = () => {
-    navigator.clipboard.writeText(normalizedCode);
+    navigator.clipboard.writeText(plain);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const displayLang = LANGUAGE_DISPLAY[language] || language;
+
   return (
     <div className="code-block">
       <div className="code-block__header">
-        <span className="code-block__lang">
-          {LANGUAGE_DISPLAY[language] || language}
+        <span className="code-block__lang" aria-label={`${t("language")}: ${displayLang}`}>
+          {displayLang}
         </span>
-        <button onClick={copy} className="code-block__copy">
+        <button
+          type="button"
+          onClick={copy}
+          aria-label={copied ? t("copied") : t("copyCode")}
+          aria-live="polite"
+          className="code-block__copy"
+        >
           {copied ? `✓ ${t("copied")}` : t("copy")}
         </button>
       </div>
       <pre className="code-block__pre">
-        <code className={`language-${language} code-block__code`} suppressHydrationWarning dangerouslySetInnerHTML={{ __html: highlightedCode }} />
+        <code
+          className={`language-${language} code-block__code`}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{ __html: highlightedCode }}
+        />
       </pre>
     </div>
   );

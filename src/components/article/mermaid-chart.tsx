@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef } from "react";
-import mermaid from "mermaid";
+import { useTranslations } from "next-intl";
 
 interface MermaidChartProps {
   children: string;
@@ -110,6 +110,7 @@ export function MermaidChart({ children }: MermaidChartProps) {
   const rawId = useId();
   const baseId = "mermaid-" + rawId.replace(/:/g, "");
   const renderCountRef = useRef(0);
+  const t = useTranslations("ArticlesPage");
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -120,6 +121,7 @@ export function MermaidChart({ children }: MermaidChartProps) {
     const render = async () => {
       if (cancelled || !containerRef.current) return;
 
+      const { default: mermaid } = await import("mermaid");
       const isDark = document.documentElement.dataset.theme === "dark";
       const diagramId = `${baseId}-r${++renderCountRef.current}`;
 
@@ -167,5 +169,12 @@ export function MermaidChart({ children }: MermaidChartProps) {
     };
   }, [children, baseId]);
 
-  return <div ref={containerRef} className="mermaid-chart" />;
+  return (
+    <div
+      ref={containerRef}
+      className="mermaid-chart"
+      role="img"
+      aria-label={t("diagram")}
+    />
+  );
 }

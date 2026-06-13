@@ -1,22 +1,28 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useRef, type ReactNode, type RefObject } from "react";
 
 type MobileMenuContextValue = {
   open: boolean;
   toggle: () => void;
   close: () => void;
+  triggerRef: RefObject<HTMLButtonElement | null>;
 };
 
 const MobileMenuContext = createContext<MobileMenuContextValue | null>(null);
 
 export function MobileMenuProvider({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+
   const toggle = useCallback(() => setOpen((v) => !v), []);
-  const close = useCallback(() => setOpen(false), []);
+  const close = useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, []);
 
   return (
-    <MobileMenuContext value={{ open, toggle, close }}>
+    <MobileMenuContext value={{ open, toggle, close, triggerRef }}>
       {children}
     </MobileMenuContext>
   );

@@ -1,22 +1,24 @@
 "use client";
 
 import { useLayoutEffect, useEffect, useState, useRef } from "react";
+import { useTranslations } from "next-intl";
 
 function ArrowUpIcon() {
   return (
-    <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor">
+    <svg viewBox="0 0 20 20" width="20" height="20" fill="currentColor" aria-hidden="true">
       <path fillRule="evenodd" d="M3.293 9.707a1 1 0 010-1.414l6-6a1 1 0 011.414 0l6 6a1 1 0 01-1.414 1.414L11 5.414V17a1 1 0 11-2 0V5.414L4.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" />
     </svg>
   );
 }
 
 export function BackToTop() {
+  const t = useTranslations("Nav");
   const [show, setShow] = useState(false);
   const [progress, setProgress] = useState(0);
   const progressRingRef = useRef<SVGCircleElement>(null);
-  const isScrollingRef = useRef(false);
   const radius = 18;
   const circumference = 2 * Math.PI * radius;
+  const rafRef = useRef<number | null>(null);
 
   useLayoutEffect(() => {
     const updateProgress = () => {
@@ -24,30 +26,24 @@ export function BackToTop() {
       const docHeight = document.documentElement.scrollHeight - window.innerHeight;
       const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
       const clampedProgress = Math.min(100, Math.max(0, scrollPercent));
-
       setShow(scrollTop > 0);
       setProgress(clampedProgress);
     };
 
     updateProgress();
 
-    let scrollTimeout: NodeJS.Timeout;
-
     const handleScroll = () => {
-      updateProgress();
-
-      clearTimeout(scrollTimeout);
-      isScrollingRef.current = true;
-
-      scrollTimeout = setTimeout(() => {
-        isScrollingRef.current = false;
-      }, 100);
+      if (rafRef.current !== null) return;
+      rafRef.current = window.requestAnimationFrame(() => {
+        updateProgress();
+        rafRef.current = null;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      clearTimeout(scrollTimeout);
+      if (rafRef.current !== null) window.cancelAnimationFrame(rafRef.current);
     };
   }, []);
 
@@ -59,23 +55,24 @@ export function BackToTop() {
   }, [progress, circumference]);
 
   const scrollToTop = () => {
-    isScrollingRef.current = true;
-
     setShow(false);
     setProgress(0);
-
     window.scrollTo({ top: 0, behavior: "smooth" });
-
-    setTimeout(() => {
-      isScrollingRef.current = false;
-    }, 600);
   };
 
   const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
-    <button type="button" onClick={scrollToTop} className="back-to-top" data-visible={show}>
-      <svg className="back-to-top__progress" width="44" height="44" viewBox="0 0 44 44">
+    <button
+      type="button"
+      onClick={scrollToTop}
+      aria-label={t("backToTop")}
+      aria-hidden={!show}
+      tabIndex={show ? 0 : -1}
+      className="back-to-top"
+      data-visible={show}
+    >
+      <svg className="back-to-top__progress" width="44" height="44" viewBox="0 0 44 44" aria-hidden="true">
         <circle cx="22" cy="22" r={radius} fill="none" stroke="var(--border)" strokeWidth="2" />
         <circle ref={progressRingRef} cx="22" cy="22" r={radius} fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} transform="rotate(-90 22 22)" className="back-to-top__progress-ring" />
       </svg>

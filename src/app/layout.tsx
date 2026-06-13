@@ -2,7 +2,7 @@ import { getLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import "./globals.css";
 import { THEME_STORAGE_KEY, THEME_DEFAULT } from "@/config/theme";
-import { generateOrganizationSchema, generateWebsiteSchema, getSEOConfig, getLocaleCode } from "@/lib/seo";
+import { generateOrganizationSchema, generateWebsiteSchema, getSEOConfig } from "@/lib/seo";
 
 const themeInitScript = `(function(){try{var s=localStorage.getItem("${THEME_STORAGE_KEY}");var t=s==="dark"||s==="light"?s:"${THEME_DEFAULT}";document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){}})();`;
 const seoConfig = getSEOConfig();
@@ -83,7 +83,6 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang={locale} data-theme={THEME_DEFAULT} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        <meta property="og:locale" content={getLocaleCode(locale)} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationSchema()) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebsiteSchema()) }} />
       </head>

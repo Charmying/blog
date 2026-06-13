@@ -26,9 +26,16 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     openGraph: {
       type: 'profile',
       locale: getLocaleCode(locale),
+      url,
+      title: t("title"),
+      description: t("description"),
       firstName: 'Charmy',
       lastName: 'Tseng',
       username: 'charmying',
+    },
+    twitter: {
+      title: t("title"),
+      description: t("description"),
     },
   };
 }

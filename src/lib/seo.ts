@@ -173,14 +173,6 @@ export function generateWebsiteSchema() {
       name: 'Charmy',
       alternateName: ['曾韋翰', 'Charmy Tseng', 'charmying'],
     },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${seoConfig.siteUrl}/articles?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 

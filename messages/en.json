@@ -6,7 +6,16 @@
   "Nav": {
     "home": "Home",
     "about": "About",
-    "articles": "Articles"
+    "articles": "Articles",
+    "mainNav": "Main navigation",
+    "mobileNav": "Mobile navigation",
+    "mobileMenu": "Mobile menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "backToTop": "Back to top",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
+    "switchLocale": "Switch language to {locale}"
   },
   "HomePage": {
     "title": "Home",
@@ -59,11 +68,17 @@
     "placeholder": "Search articles or tags...",
     "tags": "Tags",
     "articles": "Articles",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "openSearch": "Open search",
+    "closeSearch": "Close search",
+    "searchDialog": "Search dialog",
+    "searchResultCount": "{count} results found"
   },
   "CodeBlock": {
     "copy": "Copy",
-    "copied": "Copied"
+    "copied": "Copied",
+    "copyCode": "Copy code",
+    "language": "Language"
   },
   "ArticlesPage": {
     "title": "Articles",
@@ -76,13 +91,18 @@
     "readingTime": "{time} min",
     "backToArticles": "Back to articles",
     "notFound": "Article not found",
+    "viewToggleLabel": "Article view mode",
+    "sortLabel": "Sort by",
     "viewGrid": "Grid view",
     "viewList": "List view",
     "sortByDate": "Sort by date",
     "sortByTitle": "Sort by title",
     "sortByReadingTime": "Sort by reading time",
     "noArticles": "No articles found",
+    "loading": "Loading articles",
     "seriesFilter": "Series",
-    "allSeries": "All"
+    "allSeries": "All",
+    "comments": "Comments",
+    "diagram": "Diagram"
   }
 }

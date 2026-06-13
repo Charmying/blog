@@ -61,11 +61,11 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
 
   if (!isViewLoaded || !isSortLoaded) {
     return (
-      <section className="px-4 py-12 xs:py-14 sm:py-16">
+      <section className="px-4 py-12 xs:py-14 sm:py-16" aria-busy="true">
         <div className="mx-auto max-w-5xl">
-          <div className="article-grid">
+          <div className="article-grid" role="status" aria-label={t("loading")}>
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="article-card article-card--skeleton">
+              <div key={i} className="article-card article-card--skeleton" aria-hidden="true">
                 <div className="skeleton skeleton--tag" />
                 <div className="skeleton skeleton--title" />
                 <div className="skeleton skeleton--excerpt" />
@@ -85,7 +85,7 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
         {/* ── Series filter (only shown when series exist) ── */}
         {series.length > 0 && (
           <div className="mb-6">
-            <p className="text-[11px] uppercase tracking-widest font-semibold opacity-40 mb-3">
+            <p className="text-[11px] uppercase tracking-widest font-semibold opacity-60 mb-3">
               {t("seriesFilter")}
             </p>
             <div className="flex flex-wrap gap-2">
@@ -119,17 +119,17 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
                 {activeTag || activeSeries ? `${sorted.length} / ${posts.length}` : t("articleCount", { count: posts.length })}
               </p>
               <div className="flex items-center gap-3">
-                <div className="view-toggle">
-                  <button onClick={() => setViewMode("grid")} className={`view-toggle__btn ${viewMode === "grid" ? "view-toggle__btn--active" : ""}`} title={t("viewGrid")}>
-                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <div className="view-toggle" role="group" aria-label={t("viewToggleLabel")}>
+                  <button type="button" onClick={() => setViewMode("grid")} aria-label={t("viewGrid")} aria-pressed={viewMode === "grid"} className={`view-toggle__btn ${viewMode === "grid" ? "view-toggle__btn--active" : ""}`}>
+                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
                       <rect x="3" y="3" width="7" height="7" rx="1.5" />
                       <rect x="14" y="3" width="7" height="7" rx="1.5" />
                       <rect x="3" y="14" width="7" height="7" rx="1.5" />
                       <rect x="14" y="14" width="7" height="7" rx="1.5" />
                     </svg>
                   </button>
-                  <button onClick={() => setViewMode("list")} className={`view-toggle__btn ${viewMode === "list" ? "view-toggle__btn--active" : ""}`} title={t("viewList")}>
-                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <button type="button" onClick={() => setViewMode("list")} aria-label={t("viewList")} aria-pressed={viewMode === "list"} className={`view-toggle__btn ${viewMode === "list" ? "view-toggle__btn--active" : ""}`}>
+                    <svg className="w-4.5 h-4.5" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" aria-hidden="true">
                       <line x1="8" y1="6" x2="21" y2="6" strokeLinecap="round" />
                       <line x1="8" y1="12" x2="21" y2="12" strokeLinecap="round" />
                       <line x1="8" y1="18" x2="21" y2="18" strokeLinecap="round" />
@@ -140,22 +140,22 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
                   </button>
                 </div>
                 <div className="sort-dropdown" ref={dropdownRef}>
-                  <button onClick={() => setIsOpen(!isOpen)} className="sort-dropdown__trigger">
+                  <button type="button" onClick={() => setIsOpen(!isOpen)} aria-haspopup="listbox" aria-expanded={isOpen} aria-label={t("sortLabel")} className="sort-dropdown__trigger">
                     <span className="sort-dropdown__label">
                       {t(SORT_OPTIONS.find((o) => o.value === sortBy)!.key)}
                     </span>
-                    <svg className={`sort-dropdown__arrow ${isOpen ? "sort-dropdown__arrow--open" : ""}`} width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <svg className={`sort-dropdown__arrow ${isOpen ? "sort-dropdown__arrow--open" : ""}`} width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                       <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </button>
                   {isOpen && (
-                    <div className="sort-dropdown__menu">
+                    <div className="sort-dropdown__menu" role="listbox" aria-label={t("sortLabel")}>
                       {SORT_OPTIONS.map((opt) => (
-                        <button key={opt.value} onClick={() => handleSort(opt.value)} className={`sort-dropdown__item ${sortBy === opt.value ? "sort-dropdown__item--active" : ""}`}>
-                          <span className="sort-dropdown__icon">{opt.icon}</span>
+                        <button key={opt.value} type="button" role="option" aria-selected={sortBy === opt.value} onClick={() => handleSort(opt.value)} className={`sort-dropdown__item ${sortBy === opt.value ? "sort-dropdown__item--active" : ""}`}>
+                          <span className="sort-dropdown__icon" aria-hidden="true">{opt.icon}</span>
                           <span className="sort-dropdown__text">{t(opt.key)}</span>
                           {sortBy === opt.value && (
-                            <svg className="sort-dropdown__check" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <svg className="sort-dropdown__check" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
                               <path d="M3 8L6.5 11.5L13 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           )}
@@ -171,7 +171,7 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
 
         {/* ── Article grid / list ── */}
         {sorted.length === 0 ? (
-          <div className="article-empty">
+          <div className="article-empty" role="status">
             {/* Exclamation-circle: bar at top, filled dot at bottom */}
             <svg className="article-empty__icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
               <circle cx="12" cy="12" r="10" />
@@ -211,7 +211,7 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
                   <h2 className="article-card__title">{post.title}</h2>
                   {post.excerpt && <p className="article-card__excerpt">{post.excerpt}</p>}
                   <div className="article-card__meta">
-                    <time className="article-card__date">{post.date}</time>
+                    <time className="article-card__date" dateTime={post.date}>{post.date}</time>
                     <span className="article-card__divider">·</span>
                     <span className="article-card__time">
                       {t("readingTime", { time: post.readingTime })}
@@ -220,7 +220,7 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
                 </Link>
               ) : (
                 <Link key={post.slug} href={`/articles/${post.slug}`} className="article-row">
-                  <time className="article-row__date">{post.date}</time>
+                  <time className="article-row__date" dateTime={post.date}>{post.date}</time>
                   <div className="article-row__content">
                     {post.series && (
                       <p className="article-row__series">

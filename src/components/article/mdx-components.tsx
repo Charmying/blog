@@ -4,6 +4,7 @@ import { CodeBlock } from "./code-block";
 import { MermaidChart } from "./mermaid-chart";
 
 export const mdxComponents = {
+  h1: () => null,
   pre: ({ children }: { children: React.ReactNode }) => {
     const child = (children as any)?.props;
     const language = child?.className?.replace("language-", "") || "text";

@@ -9,7 +9,7 @@ import type { Locale } from "@/i18n/routing";
 
 function ArrowIcon() {
   return (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
     </svg>
   );
@@ -92,9 +92,9 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
             <h2 className="text-2xl xs:text-3xl font-semibold tracking-[-0.02em]">
               {t("latestTitle")}
             </h2>
-            <Link
+              <Link
               href="/articles"
-              className="inline-flex items-center gap-1.5 text-sm font-medium no-underline opacity-40 hover:opacity-80 transition-opacity duration-200"
+              className="inline-flex items-center gap-1.5 text-sm font-medium no-underline text-(--secondary) hover:opacity-100 transition-opacity duration-200"
             >
               <span>{t("viewAll")}</span>
               <ArrowIcon />
@@ -114,7 +114,7 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
                         <span key={tag} className="home-article-item__tag">{tag}</span>
                       ))}
                     </div>
-                    <time className="home-article-item__date">{post.date}</time>
+                    <time className="home-article-item__date" dateTime={post.date}>{post.date}</time>
                   </div>
                   <h3 className="home-article-item__title">{post.title}</h3>
                   {post.excerpt && (

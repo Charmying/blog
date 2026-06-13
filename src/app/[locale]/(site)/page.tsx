@@ -42,7 +42,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       },
     },
     openGraph: {
+      type: 'website',
       locale: getLocaleCode(locale),
+      url,
+      title: t("title"),
+      description: t("description"),
+    },
+    twitter: {
+      title: t("title"),
+      description: t("description"),
     },
   };
 }

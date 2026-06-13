@@ -33,6 +33,12 @@ export async function generateMetadata({ params }: {
   try {
     const post = getPostMetadata(locale as Locale, decodedSlug);
     const { authorName } = getSEOConfig();
+
+    const allLocales = routing.locales as readonly string[];
+    const availableLocales = allLocales.filter((loc) => {
+      try { getPostMetadata(loc as Locale, decodedSlug); return true; } catch { return false; }
+    });
+
     const metadata = generateArticleMetadata({
       title: post.title,
       description: post.excerpt,
@@ -42,6 +48,7 @@ export async function generateMetadata({ params }: {
       readingTime: post.readingTime,
       locale,
       authorName,
+      availableLocales,
     });
     return {
       ...metadata,

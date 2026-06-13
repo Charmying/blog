@@ -18,6 +18,7 @@ export interface ArticleSEOProps {
   readingTime: number;
   locale: string;
   authorName?: string;
+  availableLocales?: string[];
 }
 
 const seoConfig: SEOConfig = {
@@ -180,16 +181,20 @@ export function generateArticleMetadata(props: ArticleSEOProps): Metadata {
   const url = getCanonicalUrl(`/articles/${props.slug}`, props.locale);
   const authorName = props.authorName || seoConfig.authorName;
 
+  const locales = props.availableLocales ?? ['zh-TW', 'en'];
+  const languages: Record<string, string> = {
+    'x-default': getCanonicalUrl(`/articles/${props.slug}`, 'zh-TW'),
+  };
+  for (const loc of locales) {
+    languages[loc] = getCanonicalUrl(`/articles/${props.slug}`, loc);
+  }
+
   return {
     title: props.title,
     description: props.description,
     alternates: {
       canonical: url,
-      languages: {
-        'zh-TW': getCanonicalUrl(`/articles/${props.slug}`, 'zh-TW'),
-        'en': getCanonicalUrl(`/articles/${props.slug}`, 'en'),
-        'x-default': getCanonicalUrl(`/articles/${props.slug}`, 'zh-TW'),
-      },
+      languages,
     },
     keywords: [
       ...props.tags,

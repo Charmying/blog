@@ -24,15 +24,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       {
         url: zhUrl,
         lastModified: new Date(),
-        changeFrequency: path === '' ? 'weekly' : path === '/articles' ? 'daily' : 'monthly' as const,
-        priority: path === '' ? 1 : path === '/articles' ? 0.9 : 0.8,
         alternates,
       },
       {
         url: enUrl,
         lastModified: new Date(),
-        changeFrequency: path === '' ? 'weekly' : path === '/articles' ? 'daily' : 'monthly' as const,
-        priority: path === '' ? 1 : path === '/articles' ? 0.9 : 0.8,
         alternates,
       },
     );
@@ -61,8 +57,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     articleEntries.push({
       url: zhUrl,
       lastModified: new Date(post.date),
-      changeFrequency: 'monthly' as const,
-      priority: 0.7,
       alternates,
     });
 
@@ -70,8 +64,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       articleEntries.push({
         url: enUrl,
         lastModified: new Date(post.date),
-        changeFrequency: 'monthly' as const,
-        priority: 0.7,
         alternates,
       });
     }

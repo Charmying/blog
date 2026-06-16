@@ -11,6 +11,17 @@ const LANGUAGE_DISPLAY: Record<string, string> = {
   jsx: "JSX",
   tsx: "TSX",
   python: "Python",
+  java: "Java",
+  cpp: "C++",
+  c: "C",
+  csharp: "C#",
+  cs: "C#",
+  go: "Go",
+  rust: "Rust",
+  php: "PHP",
+  ruby: "Ruby",
+  kotlin: "Kotlin",
+  swift: "Swift",
   css: "CSS",
   html: "HTML",
   json: "JSON",
@@ -70,25 +81,45 @@ export function CodeBlock({ children, language = "text" }: CodeBlockProps) {
       if (cancelled) return;
       const [
         { default: bash },
+        { default: c },
+        { default: cpp },
+        { default: csharp },
         { default: css },
+        { default: go },
+        { default: java },
         { default: javascript },
         { default: json },
+        { default: kotlin },
+        { default: php },
         { default: plaintext },
         { default: python },
+        { default: ruby },
+        { default: rust },
         { default: shell },
         { default: sql },
+        { default: swift },
         { default: typescript },
         { default: xml },
         { default: yaml },
       ] = await Promise.all([
         import("highlight.js/lib/languages/bash"),
+        import("highlight.js/lib/languages/c"),
+        import("highlight.js/lib/languages/cpp"),
+        import("highlight.js/lib/languages/csharp"),
         import("highlight.js/lib/languages/css"),
+        import("highlight.js/lib/languages/go"),
+        import("highlight.js/lib/languages/java"),
         import("highlight.js/lib/languages/javascript"),
         import("highlight.js/lib/languages/json"),
+        import("highlight.js/lib/languages/kotlin"),
+        import("highlight.js/lib/languages/php"),
         import("highlight.js/lib/languages/plaintext"),
         import("highlight.js/lib/languages/python"),
+        import("highlight.js/lib/languages/ruby"),
+        import("highlight.js/lib/languages/rust"),
         import("highlight.js/lib/languages/shell"),
         import("highlight.js/lib/languages/sql"),
+        import("highlight.js/lib/languages/swift"),
         import("highlight.js/lib/languages/typescript"),
         import("highlight.js/lib/languages/xml"),
         import("highlight.js/lib/languages/yaml"),
@@ -96,17 +127,28 @@ export function CodeBlock({ children, language = "text" }: CodeBlockProps) {
       if (cancelled) return;
 
       if (!hljs.getLanguage("bash")) hljs.registerLanguage("bash", bash);
+      if (!hljs.getLanguage("c")) hljs.registerLanguage("c", c);
       if (!hljs.getLanguage("console")) hljs.registerLanguage("console", shell);
+      if (!hljs.getLanguage("cpp")) hljs.registerLanguage("cpp", cpp);
+      if (!hljs.getLanguage("csharp")) hljs.registerLanguage("csharp", csharp);
+      if (!hljs.getLanguage("cs")) hljs.registerLanguage("cs", csharp);
       if (!hljs.getLanguage("css")) hljs.registerLanguage("css", css);
+      if (!hljs.getLanguage("go")) hljs.registerLanguage("go", go);
       if (!hljs.getLanguage("html")) hljs.registerLanguage("html", xml);
+      if (!hljs.getLanguage("java")) hljs.registerLanguage("java", java);
       if (!hljs.getLanguage("javascript")) hljs.registerLanguage("javascript", javascript);
       if (!hljs.getLanguage("js")) hljs.registerLanguage("js", javascript);
       if (!hljs.getLanguage("json")) hljs.registerLanguage("json", json);
       if (!hljs.getLanguage("jsx")) hljs.registerLanguage("jsx", javascript);
+      if (!hljs.getLanguage("kotlin")) hljs.registerLanguage("kotlin", kotlin);
+      if (!hljs.getLanguage("php")) hljs.registerLanguage("php", php);
       if (!hljs.getLanguage("plaintext")) hljs.registerLanguage("plaintext", plaintext);
       if (!hljs.getLanguage("python")) hljs.registerLanguage("python", python);
+      if (!hljs.getLanguage("ruby")) hljs.registerLanguage("ruby", ruby);
+      if (!hljs.getLanguage("rust")) hljs.registerLanguage("rust", rust);
       if (!hljs.getLanguage("shell")) hljs.registerLanguage("shell", shell);
       if (!hljs.getLanguage("sql")) hljs.registerLanguage("sql", sql);
+      if (!hljs.getLanguage("swift")) hljs.registerLanguage("swift", swift);
       if (!hljs.getLanguage("text")) hljs.registerLanguage("text", plaintext);
       if (!hljs.getLanguage("txt")) hljs.registerLanguage("txt", plaintext);
       if (!hljs.getLanguage("ts")) hljs.registerLanguage("ts", typescript);

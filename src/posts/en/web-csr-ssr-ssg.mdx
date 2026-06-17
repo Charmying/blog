@@ -190,3 +190,7 @@ No single strategy is universally best — each involves trade-offs:
 - SSG — fastest, cheapest, but content isn't live
 
 Modern frameworks like Next.js and Nuxt.js let you mix all three strategies within the same project, choosing the right approach on a page-by-page basis.
+
+Worth mentioning: Next.js's ISR (Incremental Static Regeneration) extends SSG by adding a revalidation window. Static pages are silently regenerated in the background after a set interval — no full site rebuild required. For content that updates occasionally but doesn't need to be fresh on every request, ISR is a practical middle ground between SSG's performance and SSR's data freshness.
+
+CSR, SSR, and SSG are runtime rendering strategies. Regardless of which strategy delivers the HTML, the browser processes it through the same rendering pipeline — see [Browser Rendering Pipeline](/articles/web-browser-rendering). For the full execution lifecycle, see [From Source to Screen](/articles/web-sourcecode-to-screen).

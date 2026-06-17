@@ -11,6 +11,8 @@ When a browser loads a webpage, a lot happens between receiving the HTML and put
 
 Understanding it helps you write more performant frontend code and avoid common bottlenecks.
 
+This pipeline runs the same way regardless of how the HTML was generated — CSR, SSR, or SSG. The rendering strategy determines what the browser receives; the steps from there are identical.
+
 ```mermaid
 mindmap
   	root((Browser Rendering Pipeline))
@@ -215,3 +217,5 @@ flowchart TD
 Performance cost from highest to lowest: Reflow > Repaint > Compositing
 
 The core principle for performant frontend code: avoid triggering Reflow wherever possible, and prefer properties that only trigger Compositing — `transform` and `opacity`.
+
+Browser rendering is the final stage of a broader frontend pipeline. The rendering strategy — CSR, SSR, or SSG — determines what HTML the browser starts with. See [CSR vs SSR vs SSG](/articles/web-csr-ssr-ssg) for a comparison, or [From Source to Screen](/articles/web-sourcecode-to-screen) for the full lifecycle.

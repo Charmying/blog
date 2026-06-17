@@ -217,3 +217,5 @@ flowchart TD
 效能影響由大到小：Reflow > Repaint > Compositing
 
 寫高效能的前端程式碼，核心原則是：盡量避免觸發 Reflow，優先使用只觸發 Compositing 的屬性 (`transform`、`opacity`)。
+
+瀏覽器渲染是前端應用完整執行週期的最後一段。不同渲染策略 (CSR / SSR / SSG) 決定了初始 HTML 的內容，參考 [CSR vs SSR vs SSG](/articles/web-csr-ssr-ssg)；想了解完整執行週期，參考 [從原始碼到畫面](/articles/web-sourcecode-to-screen)。

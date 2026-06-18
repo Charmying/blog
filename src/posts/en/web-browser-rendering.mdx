@@ -22,7 +22,7 @@ mindmap
     	4. Layout Reflow
     	5. Paint Repaint
     	6. Compositing
-    	Performance Reflow vs Repaint vs Compositing
+    	Performance Reflow vs. Repaint vs. Compositing
 ```
 
 - [Parse HTML → DOM Tree](#1-parse-html--dom-tree)
@@ -218,4 +218,4 @@ Performance cost from highest to lowest: Reflow > Repaint > Compositing
 
 The core principle for performant frontend code: avoid triggering Reflow wherever possible, and prefer properties that only trigger Compositing — `transform` and `opacity`.
 
-Browser rendering is the final stage of a broader frontend pipeline. The rendering strategy — CSR, SSR, or SSG — determines what HTML the browser starts with. See [CSR vs SSR vs SSG](/articles/web-csr-ssr-ssg) for a comparison, or [From Source to Screen](/articles/web-sourcecode-to-screen) for the full lifecycle.
+Browser rendering is the final stage of a broader frontend pipeline. The rendering strategy — CSR, SSR, or SSG — determines what HTML the browser starts with. See [CSR vs. SSR vs. SSG](/articles/web-csr-ssr-ssg) for a comparison, or [From Source to Screen](/articles/web-sourcecode-to-screen) for the full lifecycle.

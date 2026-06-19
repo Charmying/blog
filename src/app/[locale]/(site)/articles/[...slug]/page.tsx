@@ -10,8 +10,10 @@ import { mdxComponents } from "@/components/article/mdx-components";
 import { Comments } from "@/components/article/comments";
 import { generateArticleMetadata, generateArticleSchema, generateBreadcrumbSchema, getCanonicalUrl, getLocaleCode, getSEOConfig } from "@/lib/seo";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeKatex from "rehype-katex";
 
 export function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -213,10 +215,11 @@ export default async function ArticlePage({ params }: {
           components={mdxComponents}
           options={{
             mdxOptions: {
-              remarkPlugins: [remarkGfm],
+              remarkPlugins: [remarkGfm, remarkMath],
               rehypePlugins: [
                 rehypeSlug,
                 [rehypeAutolinkHeadings, { behavior: "wrap" }],
+                rehypeKatex,
               ],
             },
           }}

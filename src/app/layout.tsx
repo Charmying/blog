@@ -1,6 +1,7 @@
 import { getLocale } from "next-intl/server";
 import type { Metadata } from "next";
 import "./globals.css";
+import "katex/dist/katex.min.css";
 import { THEME_STORAGE_KEY, THEME_DEFAULT } from "@/config/theme";
 import { generateOrganizationSchema, generateWebsiteSchema, getSEOConfig } from "@/lib/seo";
 

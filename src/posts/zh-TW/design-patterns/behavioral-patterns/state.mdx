@@ -1,0 +1,166 @@
+export const metadata = {
+  title: '設計模式：狀態模式 (State)',
+  date: '2026-06-30',
+  excerpt: '介紹行為型設計模式中的狀態模 —— 每個狀態封裝成一個類別，讓物件的行為隨著狀態轉換自然地改變，不必再用一堆 if-else 判斷。',
+  tags: ['軟體設計', '設計模式', 'OOP'],
+};
+
+# 設計模式：狀態模式 (State)
+
+State 把物件的每個狀態各自封裝成一個類別。當狀態改變時，物件就委派給新的狀態物件，行為也隨之自動切換，不需要一堆 if-else 來判斷目前處於哪個狀態。
+
+```mermaid
+mindmap
+    root((State))
+        意圖與用途
+        結構與角色
+        實作範例
+        適用情境
+        總結
+```
+
+- [意圖與用途](#意圖與用途)
+- [結構與角色](#結構與角色)
+- [實作範例：訂單狀態機](#實作範例訂單狀態機)
+- [適用情境](#適用情境)
+- [總結](#總結)
+
+---
+
+## 意圖與用途
+
+考慮一個訂單物件，它可以處於不同狀態：`待處理`、`處理中`、`已出貨`、`已送達`、`已取消`。在每個狀態下，`cancel()` 的行為都完全不同。
+
+如果用 if-else 來處理：
+
+```typescript
+cancel() {
+  if (this.status === 'pending') { /* ... */ }
+  else if (this.status === 'processing') { /* ... */ }
+  else if (this.status === 'shipped') { /* ... */ }
+  else throw new Error('無法取消');
+}
+```
+
+狀態越多，這種判斷就越難維護。State 把每個狀態各自搬進獨立的類別。
+
+---
+
+## 結構與角色
+
+- Context：持有當前狀態的物件 (`Order`)
+- State：定義狀態行為的介面
+- ConcreteState：各個具體狀態的實作
+
+---
+
+## 實作範例：訂單狀態機
+
+```typescript
+interface OrderState {
+  name: string;
+  confirm(order: Order): void;
+  ship(order: Order): void;
+  deliver(order: Order): void;
+  cancel(order: Order): void;
+}
+
+class Order {
+  state: OrderState = new PendingState();
+  id: string;
+
+  constructor(id: string) { this.id = id; }
+
+  setState(state: OrderState): void { this.state = state; }
+
+  confirm(): void { this.state.confirm(this); }
+  ship(): void { this.state.ship(this); }
+  deliver(): void { this.state.deliver(this); }
+  cancel(): void { this.state.cancel(this); }
+}
+
+// 待處理
+class PendingState implements OrderState {
+  name = '待處理';
+  confirm(order: Order): void {
+    console.log('訂單已確認，開始處理');
+    order.setState(new ProcessingState());
+  }
+  ship(order: Order): void { throw new Error('尚未確認，無法出貨'); }
+  deliver(order: Order): void { throw new Error('尚未出貨'); }
+  cancel(order: Order): void {
+    console.log('訂單已取消');
+    order.setState(new CancelledState());
+  }
+}
+
+// 處理中
+class ProcessingState implements OrderState {
+  name = '處理中';
+  confirm(order: Order): void { console.log('已確認'); }
+  ship(order: Order): void {
+    console.log('已出貨');
+    order.setState(new ShippedState());
+  }
+  deliver(order: Order): void { throw new Error('尚未出貨'); }
+  cancel(order: Order): void {
+    console.log('處理中的訂單已取消，退款處理中');
+    order.setState(new CancelledState());
+  }
+}
+
+// 已出貨
+class ShippedState implements OrderState {
+  name = '已出貨';
+  confirm(order: Order): void { console.log('已出貨'); }
+  ship(order: Order): void { console.log('已出貨'); }
+  deliver(order: Order): void {
+    console.log('已送達');
+    order.setState(new DeliveredState());
+  }
+  cancel(order: Order): void { throw new Error('已出貨，無法取消'); }
+}
+
+// 已送達
+class DeliveredState implements OrderState {
+  name = '已送達';
+  confirm(): void { console.log('已完成'); }
+  ship(): void { throw new Error('已送達'); }
+  deliver(): void { console.log('已送達'); }
+  cancel(): void { throw new Error('已送達，無法取消'); }
+}
+
+// 已取消
+class CancelledState implements OrderState {
+  name = '已取消';
+  confirm(): void { throw new Error('訂單已取消'); }
+  ship(): void { throw new Error('訂單已取消'); }
+  deliver(): void { throw new Error('訂單已取消'); }
+  cancel(): void { console.log('訂單已經取消'); }
+}
+
+// 使用
+const order = new Order('ORD-001');
+order.confirm();
+order.ship();
+order.deliver();
+// order.cancel(); // 會拋出錯誤：已送達，無法取消
+```
+
+---
+
+## 適用情境
+
+適用時機
+
+- 物件的行為隨狀態變化而大幅不同
+- 一堆判斷 `this.status` 的 if-else 已經成為維護痛點
+- 狀態轉換邏輯需要被明確定義並強制遵守
+
+---
+
+## 總結
+
+State 模式的精髓：把 if-else 改寫成多型。
+
+每個狀態都是一個類別，負責它自己狀態下的行為與轉換邏輯。如此一來，新增狀態或修改轉換邏輯時，只需要動到對應的那個狀態類別。

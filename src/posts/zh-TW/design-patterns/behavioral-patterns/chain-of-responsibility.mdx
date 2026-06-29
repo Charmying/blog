@@ -1,0 +1,151 @@
+export const metadata = {
+  title: '設計模式：責任鏈 (Chain of Responsibility)',
+  date: '2026-06-30',
+  excerpt: '介紹行為型設計模式中的責任鏈模 —— 請求沿著一條處理器鏈傳遞，每個處理器自行決定要處理它，或往下傳遞給下一個。',
+  tags: ['軟體設計', '設計模式', 'OOP'],
+};
+
+# 設計模式：責任鏈 (Chain of Responsibility)
+
+Chain of Responsibility 讓請求沿著一條處理器鏈往下傳遞。每個處理器自行決定要把請求處理掉，或是繼續往下交給鏈上的下一個。
+
+```mermaid
+mindmap
+    root((Chain of Responsibility))
+        意圖與用途
+        結構與角色
+        實作範例
+        適用情境
+        總結
+```
+
+- [意圖與用途](#意圖與用途)
+- [結構與角色](#結構與角色)
+- [實作範例：HTTP 中間件鏈](#實作範例http-中間件鏈)
+- [適用情境](#適用情境)
+- [總結](#總結)
+
+---
+
+## 意圖與用途
+
+一個請求需要經過多道檢查或處理步驟，但實際上會跑哪些步驟，取決於當下的情境與時機。
+
+如果把這些邏輯全塞進同一個類別，就會造成高耦合。Chain of Responsibility 把每一個步驟抽離成獨立的處理器，讓你能自由組合它們。
+
+---
+
+## 結構與角色
+
+- Handler：定義「處理請求」與「設定下一個處理器」的介面
+- ConcreteHandler：實作處理邏輯，決定自己處理或往下傳遞
+- Client：組裝整條鏈，並送出請求
+
+---
+
+## 實作範例：HTTP 中間件鏈
+
+```typescript
+interface Request {
+  method: string;
+  path: string;
+  headers: Record<string, string>;
+  body?: unknown;
+}
+
+interface Response {
+  status: number;
+  message: string;
+}
+
+abstract class Middleware {
+  protected next: Middleware | null = null;
+
+  setNext(handler: Middleware): Middleware {
+    this.next = handler;
+    return handler; // 方便鏈式呼叫
+  }
+
+  protected proceed(request: Request): Response | null {
+    return this.next ? this.next.handle(request) : null;
+  }
+
+  abstract handle(request: Request): Response | null;
+}
+
+// 驗證 Token
+class AuthMiddleware extends Middleware {
+  handle(request: Request): Response | null {
+    const token = request.headers['authorization'];
+    if (!token || !token.startsWith('Bearer ')) {
+      return { status: 401, message: 'Unauthorized' };
+    }
+    console.log('[Auth] 通過驗證');
+    return this.proceed(request);
+  }
+}
+
+// 檢查 Content-Type
+class ContentTypeMiddleware extends Middleware {
+  handle(request: Request): Response | null {
+    if (request.body && request.headers['content-type'] !== 'application/json') {
+      return { status: 415, message: 'Unsupported Media Type' };
+    }
+    console.log('[ContentType] 通過檢查');
+    return this.proceed(request);
+  }
+}
+
+// 記錄請求日誌
+class LoggingMiddleware extends Middleware {
+  handle(request: Request): Response | null {
+    console.log(`[Log] ${request.method} ${request.path}`);
+    const response = this.proceed(request);
+    console.log(`[Log] 回應: ${response?.status ?? '無'}`);
+    return response;
+  }
+}
+
+// 實際處理器
+class RouteHandler extends Middleware {
+  handle(request: Request): Response | null {
+    return { status: 200, message: `處理 ${request.path}` };
+  }
+}
+
+// 組裝中間件鏈
+const logging = new LoggingMiddleware();
+const auth = new AuthMiddleware();
+const contentType = new ContentTypeMiddleware();
+const route = new RouteHandler();
+
+logging.setNext(auth).setNext(contentType).setNext(route);
+
+// 送出請求
+const response = logging.handle({
+  method: 'POST',
+  path: '/api/orders',
+  headers: {
+    authorization: 'Bearer abc123',
+    'content-type': 'application/json',
+  },
+  body: { product: 'iPhone' },
+});
+console.log(response); // { status: 200, message: '處理 /api/orders' }
+```
+
+---
+
+## 適用情境
+
+適用時機
+
+- 多個物件都可能處理同一個請求，而具體由誰處理要到執行期才知道
+- 處理步驟需要彈性組合，或請求經過的順序很重要
+- HTTP 中間件、事件冒泡、審批流程
+
+---
+
+## 總結
+
+Chain of Responsibility 把「請求由誰處理」這個決定藏了起來。送出端只需要把請求丟進鏈頭，它就會自然地流向正確的處理器。Express.js 的 middleware、NestJS 的 Guard／Interceptor，都是這個模式的實際應用。

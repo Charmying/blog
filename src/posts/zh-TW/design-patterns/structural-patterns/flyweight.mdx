@@ -1,0 +1,142 @@
+export const metadata = {
+  title: '設計模式：享元模式 (Flyweight)',
+  date: '2026-06-30',
+  excerpt: '介紹結構型設計模式中的享元模 —— 大量細小物件的情境下，如何透過共享內部狀態大幅減少記憶體使用量。',
+  tags: ['軟體設計', '設計模式', 'OOP'],
+};
+
+# 設計模式：享元模式 (Flyweight)
+
+Flyweight 透過在大量細小物件之間共享相同的內部狀態，避免為每個實例都複製一份，藉此降低記憶體用量。
+
+```mermaid
+mindmap
+    root((Flyweight))
+        意圖與用途
+        內在與外在狀態
+        實作範例
+        適用情境
+        總結
+```
+
+- [意圖與用途](#意圖與用途)
+- [內在與外在狀態](#內在與外在狀態)
+- [實作範例：文字渲染引擎](#實作範例文字渲染引擎)
+- [適用情境](#適用情境)
+- [總結](#總結)
+
+---
+
+## 意圖與用途
+
+假設一個文字編輯器裡有 100,000 個字元，每個字元都有字型、大小、顏色、位置。如果每個字元都各存一份「字型 + 大小 + 顏色」，記憶體用量會非常可觀。
+
+其實大多數使用相同字型與樣式的字元，可以共享同一個樣式物 —— 有位置才是每個字元各自獨有的。
+
+---
+
+## 內在與外在狀態
+
+Flyweight 的關鍵，是把物件的狀態分成兩類：
+
+- 內在狀態 (Intrinsic State)：共享且不會改變的資料 → 存在 Flyweight 物件裡
+- 外在狀態 (Extrinsic State)：每個實例獨有、各不相同的資料 → 由客戶端在呼叫時傳入
+
+---
+
+## 實作範例：文字渲染引擎
+
+```typescript
+// 內在狀態：字型與樣式 (可共享)
+interface CharacterStyle {
+  font: string;
+  size: number;
+  color: string;
+  render(char: string, x: number, y: number): void;
+}
+
+class ConcreteCharacterStyle implements CharacterStyle {
+  constructor(
+    public font: string,
+    public size: number,
+    public color: string,
+  ) {}
+
+  render(char: string, x: number, y: number): void {
+    console.log(`'${char}' at (${x},${y}) [${this.font} ${this.size}px ${this.color}]`);
+  }
+}
+
+// Flyweight Factor —— 制共享的實例
+class CharacterStyleFactory {
+  private cache = new Map<string, CharacterStyle>();
+
+  getStyle(font: string, size: number, color: string): CharacterStyle {
+    const key = `${font}-${size}-${color}`;
+    if (!this.cache.has(key)) {
+      this.cache.set(key, new ConcreteCharacterStyle(font, size, color));
+      console.log(`建立新樣式: ${key}`);
+    }
+    return this.cache.get(key)!;
+  }
+
+  getCount(): number { return this.cache.size; }
+}
+
+// 外在狀態：字元與位置 (每個實例各自獨有)
+interface CharInstance {
+  char: string;
+  x: number;
+  y: number;
+  style: CharacterStyle;
+}
+
+const factory = new CharacterStyleFactory();
+const characters: CharInstance[] = [];
+
+// 100 個字元，大多數都是 'Arial 14px black'
+for (let i = 0; i < 100; i++) {
+  characters.push({
+    char: String.fromCharCode(65 + (i % 26)),
+    x: i * 10, y: 0,
+    style: factory.getStyle('Arial', 14, 'black'),
+  });
+}
+
+// 少數紅色的字
+['H', 'e', 'l', 'l', 'o'].forEach((char, i) => {
+  characters.push({
+    char, x: i * 20, y: 50,
+    style: factory.getStyle('Georgia', 18, 'red'),
+  });
+});
+
+console.log(`實際字元數: ${characters.length}`); // 105
+console.log(`共享樣式數: ${factory.getCount()}`); // 2
+
+// 渲染時才傳入外在狀態
+characters.slice(0, 3).forEach(c => c.style.render(c.char, c.x, c.y));
+```
+
+105 個字元，卻只建立了 2 個樣式物 —— 享的工作交給工廠的快取完成。
+
+---
+
+## 適用情境
+
+適用時機
+
+- 需要大量細小物件，而它們之間有大量重複的內部狀態
+- 記憶體用量是可量測到的瓶頸
+
+取捨
+
+Flyweight 是以一點時間成本 (工廠查找) 來換取記憶體。如果物件數量沒到幾十萬，或重複率不高，那這份複雜度就不划算。
+
+---
+
+## 總結
+
+Flyweight 是效能導向的模式，不是日常架構的首選。等你真的量測到記憶體問題，再把它請出來。
+
+常見應用：遊戲引擎的粒子系統、文字渲染管線，以及地圖上成千上萬個重複的圖磚。

@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'JavaScript Event Loop',
   date: '2026-03-19',
-  excerpt: 'A practical guide to the JavaScript Event Loop — covering the Call Stack, Web APIs, Task Queue, and Microtask Queue, and how macrotasks and microtasks are prioritized.',
+  excerpt: 'A practical guide to the JavaScript Event Loop, covering the Call Stack, Web APIs, Task Queue, and Microtask Queue, and how macrotasks and microtasks are prioritized.',
   tags: ['Front-end', 'JavaScript'],
 };
 
 # JavaScript Event Loop
 
-JavaScript is single-threaded — it can only do one thing at a time. Yet it handles timers, network requests, and user interactions without freezing up.
+JavaScript is single-threaded: it can only do one thing at a time. Yet it handles timers, network requests, and user interactions without freezing up.
 
 The mechanism that makes this possible is the Event Loop.
 
@@ -39,7 +39,7 @@ To understand the Event Loop, you need to understand the pieces that make up Jav
 
 The Call Stack is where synchronous code runs.
 
-Every time a function is called, it's pushed onto the stack. When it finishes, it's popped off. Only one function can run at a time — that's what single-threaded means.
+Every time a function is called, it's pushed onto the stack. When it finishes, it's popped off. Only one function can run at a time: that's what single-threaded means.
 
 ```javascript
 function first() {
@@ -69,7 +69,7 @@ flowchart TD
 
 Web APIs are browser-provided features: `setTimeout`, `fetch`, DOM event listeners, and so on.
 
-These don't run on the Call Stack. They're handed off to the browser, which handles them in the background — so JavaScript keeps running without waiting.
+These don't run on the Call Stack. They're handed off to the browser, which handles them in the background, so JavaScript keeps running without waiting.
 
 ### Task Queue (Macrotask Queue)
 
@@ -134,7 +134,7 @@ C
 B
 ```
 
-Even with a `0` delay, `"B"` runs last — because `setTimeout` callbacks always go through the Task Queue.
+Even with a `0` delay, `"B"` runs last, because `setTimeout` callbacks always go through the Task Queue.
 
 ---
 
@@ -239,10 +239,10 @@ Output:
 
 The Event Loop is what lets JavaScript handle asynchronous work despite being single-threaded:
 
-- Call Stack — runs synchronous code, one task at a time
-- Web APIs — handles timers, network requests, and events in the background
-- Microtask Queue — Promise callbacks, drained completely after each Call Stack clear
-- Task Queue — `setTimeout`, `setInterval`, DOM events; runs after microtasks
+- **Call Stack**: runs synchronous code, one task at a time
+- **Web APIs**: handle timers, network requests, and events in the background
+- **Microtask Queue**: Promise callbacks, drained completely after each Call Stack clear
+- **Task Queue**: `setTimeout`, `setInterval`, DOM events; runs after microtasks
 
 Execution priority: synchronous code → microtasks → macrotasks
 

@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'Design Patterns: Decorator',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Decorator pattern — how to dynamically attach new behavior to objects through wrapping, without modifying the original class or relying on inheritance.',
+  excerpt: 'A practical guide to the Decorator pattern: how to dynamically attach new behavior to objects through wrapping, without modifying the original class or relying on inheritance.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
 # Design Patterns: Decorator
 
-Decorator lets you attach new behavior to objects at runtime by wrapping them — without modifying the underlying class or building a subclass for every combination.
+Decorator lets you attach new behavior to objects at runtime by wrapping them, without modifying the underlying class or building a subclass for every combination.
 
 ```mermaid
 mindmap
@@ -29,7 +29,7 @@ mindmap
 
 ## Intent
 
-Inheritance is static — you create a new subclass for every combination of behaviors. Decorator makes that composition dynamic: combine behaviors at runtime, freely.
+Inheritance is static: you create a new subclass for every combination of behaviors. Decorator makes that composition dynamic: combine behaviors at runtime, freely.
 
 Common examples:
 
@@ -109,10 +109,10 @@ Good fits
 
 Decorator vs. Inheritance
 
-Inheritance is decided at compile time. Decorator is decided at runtime — and you can layer the same decorator multiple times.
+Inheritance is decided at compile time. Decorator is decided at runtime, and you can layer the same decorator multiple times.
 
 ---
 
 ## Summary
 
-Decorator is one of the cleanest ways to implement OCP in practice — open for extension, closed for modification. TypeScript's decorator syntax (a TC39 proposal) takes its name directly from this pattern.
+Decorator is one of the cleanest ways to implement OCP in practice (open for extension, closed for modification). TypeScript's decorator syntax (a TC39 proposal) takes its name directly from this pattern.

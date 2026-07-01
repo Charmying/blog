@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Browser Rendering Pipeline',
   date: '2026-03-27',
-  excerpt: 'A practical guide to the browser rendering pipeline — covering DOM Tree, CSSOM Tree, Render Tree, Layout, Paint, and Compositing, with a look at how Reflow and Repaint affect performance and how to minimize them.',
+  excerpt: 'A practical guide to the browser rendering pipeline, covering DOM Tree, CSSOM Tree, Render Tree, Layout, Paint, and Compositing, with a look at how Reflow and Repaint affect performance and how to minimize them.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -11,7 +11,7 @@ When a browser loads a webpage, a lot happens between receiving the HTML and put
 
 Understanding it helps you write more performant frontend code and avoid common bottlenecks.
 
-This pipeline runs the same way regardless of how the HTML was generated — CSR, SSR, or SSG. The rendering strategy determines what the browser receives; the steps from there are identical.
+This pipeline runs the same way regardless of how the HTML was generated (CSR, SSR, or SSG). The rendering strategy determines what the browser receives; the steps from there are identical.
 
 ```mermaid
 mindmap
@@ -44,7 +44,7 @@ flowchart LR
     html["HTML"] --> token["Tokenization"] --> dom["DOM Tree"]
 ```
 
-When the parser hits a `<script>` tag, it pauses by default — the script has to download and execute before parsing continues. That's why scripts are typically placed at the bottom of `<body>`, or use `defer` / `async`.
+When the parser hits a `<script>` tag, it pauses by default; the script has to download and execute before parsing continues. That's why scripts are typically placed at the bottom of `<body>`, or use `defer` / `async`.
 
 ```html
 <!-- blocks parsing -->
@@ -63,7 +63,7 @@ When the parser hits a `<script>` tag, it pauses by default — the script has t
 
 While parsing HTML, the browser also parses CSS and builds the CSSOM Tree.
 
-The browser won't render anything until the CSSOM is complete — making CSS a render-blocking resource.
+The browser won't render anything until the CSSOM is complete, making CSS a render-blocking resource.
 
 Placing `<link>` tags in `<head>` lets CSS start downloading as early as possible, minimizing how long rendering is blocked.
 
@@ -75,8 +75,8 @@ The DOM Tree and CSSOM Tree are combined into the Render Tree.
 
 The Render Tree only includes visible nodes:
 
-- Elements with `display: none` are excluded — they take up no space
-- Elements with `visibility: hidden` are included — they're invisible but still occupy space
+- Elements with `display: none` are excluded (they take up no space)
+- Elements with `visibility: hidden` are included (they're invisible but still occupy space)
 - Non-visual elements like `<head>` and `<script>` are excluded
 
 ```mermaid
@@ -110,7 +110,7 @@ In the Paint phase (also called Repaint), the browser fills in the pixels for ea
 - Borders
 - Shadows
 
-The browser divides the page into layers. Elements with complex styles — like those using `transform` or `opacity` — get their own layer.
+The browser divides the page into layers. Elements with complex styles (like those using `transform` or `opacity`) get their own layer.
 
 ---
 
@@ -118,7 +118,7 @@ The browser divides the page into layers. Elements with complex styles — like 
 
 In the Compositing phase, the browser takes all the layers and combines them in the correct order to produce the final frame on screen.
 
-Elements on their own compositor layer (achieved with `transform: translateZ(0)` or `will-change: transform`) can be processed entirely on the GPU, skipping Layout and Paint entirely — which makes them the most performant to animate.
+Elements on their own compositor layer (achieved with `transform: translateZ(0)` or `will-change: transform`) can be processed entirely on the GPU, skipping Layout and Paint entirely, making them the most performant to animate.
 
 ```mermaid
 flowchart LR
@@ -151,7 +151,7 @@ Changing visual styles that don't affect size or position only triggers a Repain
 
 ### Compositing only (cheapest)
 
-These only affect the GPU compositing step — no Layout or Paint:
+These only affect the GPU compositing step, with no Layout or Paint:
 
 - `transform`
 - `opacity`
@@ -216,6 +216,6 @@ flowchart TD
 
 Performance cost from highest to lowest: Reflow > Repaint > Compositing
 
-The core principle for performant frontend code: avoid triggering Reflow wherever possible, and prefer properties that only trigger Compositing — `transform` and `opacity`.
+The core principle for performant frontend code: avoid triggering Reflow wherever possible, and prefer properties that only trigger Compositing: `transform` and `opacity`.
 
-Browser rendering is the final stage of a broader frontend pipeline. The rendering strategy — CSR, SSR, or SSG — determines what HTML the browser starts with. See [CSR vs. SSR vs. SSG](/articles/web-csr-ssr-ssg) for a comparison, or [From Source to Screen](/articles/web-sourcecode-to-screen) for the full lifecycle.
+Browser rendering is the final stage of a broader frontend pipeline. The rendering strategy (CSR, SSR, or SSG) determines what HTML the browser starts with. See [CSR vs. SSR vs. SSG](/articles/web-csr-ssr-ssg) for a comparison, or [From Source to Screen](/articles/web-source-to-screen) for the full lifecycle.

@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Cookie vs. LocalStorage vs. SessionStorage',
   date: '2026-03-25',
-  excerpt: 'A practical guide to browser storage — comparing Cookie, LocalStorage, and SessionStorage across capacity, lifetime, security options, and when to use each.',
+  excerpt: 'A practical guide to browser storage, comparing Cookie, LocalStorage, and SessionStorage across capacity, lifetime, security options, and when to use each.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -35,12 +35,12 @@ Cookies are the oldest client-side storage mechanism. Their primary purpose is p
 
 ### Characteristics
 
-- Small capacity — around 4KB
-- Automatically sent with every HTTP request — the browser attaches matching cookies to every request for that domain
-- Configurable expiry — without an expiry date, the cookie is deleted when the browser closes
-- HttpOnly flag — prevents JavaScript from accessing the cookie, protecting against XSS
-- Secure flag — only sent over HTTPS
-- SameSite flag — controls whether cookies are sent with cross-site requests, protecting against CSRF
+- **Small capacity**: around 4KB
+- **Automatically sent with every HTTP request**: the browser attaches matching cookies to every request for that domain
+- **Configurable expiry**: without an expiry date, the cookie is deleted when the browser closes
+- **HttpOnly flag**: prevents JavaScript from accessing the cookie, protecting against XSS
+- **Secure flag**: only sent over HTTPS
+- **SameSite flag**: controls whether cookies are sent with cross-site requests, protecting against CSRF
 
 ### Basic Usage
 
@@ -77,11 +77,11 @@ LocalStorage was introduced with HTML5. Data stored here persists indefinitely u
 
 ### Characteristics
 
-- Larger capacity — around 5MB
-- Persistent — survives browser restarts and tab closes
-- Never sent to the server — client-side only
-- Same-origin policy — only accessible from the same domain
-- Strings only — objects need to be serialized with `JSON.stringify`
+- **Larger capacity**: around 5MB
+- **Persistent**: survives browser restarts and tab closes
+- **Never sent to the server**: client-side only
+- **Same-origin policy**: only accessible from the same domain
+- **Strings only**: objects need to be serialized with `JSON.stringify`
 
 ### Basic Usage
 
@@ -121,8 +121,8 @@ SessionStorage has the same API as LocalStorage, but data only lasts for the cur
 
 ### Characteristics
 
-- Larger capacity — around 5MB
-- Tab-scoped — closed when the tab closes; not shared between tabs, even on the same domain
+- **Larger capacity**: around 5MB
+- **Tab-scoped**: closed when the tab closes; not shared between tabs, even on the same domain
 - Never sent to the server
 - Same-origin and same-tab restriction
 
@@ -183,8 +183,8 @@ sessionStorage.clear();
 ### What Not to Do
 
 - Never store sensitive data (passwords, credit card numbers) in any client-side storage
-- Don't store JWT tokens in LocalStorage — they're vulnerable to XSS attacks; use an `HttpOnly` cookie instead
-- LocalStorage and SessionStorage have no encryption — any JavaScript running on the page can read them
+- Don't store JWT tokens in LocalStorage; they're vulnerable to XSS attacks, use an `HttpOnly` cookie instead
+- LocalStorage and SessionStorage have no encryption; any JavaScript running on the page can read them
 
 ---
 
@@ -192,8 +192,8 @@ sessionStorage.clear();
 
 Each storage mechanism has its place:
 
-- Cookie — when the server needs the data, or when you need security flags like `HttpOnly`
-- LocalStorage — for long-term client-side persistence of non-sensitive data
-- SessionStorage — for temporary data scoped to the current tab
+- **Cookie**: when the server needs the data, or when you need security flags like `HttpOnly`
+- **LocalStorage**: for long-term client-side persistence of non-sensitive data
+- **SessionStorage**: for temporary data scoped to the current tab
 
 The most important question when choosing: how sensitive is this data, and how long does it need to live?

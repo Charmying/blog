@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Map vs. Set: Key Differences and When to Use Each',
   date: '2026-06-28',
-  excerpt: 'A practical comparison of JavaScript Map and Set — covering data structure, key and value semantics, ordering and iteration, performance, how they stack up against Object and Array, and when to reach for each.',
+  excerpt: 'A practical comparison of JavaScript Map and Set, covering data structure, key and value semantics, ordering and iteration, performance, how they stack up against Object and Array, and when to reach for each.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 ES6 gave JavaScript two proper collection types: `Map` and `Set`.
 
-Before they arrived, we reached for plain objects as dictionaries and arrays as lists. That works most of the time — until you need keys that aren't strings, values that can't repeat, or frequent inserts and deletes. Then it starts to feel like fighting the language.
+Before they arrived, we reached for plain objects as dictionaries and arrays as lists. That works most of the time, until you need keys that aren't strings, values that can't repeat, or frequent inserts and deletes. Then it starts to feel like fighting the language.
 
 `Map` and `Set` aren't just different syntax. They solve different problems: one manages a mapping from keys to values, the other manages a set of unique values.
 
@@ -19,7 +19,7 @@ mindmap
     	Data Structure
     	Keys and Values
     	Order and Iteration
-    	Performance and size
+    	Performance and Size
     	vs. Object and Array
     	WeakMap and WeakSet
     	When to Use Each
@@ -29,7 +29,7 @@ mindmap
 - [Creating and Basic Operations](#creating-and-basic-operations)
 - [Keys, Values, and Uniqueness](#keys-values-and-uniqueness)
 - [Order and Iteration](#order-and-iteration)
-- [Performance and size](#performance-and-size)
+- [Performance and Size](#performance-and-size)
 - [Map or Object](#map-or-object)
 - [Set or Array](#set-or-array)
 - [WeakMap and WeakSet](#weakmap-and-weakset)
@@ -135,7 +135,7 @@ This is where `Map` and `Set` differ most from plain objects and arrays.
 
 ### Any type can be a key or value
 
-A `Map` key can be any type: an object, a function, `NaN`, even `undefined`. An `Object` key, by contrast, can only be a string or a symbol — even numbers get quietly coerced to strings.
+A `Map` key can be any type: an object, a function, `NaN`, even `undefined`. An `Object` key, by contrast, can only be a string or a symbol; even numbers get quietly coerced to strings.
 
 ```javascript
 const map = new Map();
@@ -149,7 +149,7 @@ map.get(objKey); // 'objects can be keys'
 map.get(NaN);    // 'so can NaN'
 ```
 
-`Set` is the same — it accepts values of any type.
+`Set` is the same: it accepts values of any type.
 
 ### Object keys compare by reference
 
@@ -245,7 +245,7 @@ set.forEach((value) => {
 });
 ```
 
-To mirror the `Map` interface, `Set` also keeps `keys()`, `values()`, and `entries()` — where `entries()` returns `[value, value]` pairs.
+To mirror the `Map` interface, `Set` also keeps `keys()`, `values()`, and `entries()`, where `entries()` returns `[value, value]` pairs.
 
 ### Converting to and from arrays
 
@@ -263,7 +263,7 @@ new Map(Object.entries({ a: 1 })); // Map { 'a' => 1 }
 
 ---
 
-## Performance and size
+## Performance and Size
 
 ### size is a property, not a method
 
@@ -274,11 +274,11 @@ map.size; // direct read, O(1)
 set.size;
 ```
 
-A plain object, by contrast, makes you compute `Object.keys(obj).length`, which builds an array first — an O(n) operation.
+A plain object, by contrast, makes you compute `Object.keys(obj).length`, which builds an array first, an O(n) operation.
 
 ### Lookup speed
 
-`Map.has`, `Map.get`, and `Set.has` are required by the spec to be, on average, sublinear — roughly O(1) — so they don't slow down as the collection grows. Array `includes` and `indexOf` are O(n): they scan from the front.
+`Map.has`, `Map.get`, and `Set.has` are required by the spec to be, on average, sublinear (roughly O(1)), so they don't slow down as the collection grows. Array `includes` and `indexOf` are O(n): they scan from the front.
 
 ```javascript
 // The gap shows up when you check membership repeatedly over a large set
@@ -373,15 +373,15 @@ const unique = [...new Set(rawList)].sort();
 
 ## WeakMap and WeakSet
 
-`Map` and `Set` each have a "weak" counterpart: `WeakMap` and `WeakSet`. They exist for one reason — don't keep an object alive just because you're holding a reference to it.
+`Map` and `Set` each have a "weak" counterpart: `WeakMap` and `WeakSet`. They exist for one reason: don't keep an object alive just because you're holding a reference to it.
 
 What sets them apart:
 
 - `WeakMap` keys and `WeakSet` values must be objects (no primitives)
-- They hold weak references — when an object has no other references, it can be garbage collected
+- They hold weak references; when an object has no other references, it can be garbage collected
 - They aren't iterable, have no `size`, and can't be cleared (since contents may vanish at any time, enumeration wouldn't be meaningful)
 
-The classic use case is attaching extra data to an object without causing a memory leak — for example, a cache:
+The classic use case is attaching extra data to an object without causing a memory leak, for example a cache:
 
 ```javascript
 const cache = new WeakMap();
@@ -396,7 +396,7 @@ function process(obj) {
 // Once obj is no longer referenced elsewhere, its cache entry is collected automatically
 ```
 
-With a regular `Map`, `obj` would stay alive purely because the `Map` holds it as a key — a leak.
+With a regular `Map`, `obj` would stay alive purely because the `Map` holds it as a key (a memory leak).
 
 ---
 
@@ -458,4 +458,4 @@ if (blocked.has(category)) {
 
 Need to map keys to values, with keys that aren't necessarily strings? Use a `Map`. Need a collection of unique values you'll check membership against often? Use a `Set`.
 
-Objects and arrays are still great — especially when you need serialization, a fixed shape, or indexed access. The point isn't which one replaces the other; it's matching the shape of your data to the right tool.
+Objects and arrays are still great, especially when you need serialization, a fixed shape, or indexed access. The point isn't which one replaces the other; it's matching the shape of your data to the right tool.

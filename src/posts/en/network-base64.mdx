@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Base64 Encoding',
   date: '2026-05-18',
-  excerpt: 'A practical guide to Base64 encoding — covering how the encoding works, padding, the Base64URL variant, usage in JavaScript and Python, and common use cases including JWT, email attachments, and HTTP Basic Auth.',
+  excerpt: 'A practical guide to Base64 encoding, covering how the encoding works, padding, the Base64URL variant, usage in JavaScript and Python, and common use cases including JWT, email attachments, and HTTP Basic Auth.',
   tags: ['Security', 'Network'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 Base64 is a way to encode binary data as plain text, making it safe to transmit in environments that only support text.
 
-Base64 is not encryption. It's just encoding — anyone can decode it to recover the original data.
+Base64 is not encryption. It's just encoding; anyone can decode it to recover the original data.
 
 ```mermaid
 mindmap
@@ -40,7 +40,7 @@ Input:  any binary data
 Output: a string containing only A-Z, a-z, 0-9, +, /, and =
 ```
 
-Encoded data is about 4/3 the size of the original — roughly a 33% size increase.
+Encoded data is about 4/3 the size of the original, roughly a 33% size increase.
 
 ---
 
@@ -115,7 +115,7 @@ Base64:    TWFu+abc/def==
 Base64URL: TWFu-abc_def
 ```
 
-JWT uses Base64URL encoding — that's why a JWT can be placed directly in a URL query parameter without needing to be escaped.
+JWT uses Base64URL encoding, which is why a JWT can be placed directly in a URL query parameter without needing to be escaped.
 
 ---
 
@@ -241,7 +241,7 @@ Anywhere you need to pass binary data through a text-only channel:
 
 ## Conclusion
 
-- Base64 is encoding, not encryption — anyone can decode it
+- **Base64 is encoding, not encryption**: anyone can decode it
 - Every 3 bytes of input become 4 characters of output, increasing size by ~33%
-- Base64URL is the URL-safe variant — replaces `+` with `-` and `/` with `_`
+- **Base64URL is the URL-safe variant**: replaces `+` with `-` and `/` with `_`
 - Common uses: email attachments, HTML image embedding, JWT, HTTP Basic Auth

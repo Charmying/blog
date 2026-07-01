@@ -1,7 +1,7 @@
 export const metadata = {
-  title: 'JavaScript Promise',
+  title: 'JavaScript Promises',
   date: '2026-03-19',
-  excerpt: 'A practical guide to JavaScript Promises — covering the three states, .then/.catch/.finally, Promise chaining, and the four static methods: all, allSettled, race, and any.',
+  excerpt: 'A practical guide to JavaScript Promises, covering the three states, .then/.catch/.finally, Promise chaining, and the four static methods: all, allSettled, race, and any.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 Promises were introduced in ES6 to solve the Callback Hell problem and give asynchronous code more structure.
 
-The idea: a Promise represents an operation that hasn't completed yet, but will produce a result — either a success or a failure — in the future.
+The idea: a Promise represents an operation that hasn't completed yet, but will produce a result (either a success or a failure) in the future.
 
 ```mermaid
 mindmap
@@ -41,7 +41,7 @@ mindmap
 
 A Promise is an object that represents the eventual result of an asynchronous operation.
 
-Think of it like a ticket: "I don't have your order ready yet, but I'll come find you when it's done — whether it worked out or not."
+Think of it like a ticket: "I don't have your order ready yet, but I'll come find you when it's done, whether it worked out or not."
 
 ---
 
@@ -49,9 +49,9 @@ Think of it like a ticket: "I don't have your order ready yet, but I'll come fin
 
 Every Promise is in exactly one of three states:
 
-- Pending — the operation hasn't finished yet (initial state)
-- Fulfilled — the operation completed successfully, with a result value
-- Rejected — the operation failed, with a reason
+- **Pending**: the operation hasn't finished yet (initial state)
+- **Fulfilled**: the operation completed successfully, with a result value
+- **Rejected**: the operation failed, with a reason
 
 Once a Promise moves from Pending to either Fulfilled or Rejected, it stays there. The state can't change again.
 
@@ -113,7 +113,7 @@ promise.then(function (result) {
 });
 ```
 
-`.then` can take two arguments — the first for success, the second for failure — but using `.catch` separately is more common and readable:
+`.then` can take two arguments (the first for success, the second for failure), but using `.catch` separately is more common and readable:
 
 ```javascript
 promise.then(
@@ -138,7 +138,7 @@ promise.catch(function (error) {
 
 ### .finally
 
-`.finally` runs regardless of whether the Promise succeeded or failed — useful for cleanup:
+`.finally` runs regardless of whether the Promise succeeded or failed, useful for cleanup:
 
 ```javascript
 promise
@@ -212,7 +212,7 @@ Use this when you need all requests to succeed before moving on.
 
 ### Promise.allSettled
 
-Waits for all Promises to complete — regardless of whether they succeed or fail — and returns the outcome of each:
+Waits for all Promises to complete, regardless of whether they succeed or fail, and returns the outcome of each:
 
 ```javascript
 const p1 = Promise.resolve(1);
@@ -233,7 +233,7 @@ Use this when you want every result, and one failure shouldn't stop the rest.
 
 ### Promise.race
 
-Runs multiple Promises in parallel. The first one to settle — success or failure — determines the outcome:
+Runs multiple Promises in parallel. The first one to settle (success or failure) determines the outcome:
 
 ```javascript
 const p1 = new Promise(resolve => setTimeout(() => resolve("slow"), 1000));
@@ -270,13 +270,13 @@ Promise.any([p1, p2, p3]).then(function (result) {
 | Error handling | Each level handles its own errors | Single `.catch` handles everything |
 | Multiple async ops | Callback Hell | Promise chaining or static methods |
 
-Promises don't eliminate complexity, but they give it structure — making async code easier to read, reason about, and maintain.
+Promises don't eliminate complexity, but they give it structure, making async code easier to read, reason about, and maintain.
 
 ---
 
 ## Conclusion
 
-Promises give asynchronous operations a clear structure — and a consistent way to handle what happens when they succeed or fail.
+Promises give asynchronous operations a clear structure and a consistent way to handle what happens when they succeed or fail.
 
 - Three states: Pending, Fulfilled, Rejected
 - `.then` handles success, `.catch` handles failure, `.finally` always runs

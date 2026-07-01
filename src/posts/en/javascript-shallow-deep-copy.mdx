@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Shallow Copy vs. Deep Copy: When Each One Matters',
   date: '2026-03-20',
-  excerpt: 'A practical guide to shallow copy and deep copy in JavaScript — covering spread, Object.assign, structuredClone, and JSON.parse/stringify, with their limitations and when to use each.',
+  excerpt: 'A practical guide to shallow copy and deep copy in JavaScript, covering spread, Object.assign, structuredClone, and JSON.parse/stringify, with their limitations and when to use each.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,10 +9,10 @@ export const metadata = {
 
 Copying an object in JavaScript isn't as simple as it sounds.
 
-Objects are reference types — assigning one to another variable just copies the reference, not the object itself. To get a real copy, you have to create one explicitly. And depending on how deeply you need to copy, you'll get very different behavior.
+Objects are reference types: assigning one to another variable just copies the reference, not the object itself. To get a real copy, you have to create one explicitly. And depending on how deeply you need to copy, you'll get very different behavior.
 
-- Shallow copy — copies the top level only; nested objects still share a reference
-- Deep copy — copies everything, all the way down; no shared references
+- **Shallow copy**: copies the top level only; nested objects still share a reference
+- **Deep copy**: copies everything, all the way down; no shared references
 
 ```mermaid
 mindmap
@@ -37,7 +37,7 @@ mindmap
 
 A shallow copy duplicates the top-level properties of an object.
 
-If any of those properties are objects themselves, the copy gets a reference to the same nested object — not a new one.
+If any of those properties are objects themselves, the copy gets a reference to the same nested object, not a new one.
 
 ### Spread Operator
 
@@ -105,7 +105,7 @@ console.log(original.address.city); // "Taichung" — changed
 
 ## Deep Copy
 
-A deep copy creates a fully independent copy at every level. Modifying anything in the copy — no matter how deeply nested — won't touch the original.
+A deep copy creates a fully independent copy at every level. Modifying anything in the copy, no matter how deeply nested, won't touch the original.
 
 ### structuredClone
 

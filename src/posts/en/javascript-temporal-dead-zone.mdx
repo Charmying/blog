@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Temporal Dead Zone (TDZ)',
   date: '2026-03-17',
-  excerpt: 'A practical guide to the JavaScript Temporal Dead Zone — covering what it is, how it differs from var, TDZ in default parameters, and why it exists.',
+  excerpt: 'A practical guide to the JavaScript Temporal Dead Zone, covering what it is, how it differs from var, TDZ in default parameters, and why it exists.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -31,7 +31,7 @@ mindmap
 
 ## What Is the TDZ
 
-When a `let` or `const` variable enters a scope, it's hoisted — but not initialized.
+When a `let` or `const` variable enters a scope, it's hoisted but not initialized.
 
 From the moment the scope begins to the point where the declaration is executed, the variable is in the TDZ. Accessing it during this window throws a `ReferenceError`:
 
@@ -67,7 +67,7 @@ The TDZ starts at the beginning of the scope and ends when the declaration is re
 
 The TDZ is scoped, not file-wide. Each scope has its own TDZ for each variable declared within it.
 
-This means a variable in an inner scope can shadow an outer one — and still have its own TDZ:
+This means a variable in an inner scope can shadow an outer one and still have its own TDZ:
 
 ```javascript
 let name = "global";
@@ -96,8 +96,8 @@ let b = 2;
 
 The difference comes down to initialization timing:
 
-- `var` — hoisted and immediately initialized to `undefined`
-- `let` / `const` — hoisted but not initialized; enters the TDZ until the declaration runs
+- **`var`**: hoisted and immediately initialized to `undefined`
+- **`let` / `const`**: hoisted but not initialized; enters the TDZ until the declaration runs
 
 ---
 
@@ -131,7 +131,7 @@ greet(); // ReferenceError: Cannot access 'b' before initialization
 
 The TDZ is intentional. It makes code safer and bugs easier to catch.
 
-With `var`, accessing a variable before its declaration doesn't throw — it just returns `undefined`. That can mask bugs and make them harder to track down:
+With `var`, accessing a variable before its declaration doesn't throw; it just returns `undefined`. That can mask bugs and make them harder to track down:
 
 ```javascript
 console.log(count); // undefined — no error, easy to miss
@@ -154,7 +154,7 @@ The TDZ turns "declare before you use" from a best practice into a hard rule.
 - The TDZ is the period during which a `let` or `const` variable exists but can't be accessed
 - It starts at the beginning of the scope and ends when the declaration is reached
 - Accessing a variable in the TDZ throws a `ReferenceError`
-- `var` has no TDZ — accessing it early returns `undefined` instead
+- `var` has no TDZ: accessing it early returns `undefined` instead
 - The TDZ is by design: it forces you to declare variables before using them, making bugs easier to catch
 
 Once you're comfortable with the TDZ, the natural next topics are:

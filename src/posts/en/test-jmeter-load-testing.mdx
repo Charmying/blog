@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JMeter Load Testing: From Setup to Reading the Report',
   date: '2026-06-21',
-  excerpt: 'A complete walkthrough of JMeter load testing from scratch — covering Thread Group, HTTP Request, and Listener setup, through running tests in CLI mode, and breaking down every metric in the HTML report.',
+  excerpt: 'A complete walkthrough of JMeter load testing from scratch: covering Thread Group, HTTP Request, and Listener setup, through running tests in CLI mode, and breaking down every metric in the HTML report.',
   tags: ['Testing', 'Performance', 'Java'],
 };
 
@@ -52,9 +52,9 @@ JMeter is a Java application, so Java needs to be installed before anything else
 
 ### Steps
 
-1. Install Java — Java 21 is recommended. Use [mise](https://mise.jdx.dev/), SDKMAN, or download directly from the Oracle or AdoptOpenJDK website.
-2. Install JMeter — On macOS, `brew install jmeter` is the easiest option. On other platforms, download the binary archive from the [JMeter website](https://jmeter.apache.org/download_jmeter.cgi), extract it, and run `bin/jmeter`.
-3. Launch JMeter — Type `jmeter` in the terminal (or run `bin/jmeter.bat` on Windows). The GUI should open.
+1. Install Java (Java 21 is recommended). Use [mise](https://mise.jdx.dev/), SDKMAN, or download directly from the Oracle or AdoptOpenJDK website.
+2. Install JMeter: on macOS, `brew install jmeter` is the easiest option. On other platforms, download the binary archive from the [JMeter website](https://jmeter.apache.org/download_jmeter.cgi), extract it, and run `bin/jmeter`.
+3. Launch JMeter: type `jmeter` in the terminal (or run `bin/jmeter.bat` on Windows). The GUI should open.
 
 ![Confirming the Java installation](/images/test-jmeter-load-testing/001.webp)
 
@@ -81,11 +81,11 @@ The Thread Group is the core of a JMeter test plan. It defines how many virtual 
 ![Thread Group configuration panel](/images/test-jmeter-load-testing/006.webp)
 
 - Number of Threads (users)
-    How many virtual users send requests simultaneously. Start with 10 when you're just verifying the script works — there's no need to go heavy at this stage.
+    How many virtual users send requests simultaneously. Start with 10 when you're just verifying the script works; there's no need to go heavy at this stage.
 - Ramp-up period (seconds)
     How long JMeter takes to start all threads. With Threads = 10 and Ramp-up = 10, JMeter adds one new user per second. Setting the ramp-up equal to the thread count keeps traffic from spiking all at once, which could be flagged as a DDoS attempt by the server.
 - Loop Count
-    How many times each user runs through the test. Keep it at 1 initially. The Infinite option is for long-running stability tests — use it only once you're confident the script is correct, since it'll keep hammering the server until you manually stop it.
+    How many times each user runs through the test. Keep it at 1 initially. The Infinite option is for long-running stability tests; use it only once you're confident the script is correct, since it'll keep hammering the server until you manually stop it.
 
 ---
 
@@ -119,7 +119,7 @@ Each HTTP Request sampler represents one API call in the test flow. Add as many 
     - Name: a descriptive label, e.g., `Blog Home Page`
     - Method: `GET` (or POST, PUT, etc., depending on the API)
     - Path: `/` for the homepage, or a specific path like `/api/users`
-    - Server Name: leave blank — JMeter will pull the domain from HTTP Request Defaults
+    - Server Name: leave blank (JMeter will pull the domain from HTTP Request Defaults)
 
 ![Sampler menu](/images/test-jmeter-load-testing/009.webp)
 
@@ -135,8 +135,8 @@ To test multiple endpoints, add more HTTP Request samplers under the same Thread
 
 Listeners collect and display test results. Add at least these two:
 
-- View Results Tree: Shows per-request detail — request headers, response body. Use this for debugging.
-- Summary Report: Shows aggregate statistics — average response time, error rate, throughput.
+- View Results Tree: shows per-request detail (request headers, response body). Use this for debugging.
+- Summary Report: shows aggregate statistics, including average response time, error rate, and throughput.
 
 ### Setup
 
@@ -149,7 +149,7 @@ Listeners collect and display test results. Add at least these two:
 
 ![Left panel after adding Summary Report](/images/test-jmeter-load-testing/014.webp)
 
-> Listeners render live charts while the GUI test runs, which burns significant CPU and memory. They're only for script verification — actual load tests should use CLI mode, covered below.
+> Listeners render live charts while the GUI test runs, which burns significant CPU and memory. They're only for script verification; actual load tests should use CLI mode, covered below.
 
 ---
 
@@ -159,14 +159,14 @@ Before running a full load test, do a quick sanity check with a small number of 
 
 ### Steps
 
-1. Click the save button in the upper left and save the test plan — for example, as `Summary Report.jmx`.
+1. Click the save button in the upper left and save the test plan, for example as `Summary Report.jmx`.
 2. Click the green play button (Start) in the toolbar.
 3. Click `View Results Tree` in the left panel to inspect the results.
 
 ### What to look for
 
-- Green (shield icon or label) — HTTP 2xx / 3xx, success
-- Red — HTTP 4xx / 5xx or an exception, something needs fixing
+- **Green (shield icon or label)**: HTTP 2xx / 3xx, success
+- **Red**: HTTP 4xx / 5xx or an exception, something needs fixing
 
 ![Saving the test plan](/images/test-jmeter-load-testing/015.webp)
 
@@ -208,7 +208,7 @@ Flags explained
 | `-e` | Generate an HTML report after the test completes |
 | `-o <dir>` | Output directory for the HTML report (must not already exist) |
 
-> The `-o` directory must not exist before running the command — JMeter creates it automatically. If it already exists, JMeter will throw an error and stop. Either delete the old directory or use a different name between runs.
+> The `-o` directory must not exist before running the command; JMeter creates it automatically. If it already exists, JMeter will throw an error and stop. Either delete the old directory or use a different name between runs.
 
 ![Running the CLI command](/images/test-jmeter-load-testing/020.webp)
 
@@ -292,8 +292,8 @@ APDEX table columns:
 
 A pie chart showing the overall pass/fail ratio:
 
-- Green (OK) — HTTP 2xx / 3xx, marked as successful
-- Red (KO) — HTTP 4xx / 5xx, or a Response Assertion failure
+- **Green (OK)**: HTTP 2xx / 3xx, marked as successful
+- **Red (KO)**: HTTP 4xx / 5xx, or a Response Assertion failure
 
 One thing to be aware of: JMeter uses HTTP status codes to determine success by default. If an API returns HTTP 200 but the body contains an error like `{"error":"permission denied"}`, JMeter still counts it as a pass. To catch that kind of failure, add a Response Assertion or JSON Extractor to your test plan.
 
@@ -317,15 +317,15 @@ Response times (in ms)
 | Min | Fastest response | Best-case performance |
 | Max | Slowest response | Worst-case performance |
 | Median (50th pct) | Half of requests complete in this time | Better than Average for representing a typical user |
-| 90th pct | 90% of requests complete in this time | The standard SLA metric — what most users experience |
+| 90th pct | 90% of requests complete in this time | The standard SLA metric; what most users experience |
 | 95th pct | 95% of requests complete in this time | For stricter service standards |
 | 99th pct | 99% of requests complete in this time | Represents the worst outliers |
 
 > Why percentiles matter more than the average
 >
 > Say 99 requests complete in 100ms and 1 request takes 10,000ms:
-> - Average ≈ 199ms — looks reasonable
-> - 99th pct = 10,000ms — 1 in every 100 users waited over 10 seconds
+> - Average ≈ 199ms, looks reasonable
+> - 99th pct = 10,000ms: 1 in every 100 users waited over 10 seconds
 >
 > The average hides the problem. The 99th percentile reveals it.
 
@@ -333,7 +333,7 @@ Throughput
 
 | Column | Description |
 | :--- | :--- |
-| Throughput | Requests per second (req/s) — higher means the system can handle more load |
+| Throughput | Requests per second (req/s); higher means the system can handle more load |
 | Received KB/sec | Data received from the server per second |
 | Sent KB/sec | Data sent to the server per second |
 
@@ -352,16 +352,16 @@ Common error types
 
 | Error | Cause |
 | :--- | :--- |
-| `Response code: 500` | Server-side error — an unhandled exception was thrown |
+| `Response code: 500` | Server-side error: an unhandled exception was thrown |
 | `Response code: 502 / 503` | Gateway or server temporarily unavailable, usually from overload or resource exhaustion |
-| `Response code: 401 / 403` | Auth failure — token expired or not included in the request |
+| `Response code: 401 / 403` | Auth failure: token expired or not included in the request |
 | `Connection timed out` | Server too busy to respond within JMeter's timeout window |
-| `Connection refused` | Server rejected the connection — may be down or the port is closed |
+| `Connection refused` | Server rejected the connection; may be down or the port is closed |
 | `java.net.SocketException` | The network connection was forcibly closed mid-request |
 
 ### Top 5 Errors by Sampler
 
-Groups the Errors breakdown by sampler (API endpoint), showing the five worst offenders. This is usually the first place to check when a test produces a lot of failures — it tells you exactly which endpoint is responsible and how often it fails.
+Groups the Errors breakdown by sampler (API endpoint), showing the five worst offenders. This is usually the first place to check when a test produces a lot of failures; it tells you exactly which endpoint is responsible and how often it fails.
 
 | Column | Description |
 | :--- | :--- |
@@ -377,19 +377,19 @@ The report's Charts section has three sub-pages, each with interactive time-seri
 
 Over Time
 
-- Response Time Over Time — does response time climb as load increases? This is where you spot the moment the system starts struggling.
-- Active Threads Over Time — how the virtual user count changes over time.
-- Transactions Per Second — throughput over time; look for any sudden drop-offs.
+- **Response Time Over Time**: does response time climb as load increases? This is where you spot the moment the system starts struggling.
+- **Active Threads Over Time**: how the virtual user count changes over time.
+- **Transactions Per Second**: throughput over time; look for any sudden drop-offs.
 
 Throughput
 
-- Hits Per Second — the raw request rate hitting the server.
-- Throughput vs Threads — as you add more users, does throughput scale linearly or level off? A plateau means the system has hit its ceiling.
+- **Hits Per Second**: the raw request rate hitting the server.
+- **Throughput vs Threads**: as you add more users, does throughput scale linearly or level off? A plateau means the system has hit its ceiling.
 
 Response Times
 
-- Response Time Percentiles Over Time — tracks each percentile across the test duration.
-- Response Time Distribution — a histogram of response times; a wide spread or long tail points to variance issues.
+- **Response Time Percentiles Over Time**: tracks each percentile across the test duration.
+- **Response Time Distribution**: a histogram of response times; a wide spread or long tail points to variance issues.
 
 ---
 
@@ -426,7 +426,7 @@ Quick reference thresholds (general web services)
 
 Load testing with JMeter breaks into two phases: building the test plan and reading the results.
 
-In the first phase, configure everything in the GUI — thread count, endpoints, request parameters — then do a small dry run to confirm the script works. Close the GUI and run the full test from the CLI.
+In the first phase, configure everything in the GUI (thread count, endpoints, request parameters), then do a small dry run to confirm the script works. Close the GUI and run the full test from the CLI.
 
 In the second phase, start with Error%, APDEX, and 90th pct. Those three numbers tell you most of what you need to know. Cross-reference with the Over Time charts to see whether things got worse as the test ran.
 

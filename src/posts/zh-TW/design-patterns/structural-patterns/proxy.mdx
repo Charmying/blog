@@ -1,7 +1,7 @@
 export const metadata = {
   title: '設計模式：代理模式 (Proxy)',
   date: '2026-06-30',
-  excerpt: '介紹結構型設計模式中的代理模 —— 何透過一個代理物件控制對原始物件的存取，藉此實現延遲載入、快取、存取控制與日誌等功能。',
+  excerpt: '介紹結構型設計模式中的代理模式：如何透過一個代理物件控制對原始物件的存取，藉此實現延遲載入、快取、存取控制與日誌等功能。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
@@ -29,7 +29,7 @@ mindmap
 
 ## 意圖與用途
 
-Proxy 提供與原始物件相同的介面，在轉送請求的前後加入額外操 —— 完全不改變客戶端的使用方式。
+Proxy 提供與原始物件相同的介面，在轉送請求的前後加入額外操作，完全不改變客戶端的使用方式。
 
 三種主要的應用場景：
 
@@ -61,7 +61,7 @@ class RealDataService implements DataService {
   }
 }
 
-// 快取 Prox —— 同介面，多加一層快取
+// 快取 Proxy：同介面，多加一層快取
 class CachedDataService implements DataService {
   private cache = new Map<string, User>();
 

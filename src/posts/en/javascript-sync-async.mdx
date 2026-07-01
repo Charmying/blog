@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'JavaScript Synchronous vs. Asynchronous',
   date: '2026-03-18',
-  excerpt: 'A practical guide to synchronous and asynchronous JavaScript — covering how the Event Loop works and the three main ways to handle async code: callbacks, Promises, and async/await.',
+  excerpt: 'A practical guide to synchronous and asynchronous JavaScript, covering how the Event Loop works and the three main ways to handle async code: callbacks, Promises, and async/await.',
   tags: ['Front-end', 'JavaScript'],
 };
 
 # JavaScript Synchronous vs. Asynchronous
 
-JavaScript is single-threaded — it can only do one thing at a time.
+JavaScript is single-threaded: it can only do one thing at a time.
 
 But real programs need to handle things like network requests, timers, and file reads. If any of those blocked the thread while waiting, the page would freeze and nothing else could run.
 
@@ -49,7 +49,7 @@ Second
 Third
 ```
 
-Straightforward — but if one line takes a long time (like waiting for a server response), everything else has to wait. The whole thread is blocked until it's done.
+Straightforward, but if one line takes a long time (like waiting for a server response), everything else has to wait. The whole thread is blocked until it's done.
 
 ---
 
@@ -85,10 +85,10 @@ The mechanism that makes all of this work is the Event Loop.
 
 JavaScript's runtime has a few moving parts:
 
-- Call Stack — where synchronous code runs, one task at a time
-- Web APIs — browser-provided features like `setTimeout`, `fetch`, and DOM events that run in the background
-- Task Queue — once a Web API operation completes, its callback is placed here to wait
-- Event Loop — continuously watches the Call Stack; when it's empty, it pushes the next task from the Task Queue in
+- **Call Stack**: where synchronous code runs, one task at a time
+- **Web APIs**: browser-provided features like `setTimeout`, `fetch`, and DOM events that run in the background
+- **Task Queue**: once a Web API operation completes, its callback is placed here to wait
+- **Event Loop**: continuously watches the Call Stack; when it's empty, it pushes the next task from the Task Queue in
 
 Here's a concrete example:
 
@@ -118,11 +118,11 @@ Even with a `0` delay, `"B"` runs last. The `setTimeout` callback is handed off 
 
 Most async work in JavaScript falls into a few categories:
 
-- `setTimeout` / `setInterval` — timers
-- `fetch` — network requests
-- DOM events — user interactions like `click` and `input`
-- `Promise` — a wrapper for async operations
-- `async` / `await` — cleaner syntax for working with Promises
+- **`setTimeout` / `setInterval`**: timers
+- **`fetch`**: network requests
+- **DOM events**: user interactions like `click` and `input`
+- **`Promise`**: a wrapper for async operations
+- **`async` / `await`**: cleaner syntax for working with Promises
 
 ```javascript
 // Timer
@@ -149,7 +149,7 @@ There are three main approaches. Each one was introduced to address the shortcom
 
 ### Callbacks
 
-The original approach — pass a function as an argument, and call it when the operation is done:
+The original approach: pass a function as an argument, and call it when the operation is done:
 
 ```javascript
 function fetchData(callback) {
@@ -208,7 +208,7 @@ async function getData() {
 getData();
 ```
 
-`await` pauses the function until the Promise resolves — but it doesn't block the rest of the program. It can only be used inside an `async` function.
+`await` pauses the function until the Promise resolves, but it doesn't block the rest of the program. It can only be used inside an `async` function.
 
 ---
 
@@ -218,6 +218,6 @@ getData();
 | - | - | - |
 | Execution | Line by line, blocks until done | Non-blocking, handles result later |
 | Use cases | General logic | Network requests, timers, I/O |
-| Tools | — | Callbacks, Promises, async/await |
+| Tools | (none) | Callbacks, Promises, async/await |
 
 JavaScript's async model is what lets a single-threaded language handle real-world workloads without grinding to a halt. Understanding it is essential for writing JavaScript that actually works the way you expect.

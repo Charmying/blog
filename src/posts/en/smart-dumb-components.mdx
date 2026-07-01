@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Smart vs. Dumb Components: Container and Presentational Components',
   date: '2026-03-24',
-  excerpt: 'A practical guide to the Smart vs. Dumb Components pattern — covering the difference between container and presentational components, why the separation matters, with examples in Angular, React, and Vue.',
+  excerpt: 'A practical guide to the Smart vs. Dumb Components pattern: covering the difference between container and presentational components, why the separation matters, with examples in Angular, React, and Vue.',
   tags: ['Front-end', 'Front-end Architecture', 'Component Design', 'Angular', 'React', 'Vue'],
 };
 
@@ -9,8 +9,8 @@ export const metadata = {
 
 Smart/Dumb Components is a component design principle that splits components into two categories based on responsibility:
 
-- Smart Components (Container Components) — handle data and logic
-- Dumb Components (Presentational Components) — handle UI
+- **Smart Components (Container Components)**: handle data and logic
+- **Dumb Components (Presentational Components)**: handle UI
 
 This isn't tied to any specific framework. It applies equally to Angular, React, and Vue.
 
@@ -38,7 +38,7 @@ mindmap
 
 ## Smart Components
 
-A Smart Component — also called a Container Component — owns the data and logic.
+A Smart Component (also called a Container Component) owns the data and logic.
 
 Responsibilities:
 
@@ -53,7 +53,7 @@ Smart components typically correspond to a page or a major functional section of
 
 ## Dumb Components
 
-A Dumb Component — also called a Presentational Component — only cares about the UI.
+A Dumb Component (also called a Presentational Component) only cares about the UI.
 
 Responsibilities:
 
@@ -74,7 +74,7 @@ Dumb components aren't coupled to any specific service or business logic. You ca
 
 ### Easier Testing
 
-Dumb components have no external dependencies — testing them means passing in data and verifying what renders. No mocking, no complex setup.
+Dumb components have no external dependencies: testing them means passing in data and verifying what renders. No mocking, no complex setup.
 
 Smart component tests can focus entirely on business logic without worrying about UI details.
 
@@ -146,7 +146,7 @@ export class UserListComponent {
 }
 ```
 
-`UserListComponent` doesn't know what happens after the delete button is clicked — it fires the event and lets the smart component decide.
+`UserListComponent` doesn't know what happens after the delete button is clicked; it fires the event and lets the smart component decide.
 
 ---
 

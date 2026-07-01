@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Understanding Dependency Injection in Angular',
   date: '2026-03-22',
-  excerpt: 'A practical guide to Angular Dependency Injection — covering @Injectable, constructor injection and the inject function, providedIn options, global providers in bootstrapApplication, and component-level service scoping.',
+  excerpt: 'A practical guide to Angular Dependency Injection, covering @Injectable, constructor injection and the inject function, providedIn options, global providers in bootstrapApplication, and component-level service scoping.',
   tags: ['Front-end', 'Angular', 'Design Patterns'],
 };
 
@@ -47,7 +47,7 @@ This works, but it has problems:
 
 - The component is tightly coupled to `UserService`
 - You can't swap it out for a mock in tests
-- Each component creates its own instance — no shared state
+- **Each component creates its own instance**: no shared state
 
 With DI, Angular handles the creation and provides the instance:
 
@@ -83,7 +83,7 @@ export class UserService {
 }
 ```
 
-`@Injectable` tells Angular this class can be injected. `providedIn: 'root'` means the service is a singleton — one instance shared across the entire application.
+`@Injectable` tells Angular this class can be injected. `providedIn: 'root'` means the service is a singleton: one instance shared across the entire application.
 
 ---
 
@@ -151,7 +151,7 @@ The most common option. One instance shared across the entire application:
 export class UserService {}
 ```
 
-Use this for globally shared services — API calls, auth state, user preferences.
+Use this for globally shared services: API calls, auth state, user preferences.
 
 ### `providedIn: 'platform'`
 
@@ -225,7 +225,7 @@ export class UserSectionComponent {}
 
 This creates a new `UserService` instance that's isolated from the root-level one. Any child components will share this instance, but nothing outside `UserSectionComponent` can access it.
 
-Useful when you need isolated state — form state, local data management, or keeping two parts of the UI independent.
+Useful when you need isolated state: form state, local data management, or keeping two parts of the UI independent.
 
 ---
 

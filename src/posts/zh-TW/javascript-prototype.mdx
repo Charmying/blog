@@ -9,7 +9,7 @@ export const metadata = {
 
 大多數語言用「類別」實作繼承，JavaScript 卻是少數以「原型 (prototype)」為核心的語言。
 
-每個物件內部都藏著一條連到另一個物件的連結。當你存取一個物件上不存在的屬性時，JavaScript 會沿著這條連結往上 —— 就是原型鏈 (prototype chain)。
+每個物件內部都藏著一條連到另一個物件的連結。當你存取一個物件上不存在的屬性時，JavaScript 會沿著這條連結往上，這就是原型鏈 (prototype chain)。
 
 理解這套機制，等於理解了 JavaScript 物件、繼承、`class`、`instanceof` 背後共同的底層原理。
 
@@ -187,7 +187,7 @@ console.log(dog.legs);    // 2 (dog 自己的)
 console.log(animal.legs); // 4 (原型完全不受影響)
 ```
 
-正因為寫入只會動到實例自己，所以在原型上放「可變的物件或陣列」非常危 —— 會被所有實例共用同一份：
+正因為寫入只會動到實例自己，所以在原型上放「可變的物件或陣列」非常危險，因為會被所有實例共用同一份：
 
 ```javascript
 function Team() {}
@@ -243,10 +243,10 @@ console.log(u1.greet === u2.greet); // true，是同一個函式
 
 JavaScript 有四種常見的方式可以指定一個物件的原型：
 
-1. `Object.create(proto) —— 指定的原型建立新物件
+1. `Object.create(proto)`：用指定的原型建立新物件
 2. 建構函式搭配 `new`
-3. `class —— 質仍是原型 (下一節說明)
-4. `Object.setPrototypeOf(obj, proto) —— 改既有物件的原型 (效能較差，盡量避免)
+3. `class`：本質仍是原型 (下一節說明)
+4. `Object.setPrototypeOf(obj, proto)`：改既有物件的原型 (效能較差，盡量避免)
 
 ```javascript
 // 1. Object.create
@@ -307,7 +307,7 @@ Animal.prototype.speak = function () {
 console.log(typeof Animal.prototype.speak); // "function"
 ```
 
-`extends` 則會同時接起「兩條」原型 —— 例的鏈，以及靜態 (static) 成員的鏈：
+`extends` 則會同時接起「兩條」原型鏈：實例的鏈，以及靜態 (static) 成員的鏈：
 
 ```javascript
 class Dog extends Animal {

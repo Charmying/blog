@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Design Patterns: Visitor',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Visitor pattern — separating operations from object structures so you can add new behaviors without modifying the elements themselves.',
+  excerpt: 'A practical guide to the Visitor pattern: separating operations from object structures so you can add new behaviors without modifying the elements themselves.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
@@ -42,7 +42,7 @@ Visitor extracts operations out: each export format is a visitor that knows how 
 - Visitor: interface declaring a visit method for each element type
 - ConcreteVisitor: implements the operation (PDF exporter, HTML exporter...)
 - Element: interface declaring `accept(visitor)`
-- ConcreteElement: calls `visitor.visitXxx(this)` — passing itself in
+- ConcreteElement: calls `visitor.visitXxx(this)`, passing itself in
 
 ---
 

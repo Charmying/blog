@@ -1,15 +1,15 @@
 export const metadata = {
   title: 'Angular Control Flow: From Structural Directives to Built-in Blocks',
   date: '2026-06-23',
-  excerpt: "A full comparison of Angular's two control-flow systems — the structural directives *ngIf, *ngFor, *ngSwitch, and the built-in block syntax @if, @for, @switch introduced in Angular 17. From the microsyntax behind the asterisk to the mechanism underneath, all the way to the performance @for buys with a mandatory track, the bundle savings, and how to actually migrate.",
+  excerpt: "A full comparison of Angular's two control-flow systems: the structural directives *ngIf, *ngFor, *ngSwitch, and the built-in block syntax @if, @for, @switch introduced in Angular 17. From the microsyntax behind the asterisk to the mechanism underneath, all the way to the performance @for buys with a mandatory track, the bundle savings, and how to actually migrate.",
   tags: ['Front-end', 'Angular'],
 };
 
 # Angular Control Flow: From Structural Directives to Built-in Blocks
 
-From Angular 2 onward, there was just one way to write conditionals and loops in an Angular template: the structural directive. `*ngIf`, `*ngFor`, `*ngSwitch` — each carrying that faintly mysterious asterisk `*` out front. It worked, and it worked for a long time.
+From Angular 2 onward, there was just one way to write conditionals and loops in an Angular template: the structural directive. `*ngIf`, `*ngFor`, `*ngSwitch`, each carrying that faintly mysterious asterisk `*` out front. It worked, and it worked for a long time.
 
-Angular 17 introduced another way — built-in control flow: `@if`, `@for`, `@switch`, written as `@`-prefixed blocks with braces around their content, reading much like JavaScript. On the surface this looks like the old syntax wearing new clothes. But dig one layer down and you find a completely different mechanism underneath. And it's that mechanism — not the cosmetics — that explains why the new syntax type-checks more precisely, ships less code, and, in the case of `@for`, runs dramatically faster.
+Angular 17 introduced another way, built-in control flow: `@if`, `@for`, `@switch`, written as `@`-prefixed blocks with braces around their content, reading much like JavaScript. On the surface this looks like the old syntax wearing new clothes. But dig one layer down and you find a completely different mechanism underneath. And it's that mechanism (not the cosmetics) that explains why the new syntax type-checks more precisely, ships less code, and, in the case of `@for`, runs dramatically faster.
 
 ```mermaid
 mindmap
@@ -45,7 +45,7 @@ mindmap
 
 ## Structural Directives and the Asterisk
 
-To see what the new syntax improves, you first have to understand what the old syntax actually is. A structural directive is one that changes the structure of the DOM — adding, removing, or rearranging elements. `*ngIf`, `*ngFor`, and `*ngSwitch` all belong to this family, and the mark they share is that asterisk.
+To see what the new syntax improves, you first have to understand what the old syntax actually is. A structural directive is one that changes the structure of the DOM: adding, removing, or rearranging elements. `*ngIf`, `*ngFor`, and `*ngSwitch` all belong to this family, and the mark they share is that asterisk.
 
 Here's the part most people never quite internalize, even after years of writing it: the `*` is pure syntactic sugar. This line:
 
@@ -61,7 +61,7 @@ is desugared by the compiler into an equivalent form built around an `<ng-templa
 </ng-template>
 ```
 
-`NgIf` is just an ordinary directive class. In its constructor it injects a `TemplateRef` (the wrapped template) and a `ViewContainerRef` (a container it can stamp content into), then decides — based on the condition — whether to stamp that template into the container. `*ngFor` works the same way; it just has a richer microsyntax:
+`NgIf` is just an ordinary directive class. In its constructor it injects a `TemplateRef` (the wrapped template) and a `ViewContainerRef` (a container it can stamp content into), then decides, based on the condition, whether to stamp that template into the container. `*ngFor` works the same way; it just has a richer microsyntax:
 
 ```html
 <div *ngFor="let item of items; let i = index; trackBy: trackById">
@@ -88,10 +88,10 @@ graph TD
 
 This design carried Angular's entire early template system, but it comes with a few costs hidden in the details:
 
-- The microsyntax is a bespoke mini-language. `let item of items; let i = index; trackBy: fn` looks like JavaScript but isn't — it's a string DSL the compiler parses with its own rules. The keywords (`of`, `let`, `trackBy`), the semicolons between clauses, the `as` aliasing — all of it has to be learned separately.
+- The microsyntax is a bespoke mini-language. `let item of items; let i = index; trackBy: fn` looks like JavaScript but isn't; it's a string DSL the compiler parses with its own rules. The keywords (`of`, `let`, `trackBy`), the semicolons between clauses, the `as` aliasing: all of it has to be learned separately.
 - One structural directive per element. You can't put `*ngIf` and `*ngFor` on the same element, because both want to claim the same host template. The standard workaround is to wrap one in an `<ng-container>`.
 - else is awkward. To say "otherwise show this other thing," you write `*ngIf="cond; else other"` and then declare a separate `<ng-template #other>` somewhere else. The condition and its two branches end up scattered across the template.
-- They're still directives. Every usage is a class instance, with the dependency injection, lifecycle, and change-detection bookkeeping that implies — and `NgIf`, `NgForOf`, `NgSwitch` have to be imported from `CommonModule` (especially visible in standalone components) before they land in your bundle.
+- They're still directives. Every usage is a class instance, with the dependency injection, lifecycle, and change-detection bookkeeping that implies, and `NgIf`, `NgForOf`, `NgSwitch` have to be imported from `CommonModule` (especially visible in standalone components) before they land in your bundle.
 
 None of these is fatal on its own, and Angular went a long way on this design. But added together, they form the case for a rethink.
 
@@ -99,7 +99,7 @@ None of these is fatal on its own, and Angular went a long way on this design. B
 
 ## Built-in Control Flow: Block Syntax
 
-Angular 17 (November 2023) introduced built-in control flow, which became stable in Angular 18. The same three jobs — condition, loop, branch — are now written as `@`-prefixed blocks:
+Angular 17 (November 2023) introduced built-in control flow, which became stable in Angular 18. The same three jobs (condition, loop, branch) are now written as `@`-prefixed blocks:
 
 ```html
 @if (isLoggedIn) {
@@ -111,7 +111,7 @@ Angular 17 (November 2023) introduced built-in control flow, which became stable
 
 The crucial difference isn't that it reads more like JavaScript. It's that these are not directives. The Angular compiler understands `@if`, `@for`, and `@switch` natively and compiles them straight into template instructions baked into the component itself. That has a few direct consequences:
 
-- Nothing to import. You don't import `CommonModule`, and you don't import `NgIf` — control flow is part of the language, available the moment you open a template. (Note: pipes like `async` and `date`, or attribute directives like `ngClass` and `ngStyle`, still come from `CommonModule`, so those imports stay.)
+- Nothing to import. You don't import `CommonModule`, and you don't import `NgIf`; control flow is part of the language, available the moment you open a template. (Note: pipes like `async` and `date`, or attribute directives like `ngClass` and `ngStyle`, still come from `CommonModule`, so those imports stay.)
 - It's the language, not a library. Because the syntax belongs to the compiler, the compiler can optimize it more deeply, type-check it more precisely, and emit less runtime code.
 
 The three pairs line up roughly like this:
@@ -160,7 +160,7 @@ Expressing the same logic with `*ngIf` means doing the `ngIfElse`-plus-named-tem
 
 The condition and its branches get sliced into pieces scattered across separate `<ng-template>`s, and once the nesting deepens it's hard to read at a glance. `@if` pulls them back into one block, so the reading order matches the thinking order.
 
-Aliasing carries over too, and more intuitively. You can bind a computed value — most commonly async data through the `async` pipe — to a local variable:
+Aliasing carries over too, and more intuitively. You can bind a computed value (most commonly async data through the `async` pipe) to a local variable:
 
 ```html
 @if (user$ | async; as user) {
@@ -169,13 +169,13 @@ Aliasing carries over too, and more intuitively. You can bind a computed value �
 }
 ```
 
-Here `user` is scoped to this block alone — a clean, contained scope. There's also a quieter but very real benefit: type narrowing. Because the syntax belongs to the compiler, type inference inside an `@if` block is more reliable — within the block the compiler genuinely knows `user` is not `null`, and template type-checking sharpens accordingly.
+Here `user` is scoped to this block alone, a clean, contained scope. There's also a quieter but very real benefit: type narrowing. Because the syntax belongs to the compiler, type inference inside an `@if` block is more reliable; within the block the compiler genuinely knows `user` is not `null`, and template type-checking sharpens accordingly.
 
 ---
 
 ## @for vs. *ngFor
 
-The loop is where the two systems differ most — not just in how you write it, but in how fast it runs underneath. Start with the new syntax:
+The loop is where the two systems differ most, not just in how you write it but in how fast it runs underneath. Start with the new syntax:
 
 ```html
 @for (item of items; track item.id) {
@@ -187,7 +187,7 @@ The loop is where the two systems differ most — not just in how you write it, 
 
 Three things are worth taking apart one by one.
 
-First, `track` went from optional to mandatory. In `*ngFor`, `trackBy` was an optimization you could take or leave, and most people left it. In `@for`, `track` is required by the compiler — leave it out and the template won't compile. It's also an expression (`item.id`) now, not a reference to a component method, which makes it lighter to write. Why is it non-negotiable? Because it's the key to the new high-speed diffing, which we'll get to in a moment.
+First, `track` went from optional to mandatory. In `*ngFor`, `trackBy` was an optimization you could take or leave, and most people left it. In `@for`, `track` is required by the compiler; leave it out and the template won't compile. It's also an expression (`item.id`) now, not a reference to a component method, which makes it lighter to write. Why is it non-negotiable? Because it's the key to the new high-speed diffing, which we'll get to in a moment.
 
 Second, contextual variables are built in. With `*ngFor` you wrote `let i = index` to get the index; `@for` hands you a set of `$`-prefixed contextual variables ready to use:
 
@@ -214,7 +214,7 @@ Third, `@empty` is a first-class citizen. The content to show when the collectio
 
 `@for`'s heaviest selling point is runtime performance. According to community framework benchmarks (the js-framework-benchmark), the new `@for` can be up to roughly 90% faster at runtime than `*ngFor`. The mechanism behind that number is exactly what makes `track` mandatory.
 
-`*ngFor` tracks collection changes through Angular's `IterableDiffer`. `@for` replaces that with a new, leaner diffing algorithm. And for any diffing to be fast, it has to be able to answer one question: "this item after the update — which item before the update is it the same as?" `track` is the answer you hand the compiler — it computes a stable identity for every item.
+`*ngFor` tracks collection changes through Angular's `IterableDiffer`. `@for` replaces that with a new, leaner diffing algorithm. And for any diffing to be fast, it has to be able to answer one question: "for each item after the update, which item before the update is it the same as?" `track` is the answer you hand the compiler: it computes a stable identity for every item.
 
 ```mermaid
 graph TD
@@ -231,7 +231,7 @@ This is also why what you pick for `track` matters:
 
 - When items move, reorder, get inserted or deleted, use a unique, stable identity, e.g. `track item.id`.
 - For append-only or never-changing lists, `track $index` is enough.
-- Never track by a value that's recomputed each time (such as a changing object), which forces Angular to treat every item as brand new — slower than not tracking at all.
+- Never track by a value that's recomputed each time (such as a changing object), which forces Angular to treat every item as brand new, which is slower than not tracking at all.
 
 In other words, making `track` mandatory isn't Angular being difficult. It takes the one decision that used to be easiest to skip yet mattered most for performance, and moves it somewhere you can't avoid facing it.
 
@@ -268,7 +268,7 @@ The old form needs a container element carrying `[ngSwitch]`, with the children 
 A few differences stand out:
 
 - No wrapper element required. `[ngSwitch]` always needs a host element to live on (often adding an extra `<div>` or `<ng-container>` just for that); `@switch` needs none, since it is the block.
-- `[ngSwitch]` is an attribute, `*ngSwitchCase` is structural. The old form actually mixes two kinds of directive — the `[ngSwitch]` on the container is *not* a structural directive; the asterisk directives on the children are what control display. `@switch` removes that bit of mental overhead entirely.
+- `[ngSwitch]` is an attribute, `*ngSwitchCase` is structural. The old form actually mixes two kinds of directive: the `[ngSwitch]` on the container is *not* a structural directive; the asterisk directives on the children are what control display. `@switch` removes that bit of mental overhead entirely.
 - Same comparison rule: strict equality. A `@case` value is compared against the `@switch` value with `===`, just like JavaScript's `switch`, which matches the old `ngSwitch` behavior. There's no fall-through; matching stops at the first `@case` that fits.
 
 ---
@@ -291,7 +291,7 @@ graph TD
 
 Three concrete benefits fall out of this:
 
-- Smaller bundles. `NgIf`, `NgForOf`, and `NgSwitch` are no longer needed, and the whole `CommonModule` import can often go with them — and that runtime code leaving the bundle is what makes it smaller.
+- Smaller bundles. `NgIf`, `NgForOf`, and `NgSwitch` are no longer needed, and the whole `CommonModule` import can often go with them, and that runtime code leaving the bundle is what makes it smaller.
 - Faster runtime. Partly from `@for`'s new diffing algorithm (up to ~90% faster), and partly from dropping the DI and change-detection overhead of "a directive instance per node."
 - More precise type checking. With the syntax owned by the compiler, template type-checking and narrowing can go deeper and be more reliable.
 
@@ -320,9 +320,9 @@ There's an official automated migration. Run one command and the schematic rewri
 ng generate @angular/core:control-flow
 ```
 
-It's careful about imports, too: it only drops the `CommonModule` import when nothing else (`ngClass`, `ngStyle`, or pipes like `async` and `date`) still needs it — so the bundle savings land safely.
+It's careful about imports, too: it only drops the `CommonModule` import when nothing else (`ngClass`, `ngStyle`, or pipes like `async` and `date`) still needs it, so the bundle savings land safely.
 
-Structural directives are not deprecated. As of Angular 20, `*ngIf`, `*ngFor`, and `*ngSwitch` still work normally — they aren't marked deprecated, and there's no removal timeline. Old code won't break; for new code, built-in control flow is simply the recommended default.
+Structural directives are not deprecated. As of Angular 20, `*ngIf`, `*ngFor`, and `*ngSwitch` still work normally; they aren't marked deprecated, and there's no removal timeline. Old code won't break; for new code, built-in control flow is simply the recommended default.
 
 ---
 
@@ -333,5 +333,5 @@ From `*ngIf` to `@if`, what changes isn't just the syntax but the mechanism unde
 - `*ngIf`, `*ngFor`, `*ngSwitch` and `@if`, `@for`, `@switch` do the same three jobs, but the former are runtime directive instances and the latter compile-time template instructions.
 - The `*` is syntactic sugar that desugars into an `<ng-template>` plus a directive; the microsyntax, the one-structural-directive-per-element limit, and the awkward else are the costs of that design.
 - Built-in control flow needs no imports and type-checks more precisely; `@if`'s `@else if` / `@else` and `@for`'s `@empty` are native to the language.
-- `@for`'s `track` went from optional to mandatory and, paired with a new diffing algorithm, runs up to ~90% faster in community benchmarks — picking the right `track` is what makes that work.
+- `@for`'s `track` went from optional to mandatory and, paired with a new diffing algorithm, runs up to ~90% faster in community benchmarks; picking the right `track` is what makes that work.
 - As of Angular 20 the structural directives aren't deprecated and both syntaxes coexist; but for new code the `@`-blocks are the recommended default, and `ng generate @angular/core:control-flow` migrates for you.

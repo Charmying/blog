@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Design Patterns: Bridge',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Bridge pattern — how separating abstraction from implementation prevents class hierarchy explosion and lets both sides evolve independently.',
+  excerpt: 'A practical guide to the Bridge pattern: how separating abstraction from implementation prevents class hierarchy explosion and lets both sides evolve independently.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
@@ -31,7 +31,7 @@ mindmap
 
 Here's the problem Bridge solves:
 
-Imagine a remote control that can operate both TVs and SoundBars. Using inheritance:
+Imagine a remote control that can operate both TVs and soundbars. Using inheritance:
 
 - `RemoteControl`
 - `TVRemoteControl extends RemoteControl`
@@ -144,4 +144,4 @@ Good fits
 
 Bridge is about inheritance → composition.
 
-Once you notice a class that might grow in two independent directions, consider pulling one dimension out as a separate interface — that's the bridge. Both sides can then expand fully without touching each other.
+Once you notice a class that might grow in two independent directions, consider pulling one dimension out as a separate interface: that's the bridge. Both sides can then expand fully without touching each other.

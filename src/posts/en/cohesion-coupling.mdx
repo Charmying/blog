@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Cohesion vs. Coupling',
   date: '2026-04-18',
-  excerpt: 'A practical guide to cohesion and coupling — covering what high coupling and low cohesion look like, how to fix them with dependency injection and the Single Responsibility Principle, and practical questions to evaluate your own code.',
+  excerpt: 'A practical guide to cohesion and coupling: covering what high coupling and low cohesion look like, how to fix them with dependency injection and the Single Responsibility Principle, and practical questions to evaluate your own code.',
   tags: ['Software Design', 'Best Practice'],
 };
 
@@ -11,8 +11,8 @@ Cohesion and coupling are two fundamental concepts for evaluating code quality.
 
 The goal of good software design: high cohesion, low coupling.
 
-- High cohesion — the elements inside a module are closely related and focused on one thing
-- Low coupling — modules have minimal dependencies on each other and can change independently
+- **High cohesion**: the elements inside a module are closely related and focused on one thing
+- **Low coupling**: modules have minimal dependencies on each other and can change independently
 
 ```mermaid
 mindmap
@@ -66,20 +66,20 @@ class UserComponent {
 }
 ```
 
-Now `UserComponent` doesn't know or care how the data is fetched. Swap the implementation, write a test with a mock — just replace what gets injected.
+Now `UserComponent` doesn't know or care how the data is fetched. Swap the implementation, write a test with a mock: just replace what gets injected.
 
 ### The Problem with High Coupling
 
-- Hard to change — modifying one module forces changes in everything that depends on it
-- Hard to test — the module relies on real external resources; setting up tests is painful
-- Hard to reuse — the module is tied to a specific implementation and can't stand alone
-- Hard to understand — a module's behavior depends on too many external factors
+- **Hard to change**: modifying one module forces changes in everything that depends on it
+- **Hard to test**: the module relies on real external resources; setting up tests is painful
+- **Hard to reuse**: the module is tied to a specific implementation and can't stand alone
+- **Hard to understand**: a module's behavior depends on too many external factors
 
 ### How to Reduce Coupling
 
 Dependency Injection
 
-Don't create dependencies inside a module — pass them in from outside:
+Don't create dependencies inside a module; pass them in from outside:
 
 ```javascript
 // high coupling: creates its own dependency
@@ -159,10 +159,10 @@ Each class owns its domain. The purpose of each one is immediately clear.
 
 ### The Problem with Low Cohesion
 
-- Hard to understand — a module doing many unrelated things is difficult to reason about
-- Hard to maintain — changing one feature risks accidentally breaking unrelated code in the same module
-- Hard to test — too many unrelated scenarios to cover
-- Hard to reuse — you can't pull out one piece without dragging everything else along
+- **Hard to understand**: a module doing many unrelated things is difficult to reason about
+- **Hard to maintain**: changing one feature risks accidentally breaking unrelated code in the same module
+- **Hard to test**: too many unrelated scenarios to cover
+- **Hard to reuse**: you can't pull out one piece without dragging everything else along
 
 ### How to Improve Cohesion
 
@@ -228,9 +228,9 @@ function calculateTotal(price, taxRate) {
 
 | | High | Low |
 | - | - | - |
-| Cohesion | Good — focused, easy to understand and maintain | Bad — scattered responsibilities, hard to maintain |
-| Coupling | Bad — tightly dependent, hard to change | Good — independent, easy to swap and test |
+| Cohesion | Good: focused, easy to understand and maintain | Bad: scattered responsibilities, hard to maintain |
+| Coupling | Bad: tightly dependent, hard to change | Good: independent, easy to swap and test |
 
 The goal: high cohesion, low coupling.
 
-These two concepts are the foundation of many design principles — SOLID, Clean Architecture, and others. Internalizing them will help you make better design decisions in everyday development.
+These two concepts are the foundation of many design principles: SOLID, Clean Architecture, and others. Internalizing them will help you make better design decisions in everyday development.

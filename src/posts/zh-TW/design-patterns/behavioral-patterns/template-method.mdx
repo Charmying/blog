@@ -1,11 +1,11 @@
 export const metadata = {
-  title: '設計模式：樣板方法模式 (Template Method)',
+  title: '設計模式：範本方法模式 (Template Method)',
   date: '2026-06-30',
-  excerpt: '介紹行為型設計模式中的樣板方法模 —— 基底類別定義演算法的骨架，讓子類別填入各自的步驟，而不改動整體結構。',
+  excerpt: '介紹行為型設計模式中的範本方法模式：基底類別定義演算法的骨架，讓子類別填入各自的步驟，而不改動整體結構。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
-# 設計模式：樣板方法模式 (Template Method)
+# 設計模式：範本方法模式 (Template Method)
 
 Template Method 在基底類別定義一個演算法的骨架，子類別則覆寫其中特定的步驟來客製行為，而不動到整體流程。
 
@@ -37,7 +37,7 @@ mindmap
 
 ## 結構與角色
 
-- AbstractClass：定義樣板方法 (流程骨架) 以及抽象步驟
+- AbstractClass：定義範本方法 (流程骨架) 以及抽象步驟
 - templateMethod()：依序呼叫各步驟，本身不應被覆寫
 - abstractStep()：留給子類別實作的掛勾
 - ConcreteClass：提供各步驟的具體實作

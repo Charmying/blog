@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'Design Patterns: Singleton',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Singleton pattern — how to guarantee a single instance across your application, when that\'s actually the right call, and the tradeoffs you\'re accepting.',
+  excerpt: 'A practical guide to the Singleton pattern: how to guarantee a single instance across your application, when that\'s actually the right call, and the tradeoffs you\'re accepting.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
 # Design Patterns: Singleton
 
-Singleton is the simplest creational pattern — and one of the most misused. The goal is straightforward: ensure a class has only one instance and provide a global access point to it.
+Singleton is the simplest creational pattern, and one of the most misused. The goal is straightforward: ensure a class has only one instance and provide a global access point to it.
 
 ```mermaid
 mindmap
@@ -36,7 +36,7 @@ Singleton applies when:
 - A database connection pool is expensive to set up and should be shared
 - A cache holds data that needs to be shared across modules
 
-The common thread: the resource is expensive to create, or shared state is genuinely necessary — not just convenient.
+The common thread: the resource is expensive to create, or shared state is genuinely necessary, not just convenient.
 
 ---
 
@@ -68,7 +68,7 @@ const b = Singleton.getInstance();
 console.log(a === b); // true
 ```
 
-The private constructor is the key. External code can't call `new Singleton()` — the only way in is through `getInstance()`, which lazily creates and then caches the instance.
+The private constructor is the key. External code can't call `new Singleton()`: the only way in is through `getInstance()`, which lazily creates and then caches the instance.
 
 ---
 
@@ -137,6 +137,6 @@ Practical rule: try dependency injection first. Reach for Singleton only when sh
 
 Singleton solves a specific, narrow problem: eliminating the cost of duplicate resource creation and providing a consistent global access point.
 
-Its downside is exactly what makes it appealing — the global instance. Global state makes dependencies implicit and tests fragile.
+Its downside is exactly what makes it appealing: the global instance. Global state makes dependencies implicit and tests fragile.
 
 Used in the right place, it's efficient and clean. Used as a shortcut for "I need this everywhere," it becomes the kind of thing you'll spend hours debugging six months later.

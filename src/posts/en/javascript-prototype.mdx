@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Prototypes and the Prototype Chain',
   date: '2026-06-26',
-  excerpt: 'A practical guide to JavaScript prototypes and the prototype chain — covering the difference between prototype and __proto__, how property lookup and inheritance work, constructors, shadowing, class as syntactic sugar, and the common pitfalls.',
+  excerpt: 'A practical guide to JavaScript prototypes and the prototype chain, covering the difference between prototype and __proto__, how property lookup and inheritance work, constructors, shadowing, class as syntactic sugar, and the common pitfalls.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 Most languages build inheritance on classes. JavaScript is one of the few that builds it on *prototypes*.
 
-Every object carries a hidden link to another object. When you read a property the object doesn't have, JavaScript follows that link upward to look for it — and that path is the prototype chain.
+Every object carries a hidden link to another object. When you read a property the object doesn't have, JavaScript follows that link upward to look for it, and that path is the prototype chain.
 
 Once this clicks, a lot of JavaScript stops feeling like magic: objects, inheritance, `class`, and `instanceof` all run on the same underlying mechanism.
 
@@ -72,9 +72,9 @@ console.log(dog.eats);  // true (found on animal via the prototype)
 
 The thing that trips most people up early on is three terms that look alike but mean completely different things. Pin them down once and the rest falls into place.
 
-- `[[Prototype]]` — the internal slot in the spec. Every object has one, pointing to its prototype. You can't touch it directly; you go through an API.
-- `__proto__` — an accessor (a getter/setter) on `Object.prototype` that lets you read and write an object's `[[Prototype]]`. It's a legacy feature (Annex B in the spec); modern code should use `Object.getPrototypeOf` and `Object.setPrototypeOf` instead.
-- `prototype` — an ordinary property that exists only on *functions*. It isn't the function's own prototype — it's the object that instances created with `new` will use as *their* prototype.
+- **`[[Prototype]]`**: the internal slot in the spec. Every object has one, pointing to its prototype. You can't touch it directly; you go through an API.
+- **`__proto__`**: an accessor (a getter/setter) on `Object.prototype` that lets you read and write an object's `[[Prototype]]`. It's a legacy feature (Annex B in the spec); modern code should use `Object.getPrototypeOf` and `Object.setPrototypeOf` instead.
+- **`prototype`**: an ordinary property that exists only on *functions*. It isn't the function's own prototype; it's the object that instances created with `new` will use as *their* prototype.
 
 | Term | Lives on | Purpose |
 | - | - | - |
@@ -104,7 +104,7 @@ One line to remember it by: `prototype` is the prototype a function hands to *fu
 
 A prototype is itself an object, so it has a prototype too. Link those together, one after another, and you get the prototype chain.
 
-Property lookup walks up that chain and stops at the first level where the property is found. If it reaches the end of the chain — `null` — without finding anything, the lookup returns `undefined`.
+Property lookup walks up that chain and stops at the first level where the property is found. If it reaches the end of the chain (`null`) without finding anything, the lookup returns `undefined`.
 
 ```javascript
 const arr = [1, 2, 3];
@@ -125,11 +125,11 @@ graph LR
 
 Tracing the lookups above:
 
-- `length` is `arr`'s own property — found at the first level.
+- `length` is `arr`'s own property, found at the first level.
 - `map` isn't on `arr`, so the lookup steps up and finds it on `Array.prototype`.
 - `hasOwnProperty` isn't on `Array.prototype` either, so it steps up once more and finds it on `Object.prototype`.
 
-`Object.prototype` sits at the top of nearly every chain, and its `[[Prototype]]` is `null` — that's where the chain ends.
+`Object.prototype` sits at the top of nearly every chain, and its `[[Prototype]]` is `null`, which is where the chain ends.
 
 ---
 
@@ -187,7 +187,7 @@ console.log(dog.legs);    // 2 (dog's own)
 console.log(animal.legs); // 4 (the prototype is untouched)
 ```
 
-Because writes only ever touch the instance, putting a *mutable* object or array on a prototype is dangerous — every instance ends up sharing the same one:
+Because writes only ever touch the instance, putting a *mutable* object or array on a prototype is dangerous, as every instance ends up sharing the same one:
 
 ```javascript
 function Team() {}
@@ -207,7 +207,7 @@ The fix is to keep mutable state on the instance (created with `this` inside the
 
 ## Why Methods Live on the Prototype
 
-If you assign methods inside the constructor with `this`, every instance gets its own copy of the function — wasted memory for no benefit:
+If you assign methods inside the constructor with `this`, every instance gets its own copy of the function: wasted memory for no benefit:
 
 ```javascript
 function User(name) {
@@ -243,10 +243,10 @@ The rule of thumb is simple: behavior (methods) is shared, so it goes on the pro
 
 There are four common ways to set an object's prototype:
 
-1. `Object.create(proto)` — create a new object with a given prototype
+1. **`Object.create(proto)`**: create a new object with a given prototype
 2. A constructor function with `new`
-3. `class` — still prototypes underneath (next section)
-4. `Object.setPrototypeOf(obj, proto)` — change an existing object's prototype (slow, best avoided)
+3. **`class`**: still prototypes underneath (next section)
+4. **`Object.setPrototypeOf(obj, proto)`**: change an existing object's prototype (slow, best avoided)
 
 ```javascript
 // 1. Object.create
@@ -307,7 +307,7 @@ Animal.prototype.speak = function () {
 console.log(typeof Animal.prototype.speak); // "function"
 ```
 
-`extends` wires up *two* chains at once — one for instances and one for static members:
+`extends` wires up *two* chains at once: one for instances and one for static members:
 
 ```javascript
 class Dog extends Animal {
@@ -361,8 +361,8 @@ The difference between `in` and `hasOwnProperty` is worth keeping straight. The 
 
 | Operation | Includes inherited properties? |
 | - | - |
-| `obj.hasOwnProperty(key)` | No — own properties only |
-| `key in obj` | Yes — walks up the prototype chain |
+| `obj.hasOwnProperty(key)` | No (own properties only) |
+| `key in obj` | Yes (walks up the prototype chain) |
 
 ---
 
@@ -386,7 +386,7 @@ const obj = {
 };
 ```
 
-Inside an object literal, `__proto__:` has special meaning — it sets that object's prototype. If you genuinely want an ordinary property called `__proto__`, use `Object.defineProperty` instead.
+Inside an object literal, `__proto__:` has special meaning: it sets that object's prototype. If you genuinely want an ordinary property called `__proto__`, use `Object.defineProperty` instead.
 
 ### Changing a prototype dynamically hurts performance
 
@@ -419,4 +419,4 @@ Every extra level adds a step to lookups that miss. You won't notice it most of 
 - Reading a missing property walks up the prototype chain until it hits `null`.
 - `prototype` is a property on functions that sets the prototype of `new` instances; `__proto__` is the legacy way to access an existing object's prototype.
 - Methods go on the prototype (shared); state goes on the instance's `this` (independent).
-- `class` is sugar over this whole mechanism — it's still the prototype chain underneath.
+- `class` is sugar over this whole mechanism; it's still the prototype chain underneath.

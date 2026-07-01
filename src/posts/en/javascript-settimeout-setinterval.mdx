@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript setTimeout vs. setInterval',
   date: '2026-03-19',
-  excerpt: 'A practical guide to JavaScript setTimeout and setInterval — covering basic usage, clearing timers, when to use each, and why recursive setTimeout is sometimes more reliable than setInterval.',
+  excerpt: 'A practical guide to JavaScript setTimeout and setInterval, covering basic usage, clearing timers, when to use each, and why recursive setTimeout is sometimes more reliable than setInterval.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,8 +9,8 @@ export const metadata = {
 
 `setTimeout` and `setInterval` are JavaScript's two built-in timer functions. Both delay code execution, but they behave differently.
 
-- `setTimeout` — runs a callback once after a delay
-- `setInterval` — runs a callback repeatedly at a fixed interval
+- **`setTimeout`**: runs a callback once after a delay
+- **`setInterval`**: runs a callback repeatedly at a fixed interval
 
 ```mermaid
 mindmap
@@ -40,9 +40,9 @@ mindmap
 setTimeout(callback, delay, ...args)
 ```
 
-- `callback` — the function to run
-- `delay` — milliseconds to wait (1000 = 1 second)
-- `...args` — optional arguments passed to the callback
+- **`callback`**: the function to run
+- **`delay`**: milliseconds to wait (1000 = 1 second)
+- **`...args`**: optional arguments passed to the callback
 
 ### Basic Usage
 
@@ -69,7 +69,7 @@ setTimeout(function (name) {
 // "Hello, Charmy" (after 1 second)
 ```
 
-### delay of 0
+### Delay of 0
 
 Setting the delay to `0` doesn't mean the callback runs immediately. It still waits for the Call Stack to clear first:
 
@@ -91,7 +91,7 @@ C
 B
 ```
 
-This is how the Event Loop works — `setTimeout` callbacks are always asynchronous, no matter the delay.
+This is how the Event Loop works: `setTimeout` callbacks are always asynchronous, no matter the delay.
 
 ---
 
@@ -198,7 +198,7 @@ stopped
 
 ### Use setTimeout
 
-Delayed one-time actions — like auto-dismissing a notification:
+Delayed one-time actions, like auto-dismissing a notification:
 
 ```javascript
 showNotification("Saved successfully");
@@ -222,7 +222,7 @@ function fakeApiCall() {
 
 ### Use setInterval
 
-Polling or periodic updates — like fetching fresh data every few seconds:
+Polling or periodic updates, like fetching fresh data every few seconds:
 
 ```javascript
 const id = setInterval(function () {
@@ -248,7 +248,7 @@ const id = setInterval(function () {
 
 ### A Note on setInterval
 
-`setInterval` doesn't account for how long the callback takes to run. If the callback takes longer than the interval, the next execution can fire immediately after the previous one finishes — causing tasks to pile up.
+`setInterval` doesn't account for how long the callback takes to run. If the callback takes longer than the interval, the next execution can fire immediately after the previous one finishes, causing tasks to pile up.
 
 If you need a guaranteed gap between executions, use recursive `setTimeout` instead:
 
@@ -267,7 +267,7 @@ This ensures the 1-second delay starts only after `doSomething` completes.
 
 ## Conclusion
 
-- `setTimeout` — runs once after a delay, cancelled with `clearTimeout`
-- `setInterval` — runs repeatedly at a fixed interval, stopped with `clearInterval`
-- Both delays are minimums, not guarantees — actual timing depends on the Event Loop
+- **`setTimeout`**: runs once after a delay, cancelled with `clearTimeout`
+- **`setInterval`**: runs repeatedly at a fixed interval, stopped with `clearInterval`
+- Both delays are minimums, not guarantees; actual timing depends on the Event Loop
 - When precise intervals matter, recursive `setTimeout` is more reliable than `setInterval`

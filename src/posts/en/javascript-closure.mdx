@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Closures',
   date: '2026-03-19',
-  excerpt: 'A practical guide to JavaScript closures — covering how they work, common use cases like private data and factory functions, and the classic loop pitfall.',
+  excerpt: 'A practical guide to JavaScript closures, covering how they work, common use cases like private data and factory functions, and the classic loop pitfall.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -51,7 +51,7 @@ const fn = outer();
 fn(); // "Hello"
 ```
 
-`outer` has finished executing, so you'd expect `message` to be gone — but `fn` (which is `inner`) can still access it.
+`outer` has finished executing, so you'd expect `message` to be gone, but `fn` (which is `inner`) can still access it.
 
 That's the closure: `inner` holds onto the scope it was created in.
 
@@ -59,7 +59,7 @@ That's the closure: `inner` holds onto the scope it was created in.
 
 ## How Closures Work
 
-Closures work because JavaScript uses lexical scope — functions remember the scope environment they were defined in, including all the variables in any outer scopes.
+Closures work because JavaScript uses lexical scope: functions remember the scope environment they were defined in, including all the variables in any outer scopes.
 
 When a function is returned or passed somewhere else, that scope environment travels with it.
 
@@ -80,7 +80,7 @@ counter(); // 2
 counter(); // 3
 ```
 
-Each call to `counter` increments `count`. The variable isn't global — it lives in the scope that `makeCounter` created — but the returned function still has access to it. The value persists across calls because it's the same `count` being referenced each time.
+Each call to `counter` increments `count`. The variable isn't global (it lives in the scope that `makeCounter` created), but the returned function still has access to it. The value persists across calls because it's the same `count` being referenced each time.
 
 ---
 
@@ -211,7 +211,7 @@ for (var i = 0; i < 3; i++) {
 
 ## Conclusion
 
-A closure is a function that remembers the scope it was created in — even after that scope is gone.
+A closure is a function that remembers the scope it was created in, even after that scope is gone.
 
 Closures let you:
 

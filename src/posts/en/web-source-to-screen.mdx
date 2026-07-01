@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'From Source to Screen: The Frontend Execution Lifecycle',
   date: '2026-06-18',
-  excerpt: 'A practical guide to the full frontend execution lifecycle — covering build-time compilation, CDN deployment, runtime rendering strategies, Hydration mechanics, Googlebot two-wave indexing, and the Critical Rendering Path.',
+  excerpt: 'A practical guide to the full frontend execution lifecycle, covering build-time compilation, CDN deployment, runtime rendering strategies, Hydration mechanics, Googlebot two-wave indexing, and the Critical Rendering Path.',
   tags: ['Front-end', 'Web', 'Performance'],
 };
 
@@ -47,7 +47,7 @@ Tools like SWC or esbuild convert TypeScript, JSX, and TSX into JavaScript that 
 
 ### Tree-shaking and Code Splitting
 
-Because ES Modules have a static import/export structure, bundlers can analyze the AST and strip out anything that's imported but never actually used. That's tree-shaking — it can meaningfully cut bundle size without changing any code.
+Because ES Modules have a static import/export structure, bundlers can analyze the AST and strip out anything that's imported but never actually used. That's tree-shaking, which can meaningfully cut bundle size without changing any code.
 
 Code splitting uses dynamic `import()` to slice the application into async chunks, so the initial load only downloads what's immediately needed. The rest loads on demand.
 
@@ -86,15 +86,15 @@ SSR requires a Node.js process running continuously to receive requests and rend
 
 Runtime starts the moment a user makes an HTTP request. How the server responds depends on the rendering strategy:
 
-- CSR — returns an empty HTML shell + JS bundle; the browser renders the page after executing the JavaScript
-- SSG — serves pre-rendered static HTML straight from the CDN, with no server computation at request time
-- SSR — the server receives the request, fetches data, runs `renderToString`, and sends back fully populated HTML
+- **CSR**: returns an empty HTML shell + JS bundle; the browser renders the page after executing the JavaScript
+- **SSG**: serves pre-rendered static HTML straight from the CDN, with no server computation at request time
+- **SSR**: the server receives the request, fetches data, runs `renderToString`, and sends back fully populated HTML
 
 For a detailed breakdown of trade-offs and when to use each, see [CSR vs. SSR vs. SSG](/articles/web-csr-ssr-ssg).
 
 ### Hydration
 
-With SSG and SSR, the browser receives fully structured HTML — users see content immediately. But the page isn't interactive yet. JavaScript hasn't run, so there are no event listeners attached to anything.
+With SSG and SSR, the browser receives fully structured HTML, so users see content immediately. But the page isn't interactive yet. JavaScript hasn't run, so there are no event listeners attached to anything.
 
 Hydration is the process that brings a static HTML page to life. Instead of discarding the server-rendered DOM and rebuilding it, the framework walks through the existing nodes, reconciles them against its virtual DOM, and attaches event handlers in place:
 
@@ -111,14 +111,14 @@ hydrateRoot(container, <App />);
 
 The key difference between `hydrateRoot` and `createRoot`: `createRoot` assumes the DOM is empty and builds from scratch. `hydrateRoot` assumes the DOM already exists and just takes ownership.
 
-If the server-rendered HTML doesn't match what the client expects, React throws a hydration mismatch warning and attempts to recover. In serious cases it falls back to a full client-side re-render of the affected subtree — which undermines the performance benefit of having SSR in the first place.
+If the server-rendered HTML doesn't match what the client expects, React throws a hydration mismatch warning and attempts to recover. In serious cases it falls back to a full client-side re-render of the affected subtree, which undermines the performance benefit of having SSR in the first place.
 
 ### Googlebot and JavaScript
 
-A common misconception is that Googlebot can't run JavaScript. Google's Web Rendering Service (WRS) is Chromium-based and can execute JS — but indexing happens in two waves:
+A common misconception is that Googlebot can't run JavaScript. Google's Web Rendering Service (WRS) is Chromium-based and can execute JS, but indexing happens in two waves:
 
-1. Wave 1 (immediate) — the crawler fetches the HTML and parses text content right away. For SSR and SSG pages, the content is already there, so Googlebot can index and rank the page immediately.
-2. Wave 2 (deferred) — for pure CSR, Wave 1 only sees an empty shell. The URL gets queued for JavaScript rendering when cloud compute capacity is available, which can take days or weeks.
+1. Wave 1 (immediate): the crawler fetches the HTML and parses text content right away. For SSR and SSG pages, the content is already there, so Googlebot can index and rank the page immediately.
+2. Wave 2 (deferred): for pure CSR, Wave 1 only sees an empty shell. The URL gets queued for JavaScript rendering when cloud compute capacity is available, which can take days or weeks.
 
 For any page where SEO matters, SSR or SSG ensures the crawler gets full content in Wave 1.
 
@@ -141,20 +141,20 @@ flowchart LR
 
 Six steps:
 
-1. DOM construction — the parser converts HTML into the DOM tree. A `<script>` without `async` or `defer` pauses parsing until the script downloads and executes.
-2. CSSOM construction — CSS is parsed into the CSSOM tree. The browser won't render anything until this is complete — CSS is render-blocking.
-3. Render tree — DOM and CSSOM merge. Only visible nodes make the cut: `display: none` removes the element and its entire subtree; `visibility: hidden` keeps the node but makes it invisible.
-4. Layout — the browser traverses the render tree and computes the exact position and size of every element. Relative units (`rem`, `%`) get resolved to absolute pixels.
-5. Paint — layout coordinates get filled in with visual content: text, colors, borders, shadows.
-6. Composite — the painted layers are handed to the GPU, which stacks them in the correct z-index order and outputs the final frame.
+1. DOM construction: the parser converts HTML into the DOM tree. A `<script>` without `async` or `defer` pauses parsing until the script downloads and executes.
+2. CSSOM construction: CSS is parsed into the CSSOM tree. The browser won't render anything until this is complete (CSS is render-blocking).
+3. Render tree: DOM and CSSOM merge. Only visible nodes make the cut: `display: none` removes the element and its entire subtree; `visibility: hidden` keeps the node but makes it invisible.
+4. Layout: the browser traverses the render tree and computes the exact position and size of every element. Relative units (`rem`, `%`) get resolved to absolute pixels.
+5. Paint: layout coordinates get filled in with visual content: text, colors, borders, shadows.
+6. Composite: the painted layers are handed to the GPU, which stacks them in the correct z-index order and outputs the final frame.
 
-How fast this pipeline runs directly affects Core Web Vitals — FCP (First Contentful Paint) measures when the user first sees meaningful content; LCP (Largest Contentful Paint) measures when the largest visible element finishes rendering. Chrome DevTools' Performance panel lets you record the full timeline and identify where the bottleneck is.
+How fast this pipeline runs directly affects Core Web Vitals: FCP (First Contentful Paint) measures when the user first sees meaningful content; LCP (Largest Contentful Paint) measures when the largest visible element finishes rendering. Chrome DevTools' Performance panel lets you record the full timeline and identify where the bottleneck is.
 
 ### Performance: Avoid Layout and Paint
 
 Changing properties like `top` or `left` forces the browser through the full Layout → Paint → Composite cycle on every frame. That's expensive.
 
-`transform` and `opacity` are different — they only affect the Composite step, which runs entirely on the GPU, bypassing Layout and Paint:
+`transform` and `opacity` are different; they only affect the Composite step, which runs entirely on the GPU, bypassing Layout and Paint:
 
 ```css
 /* triggers Layout → Paint → Composite on every frame */

@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'RxJS: Reactive Programming in JavaScript',
   date: '2026-03-24',
-  excerpt: 'A practical guide to RxJS — covering Observables, common operators, Subject and BehaviorSubject, and how RxJS integrates with Angular, React, and Vue, with an honest look at how deeply each framework uses it.',
+  excerpt: 'A practical guide to RxJS, covering Observables, common operators, Subject and BehaviorSubject, and how RxJS integrates with Angular, React, and Vue, with an honest look at how deeply each framework uses it.',
   tags: ['Front-end', 'JavaScript', 'Angular'],
 };
 
@@ -9,9 +9,9 @@ export const metadata = {
 
 RxJS (Reactive Extensions for JavaScript) is a library for handling asynchronous data streams.
 
-The core idea is the Observable — a stream that can emit multiple values over time. You subscribe to it, transform it, and compose it with other streams.
+The core idea is the Observable: a stream that can emit multiple values over time. You subscribe to it, transform it, and compose it with other streams.
 
-RxJS is deeply integrated into Angular, and can be used in React and Vue as well — though the depth of integration differs significantly.
+RxJS is deeply integrated into Angular, and can be used in React and Vue as well, though the depth of integration differs significantly.
 
 ```mermaid
 mindmap
@@ -53,9 +53,9 @@ const observable = new Observable(subscriber => {
 
 An Observer defines what to do with incoming values. It has three callbacks:
 
-- `next` — called when a new value arrives
-- `error` — called when an error occurs
-- `complete` — called when the stream ends
+- **`next`**: called when a new value arrives
+- **`error`**: called when an error occurs
+- **`complete`**: called when the stream ends
 
 ### Subscription
 
@@ -104,7 +104,7 @@ observable.pipe(
 
 ### Transformation
 
-map — transforms each value:
+**map**: transforms each value:
 
 ```typescript
 import { of } from 'rxjs';
@@ -116,7 +116,7 @@ of(1, 2, 3).pipe(
 // 2, 4, 6
 ```
 
-switchMap — maps to a new Observable, cancelling the previous one when a new value arrives. Classic use case: search:
+**switchMap**: maps to a new Observable, cancelling the previous one when a new value arrives. Classic use case: search:
 
 ```typescript
 fromEvent(input, 'input').pipe(
@@ -125,7 +125,7 @@ fromEvent(input, 'input').pipe(
 ).subscribe(results => console.log(results));
 ```
 
-mergeMap — maps to a new Observable, runs all concurrently:
+**mergeMap**: maps to a new Observable, runs all concurrently:
 
 ```typescript
 of(1, 2, 3).pipe(
@@ -133,7 +133,7 @@ of(1, 2, 3).pipe(
 ).subscribe(user => console.log(user));
 ```
 
-concatMap — maps to a new Observable, runs them one at a time in order:
+**concatMap**: maps to a new Observable, runs them one at a time in order:
 
 ```typescript
 of(1, 2, 3).pipe(
@@ -143,7 +143,7 @@ of(1, 2, 3).pipe(
 
 ### Filtering
 
-filter — only lets values through that pass a condition:
+**filter**: only lets values through that pass a condition:
 
 ```typescript
 of(1, 2, 3, 4, 5).pipe(
@@ -152,7 +152,7 @@ of(1, 2, 3, 4, 5).pipe(
 // 2, 4
 ```
 
-debounceTime — waits for a quiet period before emitting:
+**debounceTime**: waits for a quiet period before emitting:
 
 ```typescript
 fromEvent(input, 'input').pipe(
@@ -160,7 +160,7 @@ fromEvent(input, 'input').pipe(
 ).subscribe(event => console.log(event.target.value));
 ```
 
-distinctUntilChanged — only emits when the value differs from the previous one:
+**distinctUntilChanged**: only emits when the value differs from the previous one:
 
 ```typescript
 of(1, 1, 2, 2, 3).pipe(
@@ -169,7 +169,7 @@ of(1, 1, 2, 2, 3).pipe(
 // 1, 2, 3
 ```
 
-take — takes the first n values then completes:
+**take**: takes the first n values then completes:
 
 ```typescript
 of(1, 2, 3, 4, 5).pipe(
@@ -180,7 +180,7 @@ of(1, 2, 3, 4, 5).pipe(
 
 ### Combination
 
-combineLatest — emits whenever any source emits, combining the latest value from each:
+**combineLatest**: emits whenever any source emits, combining the latest value from each:
 
 ```typescript
 combineLatest([userStream$, postsStream$]).subscribe(
@@ -188,7 +188,7 @@ combineLatest([userStream$, postsStream$]).subscribe(
 );
 ```
 
-forkJoin — waits for all Observables to complete, similar to `Promise.all`:
+**forkJoin**: waits for all Observables to complete, similar to `Promise.all`:
 
 ```typescript
 forkJoin([fetchUser(1), fetchPosts(1)]).subscribe(
@@ -200,7 +200,7 @@ forkJoin([fetchUser(1), fetchPosts(1)]).subscribe(
 
 ## Subject
 
-A Subject is both an Observable and an Observer — you can subscribe to it and push values into it manually:
+A Subject is both an Observable and an Observer: you can subscribe to it and push values into it manually:
 
 ```typescript
 import { Subject } from 'rxjs';
@@ -254,7 +254,7 @@ BehaviorSubject is commonly used for sharing state between components.
 
 ### Angular
 
-RxJS is a core Angular dependency — it's built into the framework at every level.
+RxJS is a core Angular dependency: it's built into the framework at every level.
 
 HttpClient returns Observables
 
@@ -351,7 +351,7 @@ function UserList() {
 }
 ```
 
-In practice, RxJS sees relatively little use in the React ecosystem. Most async data needs are handled with `Promise` + `async/await` or libraries like React Query. RxJS shines in React when you need complex stream handling — debouncing, `switchMap`, composing multiple data sources — scenarios where its operators genuinely simplify the code.
+In practice, RxJS sees relatively little use in the React ecosystem. Most async data needs are handled with `Promise` + `async/await` or libraries like React Query. RxJS shines in React when you need complex stream handling (debouncing, `switchMap`, composing multiple data sources) where its operators genuinely simplify the code.
 
 ---
 
@@ -402,12 +402,12 @@ Similar to React, RxJS isn't common in Vue projects. Most state and async data h
 
 The core pieces of RxJS:
 
-- Observable — a stream that emits zero to many values over time
-- Operators — transform and manipulate streams, chained with `pipe`
-- Subject — both Observable and Observer; push values in manually
-- BehaviorSubject — holds a current value and replays it to new subscribers
+- **Observable**: a stream that emits zero to many values over time
+- **Operators**: transform and manipulate streams, chained with `pipe`
+- **Subject**: both Observable and Observer; push values in manually
+- **BehaviorSubject**: holds a current value and replays it to new subscribers
 
 Framework integration at a glance:
 
-- Angular — deeply integrated; `HttpClient`, `AsyncPipe`, and more all use RxJS directly
-- React / Vue — usable but requires manual setup; less common in practice, both ecosystems favor `async/await` for most use cases
+- **Angular**: deeply integrated; `HttpClient`, `AsyncPipe`, and more all use RxJS directly
+- **React / Vue**: usable but requires manual setup; less common in practice, both ecosystems favor `async/await` for most use cases

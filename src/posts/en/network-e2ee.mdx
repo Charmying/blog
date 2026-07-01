@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'End-to-End Encryption (E2EE)',
   date: '2026-04-26',
-  excerpt: 'A practical guide to end-to-end encryption (E2EE) — covering how it differs from TLS, how asymmetric encryption works, and the trade-offs of using E2EE.',
+  excerpt: 'A practical guide to end-to-end encryption (E2EE), covering how it differs from TLS, how asymmetric encryption works, and the trade-offs of using E2EE.',
   tags: ['Security', 'Network'],
 };
 
 # End-to-End Encryption (E2EE)
 
-End-to-end encryption (E2EE) ensures that only the sender and recipient can read a message. Anyone in between — including the servers that carry the message — cannot decrypt the content.
+End-to-end encryption (E2EE) ensures that only the sender and recipient can read a message. Anyone in between (including the servers that carry the message) cannot decrypt the content.
 
 Think of it like a letter that only the sender and recipient can open. The courier delivers it, but can't read what's inside.
 
@@ -38,7 +38,7 @@ flowchart LR
     A --> Server --> B
 ```
 
-This is the standard client-server model. The server is the intermediary. TLS can protect the connection between A and the server, and between the server and B — but once the message reaches the server, the server can read it.
+This is the standard client-server model. The server is the intermediary. TLS can protect the connection between A and the server, and between the server and B, but once the message reaches the server, the server can read it.
 
 ---
 
@@ -46,8 +46,8 @@ This is the standard client-server model. The server is the intermediary. TLS ca
 
 Both TLS and E2EE use public-key cryptography, but they protect different things:
 
-- TLS — secures the connection between a client and a server. The message is encrypted in transit, but the server decrypts it on arrival and can read the contents.
-- E2EE — secures the entire path from sender to recipient. The server only ever handles encrypted data and can't read the contents at all.
+- **TLS**: secures the connection between a client and a server. The message is encrypted in transit, but the server decrypts it on arrival and can read the contents.
+- **E2EE**: secures the entire path from sender to recipient. The server only ever handles encrypted data and can't read the contents at all.
 
 ```mermaid
 flowchart LR
@@ -59,7 +59,7 @@ flowchart LR
     end
 ```
 
-TLS solves the problem of interception in transit. E2EE goes further — even the service provider can't read your messages.
+TLS solves the problem of interception in transit. E2EE goes further: even the service provider can't read your messages.
 
 ---
 
@@ -67,8 +67,8 @@ TLS solves the problem of interception in transit. E2EE goes further — even th
 
 E2EE uses asymmetric encryption (public-key cryptography). Each user has a key pair:
 
-- Public key — shared openly, used to encrypt messages
-- Private key — never leaves the user's device, used to decrypt messages
+- **Public key**: shared openly, used to encrypt messages
+- **Private key**: never leaves the user's device, used to decrypt messages
 
 The process:
 
@@ -101,7 +101,7 @@ Throughout this entire process, the server only ever sees ciphertext. It has no 
 
 ### Strong privacy
 
-Only the two parties in the conversation can read the messages. The service provider, the network operator, and even governments cannot access the content — not without obtaining someone's private key.
+Only the two parties in the conversation can read the messages. The service provider, the network operator, and even governments cannot access the content, not without obtaining someone's private key.
 
 ### Protection against interception
 
@@ -125,7 +125,7 @@ Using the same private key across multiple devices requires a secure sync mechan
 
 ### Legal and regulatory challenges
 
-E2EE makes lawful interception difficult. Even if a court orders a service provider to hand over communications, the provider genuinely cannot — the content is inaccessible to them too.
+E2EE makes lawful interception difficult. Even if a court orders a service provider to hand over communications, the provider genuinely cannot; the content is inaccessible to them too.
 
 ### Performance overhead
 
@@ -133,13 +133,13 @@ Encryption and decryption require computation. On resource-constrained devices, 
 
 ### Feature limitations
 
-Because the provider can't read content, features that depend on content access — keyword search, content moderation, targeted advertising — either don't work or need workarounds.
+Because the provider can't read content, features that depend on content access (keyword search, content moderation, targeted advertising) either don't work or need workarounds.
 
 ---
 
 ## Summary
 
-E2EE keeps encryption and decryption at the endpoints only. No server, no intermediary, no service provider can read the contents — only the sender and recipient.
+E2EE keeps encryption and decryption at the endpoints only. No server, no intermediary, no service provider can read the contents; only the sender and recipient.
 
 The mechanism is asymmetric encryption: a public key encrypts, a private key decrypts, and the private key never leaves the user's device.
 

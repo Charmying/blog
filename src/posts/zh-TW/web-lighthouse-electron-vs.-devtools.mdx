@@ -82,7 +82,7 @@ Puppeteer 與 Playwright 透過 WebSocket 的 Chrome DevTools Protocol (CDP) 連
 
 日常使用的 Chrome 瀏覽器完整啟用了系統層級的 GPU 硬體加速。Puppeteer 為了確保在 headless 環境與 CI 流程中的穩定性，通常帶上 `--disable-gpu` 旗標。
 
-少了 GPU 協助處理圖層合成 (Compositing)，渲染工作回落至 CPU。這直接造成 Speed Index 與 LCP 的結構性下 —— 是頁面變差了，而是測量環境的硬體支援不如日常瀏覽器。
+少了 GPU 協助處理圖層合成 (Compositing)，渲染工作回落至 CPU。這直接造成 Speed Index 與 LCP 的結構性下降，並非是頁面變差了，而是測量環境的硬體支援不如日常瀏覽器。
 
 ---
 
@@ -98,9 +98,9 @@ Electron 自動化工具每次都拉起一個全新、冰冷的 Chromium 實例�
 
 即使在同一台機器、相同配置下連續執行，同一個頁面跑兩次也不會得到完全相同的分數。主要的變動來源：
 
-- 作業系統排程 — macOS 的 GCD 或 Linux 的 CFS 會因為背景系統任務 (iCloud 同步、Spotlight 索引等) 動態抽調 CPU 時間片。一次排程中斷剛好發生在 JavaScript 執行期間，TBT 就會被拉高一個難以預測的量。
-- V8 Major GC — 批量測試期間記憶體堆積，V8 會周期性觸發 Major GC (Mark-Sweep-Compact)。如果 GC 週期剛好與稽核視窗重疊，TBT 可能偏移 ±15 分，完全取決於時機點。
-- CPU 散熱降頻 — 持續的高負載讓 CPU 溫度升高，硬體為了保護自身會強制降頻。第 1 個頁面測試時 CPU 跑在 3.2 GHz，第 20 個頁面時可能已降至 2.4 GHz。頁面沒有變差，是測量環境本身在物理層面退化了。
+- 作業系統排程：macOS 的 GCD 或 Linux 的 CFS 會因為背景系統任務 (iCloud 同步、Spotlight 索引等) 動態抽調 CPU 時間片。一次排程中斷剛好發生在 JavaScript 執行期間，TBT 就會被拉高一個難以預測的量。
+- V8 Major GC：批量測試期間記憶體堆積，V8 會週期性觸發 Major GC (Mark-Sweep-Compact)。如果 GC 週期剛好與稽核視窗重疊，TBT 可能偏移 ±15 分，完全取決於時機點。
+- CPU 散熱降頻：持續的高負載讓 CPU 溫度升高，硬體為了保護自身會強制降頻。第 1 個頁面測試時 CPU 跑在 3.2 GHz，第 20 個頁面時可能已降至 2.4 GHz。頁面沒有變差，是測量環境本身在物理層面退化了。
 
 這些因素不限於 Electron，任何自動化 Lighthouse 工具都會受到影響。
 

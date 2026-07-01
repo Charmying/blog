@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript var, let, and const: Key Differences and When to Use Each',
   date: '2026-03-16',
-  excerpt: 'A practical guide to var, let, and const — covering scope, hoisting, the temporal dead zone, redeclaration, reassignment, and the classic for loop gotcha.',
+  excerpt: 'A practical guide to var, let, and const, covering scope, hoisting, the temporal dead zone, redeclaration, reassignment, and the classic for loop gotcha.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -33,9 +33,9 @@ mindmap
 
 ## Scope
 
-`var` is function-scoped — it's only limited by function boundaries, not by blocks `{}`.
+`var` is function-scoped: it's only limited by function boundaries, not by blocks `{}`.
 
-`let` and `const` are block-scoped — they only exist within the `{}` they're declared in.
+`let` and `const` are block-scoped: they only exist within the `{}` they're declared in.
 
 ```javascript
 // var is not block-scoped
@@ -71,7 +71,7 @@ Block scope helps you:
 
 ## Hoisting and the Temporal Dead Zone
 
-All three — `var`, `let`, and `const` — are hoisted, but they behave differently.
+All three (`var`, `let`, and `const`) are hoisted, but they behave differently.
 
 ### `var`
 `var` is initialized to `undefined` during the creation phase, so accessing it before the declaration doesn't throw an error:
@@ -93,10 +93,10 @@ Accessing them before the declaration throws an error:
 console.log(i); // ReferenceError: Cannot access 'i' before initialization
 let i = 5;
 ```
-The TDZ makes bugs easier to catch — you'll know immediately if you're using a variable before it's declared.
+The TDZ makes bugs easier to catch: you'll know immediately if you're using a variable before it's declared.
 
 ### Variable Lifecycle
-The difference between `var`, `let`, and `const` becomes clearer when you understand the three phases of a variable's lifecycle. A variable goes through three phases:
+The difference between `var`, `let`, and `const` becomes clearer when you understand the three phases of a variable's lifecycle:
 1. Creation: when the execution context is set up, JavaScript scans all variable declarations and binds them. This is what hoisting actually is.
 2. Initialization: `var` is automatically set to `undefined` during creation. `let` and `const` enter the TDZ and are left uninitialized.
 3. Assignment: the variable gets its value when the declaration line is executed. For `const`, declaration and assignment must happen together.
@@ -144,7 +144,7 @@ const count = 0;
 count = 1; // TypeError: Assignment to constant variable.
 ```
 
-However, if a `const` variable holds an object or array, you can still modify its contents — you just can't reassign the variable itself:
+However, if a `const` variable holds an object or array, you can still modify its contents; you just can't reassign the variable itself:
 
 ```javascript
 const user = { name: "Charmy" };
@@ -184,11 +184,11 @@ You might expect `0 1 2`, but you get `3 3 3`. There are two reasons:
 
 Reason 1: Async execution order
 
-`setTimeout` callbacks run after the `for` loop has already finished. JavaScript is asynchronous — during the 100ms delay, the loop completes entirely before any callback fires.
+`setTimeout` callbacks run after the `for` loop has already finished. JavaScript is asynchronous: during the 100ms delay, the loop completes entirely before any callback fires.
 
 Reason 2: `var` is function-scoped
 
-Since there's no wrapping function, `var i` lives in the global scope. The entire loop shares a single `i`. By the time the callbacks run, `i` is already `3` — so all three log `3`.
+Since there's no wrapping function, `var i` lives in the global scope. The entire loop shares a single `i`. By the time the callbacks run, `i` is already `3`, so all three log `3`.
 
 ---
 
@@ -214,7 +214,7 @@ Output:
 
 ---
 
-Before `let`, the workaround was an IIFE — functional, but awkward:
+Before `let`, the workaround was an IIFE (functional, but awkward):
 
 ```javascript
 for (var i = 0; i < 3; i++) {

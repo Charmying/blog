@@ -1,7 +1,7 @@
 export const metadata = {
   title: '設計模式：工廠方法 (Factory Method)',
   date: '2026-06-30',
-  excerpt: '介紹創建型設計模式中的工廠方 —— 物件的建立延遲到子類別，讓建立邏輯可以在不修改原有程式碼的情況下擴充。',
+  excerpt: '介紹創建型設計模式中的工廠方法模式：物件的建立延遲到子類別，讓建立邏輯可以在不修改原有程式碼的情況下擴充。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 工廠方法 (Factory Method) 是創建型模式，用來解決一個問題：一個父類別知道自己需要建立物件，卻不知道該建立哪個具體型別。
 
-它把建立物件這件事定義成一個介面 (也就是工廠方法)，再交由子類別決定要實例化哪個具體類別。
+它把建立物件這件事定義成一個介面 (也就是工廠方法)，再交由子類別決定要實體化哪個具體類別。
 
 ```mermaid
 mindmap
@@ -85,7 +85,7 @@ class PushNotification implements Notification {
   }
 }
 
-// Creator 抽象類 —— 義工廠方法
+// Creator 抽象類別：定義工廠方法
 abstract class NotificationSender {
   // 工廠方法：由子類別實作
   abstract createNotification(target: string): Notification;
@@ -158,7 +158,7 @@ function createNotification(type: 'email' | 'sms', target: string): Notification
 }
 ```
 
-Factory Method 的價值，在於它結合了繼承帶來的共用邏 ——  Creator 除了工廠方法之外還有共用的業務邏輯、整個樣板方法 (Template Method) 結構已經就位時，就是它派上用場的時機。
+Factory Method 的價值，在於它結合了繼承帶來的共用邏輯，當 Creator 除了工廠方法之外還有共用的業務邏輯、整個範本方法 (Template Method) 結構已經就位時，就是它派上用場的時機。
 
 ---
 
@@ -166,4 +166,4 @@ Factory Method 的價值，在於它結合了繼承帶來的共用邏 ——  Cr
 
 Factory Method 的核心就是「將建立物件的職責延遲到子類別」。
 
-這麼做的好處是，父類別不必知道具體型別就能操作物件，而子類別則掌控具體的建立方式。新增型別時，只要新增一個子類 —— 不必去改一條越長越長的 if-else，也不必動到既有的類別。
+這麼做的好處是，父類別不必知道具體型別就能操作物件，而子類別則掌控具體的建立方式。新增型別時，只要新增一個子類別，不必去改一條越長越長的 if-else，也不必動到既有的類別。

@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'Session and Session Attributes',
   date: '2026-05-14',
-  excerpt: 'A practical guide to sessions and session attributes — covering how sessions work, how to set and read attributes, implementation examples in Java, Node.js, Python, and PHP, and the differences between sessions, cookies, and SessionStorage.',
+  excerpt: 'A practical guide to sessions and session attributes, covering how sessions work, how to set and read attributes, implementation examples in Java, Node.js, Python, and PHP, and the differences between sessions, cookies, and SessionStorage.',
   tags: ['Front-end', 'Back-end', 'Security'],
 };
 
 # Session and Session Attributes
 
-HTTP is stateless — every request is independent, and the server has no memory of previous ones.
+HTTP is stateless: every request is independent, and the server has no memory of previous ones.
 
 Sessions solve this problem by giving the server a way to maintain user state across multiple requests. Session attributes are the individual pieces of data stored within a session.
 
@@ -39,9 +39,9 @@ Every session has a unique Session ID. The server sends this ID to the client (u
 
 Key characteristics of sessions:
 
-- Stored server-side — sensitive data is never exposed to the client
-- Has an expiry — sessions automatically invalidate after a period of inactivity
-- Isolated per user — each user's session is independent
+- **Stored server-side**: sensitive data is never exposed to the client
+- **Has an expiry**: sessions automatically invalidate after a period of inactivity
+- **Isolated per user**: each user's session is independent
 
 Common uses: login state, shopping carts, user preferences.
 
@@ -50,7 +50,7 @@ Common uses: login state, shopping carts, user preferences.
 ## How Sessions Work
 
 ```text
-1. User visits for the first time — server creates a session
+1. User visits for the first time: server creates a session
    Session ID: "abc123"
    Session Data: {}
 
@@ -169,12 +169,12 @@ session_destroy();
 | | Session | Cookie |
 | - | - | - |
 | Stored | Server-side | Client-side (browser) |
-| Security | Higher — sensitive data stays on the server | Lower — readable by the client |
+| Security | Higher (sensitive data stays on the server) | Lower (readable by the client) |
 | Capacity | Larger (server-limited) | ~4KB |
 | Lifetime | Expires or ends on logout | Configurable expiry |
 | Best for | Sensitive data (login state, permissions) | Non-sensitive preferences |
 
-The Session ID itself is typically stored in a cookie — but the session data lives on the server. This combination is how they're most commonly used together.
+The Session ID itself is typically stored in a cookie, but the session data lives on the server. This combination is how they're most commonly used together.
 
 ---
 
@@ -188,7 +188,7 @@ SessionStorage is a browser-side storage API. Despite the similar name, it's com
 | Scope | All pages within the same session | Single browser tab |
 | Lifetime | Until session expires or logout | Until tab is closed |
 | Cross-tab sharing | Yes | No |
-| Security | Higher — suitable for sensitive data | Not suitable for sensitive data |
+| Security | Higher (suitable for sensitive data) | Not suitable for sensitive data |
 | Typical uses | Login state, shopping cart, permissions | Form state, UI state |
 
 ---

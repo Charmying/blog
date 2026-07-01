@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Destructuring Assignment',
   date: '2026-03-20',
-  excerpt: 'A practical guide to JavaScript destructuring — covering array and object destructuring, default values, renaming, rest elements, and destructuring in function parameters.',
+  excerpt: 'A practical guide to JavaScript destructuring, covering array and object destructuring, default values, renaming, rest elements, and destructuring in function parameters.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -133,7 +133,7 @@ console.log(name); // "Charmy"
 console.log(city); // "Taichung"
 ```
 
-Note: `address` here is just a destructuring path — it doesn't become a variable. If you need both `address` and `city`, declare them separately:
+Note: `address` here is just a destructuring path; it doesn't become a variable. If you need both `address` and `city`, declare them separately:
 
 ```javascript
 const { address, address: { city } } = user;
@@ -161,7 +161,7 @@ console.log(name); // "Charmy"
 console.log(role); // "user"
 ```
 
-Defaults only trigger on `undefined` — not `null`:
+Defaults only trigger on `undefined`, not `null`:
 
 ```javascript
 const { value = 'default' } = { value: null };
@@ -261,4 +261,4 @@ Destructuring makes extracting values from arrays and objects concise and readab
 - Array destructuring extracts by position; object destructuring by property name
 - You can rename, set defaults, and collect the rest with `...`
 - Destructuring in function parameters keeps signatures clean and self-documenting
-- Default values only apply when the extracted value is `undefined` — not `null`
+- Default values only apply when the extracted value is `undefined`, not `null`

@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'JavaScript IIFE',
   date: '2026-03-18',
-  excerpt: 'A practical guide to JavaScript IIFEs — covering the syntax, why they exist, passing arguments, and when they are still useful in modern JavaScript.',
+  excerpt: 'A practical guide to JavaScript IIFEs, covering the syntax, why they exist, passing arguments, and when they are still useful in modern JavaScript.',
   tags: ['Front-end', 'JavaScript'],
 };
 
 # JavaScript IIFE
 
-An IIFE — Immediately Invoked Function Expression — is a function that defines and calls itself in the same breath. Write it, run it, done. Nothing gets added to the outer scope, no name left behind.
+An IIFE (Immediately Invoked Function Expression) is a function that defines and calls itself in the same breath. Write it, run it, done. Nothing gets added to the outer scope, no name left behind.
 
 The main reason to reach for one is scope isolation: keeping variables contained and out of the global environment.
 
@@ -57,7 +57,7 @@ There are two common ways to write an IIFE:
 }());
 ```
 
-Both work the same way — the only difference is where the closing parentheses go.
+Both work the same way; the only difference is where the closing parentheses go.
 
 Arrow functions work too:
 
@@ -113,7 +113,7 @@ When multiple JavaScript files share the same global environment, IIFEs prevent 
 })();
 ```
 
-Each `name` lives in its own isolated scope — no conflicts.
+Each `name` lives in its own isolated scope; no conflicts.
 
 ---
 
@@ -139,7 +139,7 @@ You can pass in any value:
 
 ## IIFEs in Modern JavaScript
 
-With ES6 came `let`, `const`, and ES Modules — and most of what IIFEs were used for is now handled natively.
+With ES6 came `let`, `const`, and ES Modules, and most of what IIFEs were used for is now handled natively.
 
 `let` and `const` are block-scoped, so you don't need an IIFE just to isolate variables:
 
@@ -185,4 +185,4 @@ Main uses:
 - Prevent variables from leaking into the global scope
 - Avoid naming conflicts between files or libraries
 
-In modern JavaScript, `let`, `const`, and ES Modules handle most of what IIFEs were built for. But you'll still see IIFEs in older codebases — and occasionally in new ones — so it's worth understanding how they work.
+In modern JavaScript, `let`, `const`, and ES Modules handle most of what IIFEs were built for. But you'll still see IIFEs in older codebases (and occasionally in new ones), so it's worth understanding how they work.

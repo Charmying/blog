@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Scope',
   date: '2026-03-16',
-  excerpt: 'A practical guide to JavaScript scope — covering global, function, and block scope, along with the scope chain and lexical scope.',
+  excerpt: 'A practical guide to JavaScript scope, covering global, function, and block scope, along with the scope chain and lexical scope.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 Scope determines where a variable can be accessed.
 
-Understanding scope is fundamental to understanding how variables behave in JavaScript — and how to avoid bugs caused by unexpected variable access.
+Understanding scope is fundamental to understanding how variables behave in JavaScript, and how to avoid bugs caused by unexpected variable access.
 
 ```mermaid
 mindmap
@@ -32,7 +32,7 @@ mindmap
 
 ## What Is Scope
 
-Scope defines the visibility of a variable — where in your code it can be read or modified.
+Scope defines the visibility of a variable: where in your code it can be read or modified.
 
 JavaScript has three types of scope:
 
@@ -214,7 +214,7 @@ function main() {
 main(); // "global"
 ```
 
-`printName` is defined in the global scope, so it looks up `name` from there — even though it's called inside `main`, where a local `name` exists.
+`printName` is defined in the global scope, so it looks up `name` from there, even though it's called inside `main`, where a local `name` exists.
 
 Lexical scope is the foundation for understanding closures.
 

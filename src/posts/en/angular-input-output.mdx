@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Angular @Input / @Output: Passing Data Between Components',
   date: '2026-03-23',
-  excerpt: 'A practical guide to Angular @Input and @Output — covering parent-to-child data passing, @Input options, EventEmitter, and the modern input() and output() API introduced in Angular 17.',
+  excerpt: 'A practical guide to Angular @Input and @Output, covering parent-to-child data passing, @Input options, EventEmitter, and the modern input() and output() API introduced in Angular 17.',
   tags: ['Front-end', 'Angular'],
 };
 
@@ -9,8 +9,8 @@ export const metadata = {
 
 Angular components communicate through two decorators:
 
-- `@Input` — passes data from a parent component down to a child
-- `@Output` — sends events from a child component up to a parent
+- **`@Input`**: passes data from a parent component down to a child
+- **`@Output`**: sends events from a child component up to a parent
 
 ```mermaid
 mindmap
@@ -179,7 +179,7 @@ export class AppComponent {
 
 Here's a complete example combining both `@Input` and `@Output` in a reusable input component:
 
-Child — text input component
+Child: text input component
 
 ```typescript
 import { Component, Input, Output, EventEmitter } from '@angular/core';
@@ -232,7 +232,7 @@ export class AppComponent {
 
 ## input() and output() (Angular 17+)
 
-Angular 17 introduced a Signal-based API — `input()` and `output()` — as a modern alternative to `@Input` and `@Output`.
+Angular 17 introduced a Signal-based API (`input()` and `output()`) as a modern alternative to `@Input` and `@Output`.
 
 ### input()
 
@@ -293,6 +293,6 @@ Both approaches work today. For new projects, `input()` and `output()` are the r
 
 ## Conclusion
 
-- `@Input` — parent passes data down to a child via property binding
-- `@Output` — child sends events up to a parent via `EventEmitter`
-- Angular 17+ offers `input()` and `output()` as Signal-integrated alternatives — cleaner syntax and better integration with the modern Angular reactivity model
+- **`@Input`**: parent passes data down to a child via property binding
+- **`@Output`**: child sends events up to a parent via `EventEmitter`
+- **Angular 17+ offers `input()` and `output()` as Signal-integrated alternatives**: cleaner syntax and better integration with the modern Angular reactivity model

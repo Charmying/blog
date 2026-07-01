@@ -1,13 +1,13 @@
 export const metadata = {
   title: '設計模式：享元模式 (Flyweight)',
   date: '2026-06-30',
-  excerpt: '介紹結構型設計模式中的享元模 —— 大量細小物件的情境下，如何透過共享內部狀態大幅減少記憶體使用量。',
+  excerpt: '介紹結構型設計模式中的享元模式：在大量細小物件的情境下，如何透過共享內部狀態大幅減少記憶體使用量。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
 # 設計模式：享元模式 (Flyweight)
 
-Flyweight 透過在大量細小物件之間共享相同的內部狀態，避免為每個實例都複製一份，藉此降低記憶體用量。
+Flyweight 透過在大量細小物件之間共享相同的內部狀態，避免為每個實體都複製一份，藉此降低記憶體用量。
 
 ```mermaid
 mindmap
@@ -31,7 +31,7 @@ mindmap
 
 假設一個文字編輯器裡有 100,000 個字元，每個字元都有字型、大小、顏色、位置。如果每個字元都各存一份「字型 + 大小 + 顏色」，記憶體用量會非常可觀。
 
-其實大多數使用相同字型與樣式的字元，可以共享同一個樣式物 —— 有位置才是每個字元各自獨有的。
+其實大多數使用相同字型與樣式的字元，可以共享同一個樣式物件，只有位置才是每個字元各自獨有的。
 
 ---
 
@@ -40,7 +40,7 @@ mindmap
 Flyweight 的關鍵，是把物件的狀態分成兩類：
 
 - 內在狀態 (Intrinsic State)：共享且不會改變的資料 → 存在 Flyweight 物件裡
-- 外在狀態 (Extrinsic State)：每個實例獨有、各不相同的資料 → 由客戶端在呼叫時傳入
+- 外在狀態 (Extrinsic State)：每個實體獨有、各不相同的資料 → 由客戶端在呼叫時傳入
 
 ---
 
@@ -67,7 +67,7 @@ class ConcreteCharacterStyle implements CharacterStyle {
   }
 }
 
-// Flyweight Factor —— 制共享的實例
+// Flyweight Factory：控制共享的實例
 class CharacterStyleFactory {
   private cache = new Map<string, CharacterStyle>();
 
@@ -118,7 +118,7 @@ console.log(`共享樣式數: ${factory.getCount()}`); // 2
 characters.slice(0, 3).forEach(c => c.style.render(c.char, c.x, c.y));
 ```
 
-105 個字元，卻只建立了 2 個樣式物 —— 享的工作交給工廠的快取完成。
+105 個字元，卻只建立了 2 個樣式物件，共享的工作交給工廠的快取完成。
 
 ---
 

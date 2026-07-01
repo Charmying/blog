@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'HTTP vs. HTTPS',
   date: '2026-04-03',
-  excerpt: 'A practical guide to HTTP vs. HTTPS — covering how TLS encryption works, the TLS Handshake, a side-by-side comparison, and why every site should use HTTPS today.',
+  excerpt: 'A practical guide to HTTP vs. HTTPS, covering how TLS encryption works, the TLS Handshake, a side-by-side comparison, and why every site should use HTTPS today.',
   tags: ['Network'],
 };
 
@@ -31,7 +31,7 @@ mindmap
 
 HTTP (HyperText Transfer Protocol) is the foundational protocol for data transfer on the web. It defines how clients (typically browsers) request resources from servers and how servers respond.
 
-HTTP transmits everything in plain text — no encryption of any kind. Anyone who can intercept the network traffic can read it directly, including usernames, passwords, and personal data.
+HTTP transmits everything in plain text, with no encryption of any kind. Anyone who can intercept the network traffic can read it directly, including usernames, passwords, and personal data.
 
 ---
 
@@ -41,9 +41,9 @@ HTTPS (HTTP Secure) is HTTP with a TLS (Transport Layer Security) encryption lay
 
 TLS provides three guarantees:
 
-- Encryption — transmitted data is encrypted and unreadable to third parties
-- Integrity — data can't be tampered with in transit
-- Authentication — you're actually connected to the server you think you are, not an impersonator
+- **Encryption**: transmitted data is encrypted and unreadable to third parties
+- **Integrity**: data can't be tampered with in transit
+- **Authentication**: you're actually connected to the server you think you are, not an impersonator
 
 HTTPS uses an SSL/TLS certificate to verify the server's identity. Certificates are issued by trusted third-party organizations called Certificate Authorities (CAs).
 
@@ -93,8 +93,8 @@ HTTP is plain text. On an unsecured network like a public Wi-Fi hotspot, anyone 
 
 Common attacks on HTTP:
 
-- Man-in-the-Middle (MITM) — an attacker intercepts traffic between client and server, reading or modifying the data
-- Eavesdropping — passively monitoring network traffic to capture credentials and sensitive information
+- **Man-in-the-Middle (MITM)**: an attacker intercepts traffic between client and server, reading or modifying the data
+- **Eavesdropping**: passively monitoring network traffic to capture credentials and sensitive information
 
 HTTPS encryption makes both attacks ineffective. Even if packets are intercepted, the attacker can't read the contents.
 
@@ -123,7 +123,7 @@ SSL certificates used to cost money. Let's Encrypt now provides free certificate
 
 ## Conclusion
 
-- HTTP — plain text, no encryption, vulnerable to interception and tampering
-- HTTPS — HTTP + TLS encryption, protecting confidentiality, integrity, and identity
-- The TLS Handshake negotiates encryption before any data flows — on modern hardware, the overhead is negligible
+- **HTTP**: plain text, no encryption, vulnerable to interception and tampering
+- **HTTPS**: HTTP + TLS encryption, protecting confidentiality, integrity, and identity
+- **The TLS Handshake negotiates encryption before any data flows**: on modern hardware, the overhead is negligible
 - Every site should use HTTPS today; free certificates are available through Let's Encrypt

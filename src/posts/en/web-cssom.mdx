@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'CSSOM: CSS Object Model',
   date: '2026-03-26',
-  excerpt: 'A practical guide to the CSSOM — covering how it is built, how to read and modify styles with getComputedStyle, element.style, and classList, and how to avoid Layout Thrashing for better rendering performance.',
+  excerpt: 'A practical guide to the CSSOM, covering how it is built, how to read and modify styles with getComputedStyle, element.style, and classList, and how to avoid Layout Thrashing for better rendering performance.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -32,7 +32,7 @@ mindmap
 
 ## What Is the CSSOM
 
-When the browser parses CSS, it builds all the style rules into a tree structure — the CSSOM.
+When the browser parses CSS, it builds all the style rules into a tree structure: the CSSOM.
 
 ```css
 /* CSS source */
@@ -74,7 +74,7 @@ flowchart TD
     cssom --> render
 ```
 
-CSS is a render-blocking resource. The browser won't start rendering until the CSSOM is fully built — without knowing all styles, it can't correctly construct the Render Tree. This is why `<link>` tags belong in `<head>`, so CSS starts downloading as early as possible.
+CSS is a render-blocking resource. The browser won't start rendering until the CSSOM is fully built; without knowing all styles, it can't correctly construct the Render Tree. This is why `<link>` tags belong in `<head>`, so CSS starts downloading as early as possible.
 
 JavaScript also interacts with CSSOM construction: a `<script>` tag appearing after a stylesheet will wait for the CSSOM to finish before executing, since the script might query styles.
 
@@ -86,7 +86,7 @@ JavaScript also interacts with CSSOM construction: a `<script>` tag appearing af
 
 Reading computed styles
 
-`element.style` only reads inline styles. To get the actual applied styles for an element — the final values after inheritance and cascade — use `getComputedStyle`:
+`element.style` only reads inline styles. To get the actual applied styles for an element (the final values after inheritance and cascade), use `getComputedStyle`:
 
 ```javascript
 const element = document.querySelector('p');
@@ -203,7 +203,7 @@ element.getBoundingClientRect()
 window.getComputedStyle(element)
 ```
 
-Interleaving reads and writes in a loop causes repeated forced layouts — a problem called Layout Thrashing:
+Interleaving reads and writes in a loop causes repeated forced layouts, a problem called Layout Thrashing:
 
 ```javascript
 // Bad: each read forces a recalculation
@@ -221,7 +221,7 @@ items.forEach(item => {
 
 ### Prefer Class Changes Over Inline Style Changes
 
-Toggling a class is more efficient than setting individual `style` properties — the browser can batch the recalculation.
+Toggling a class is more efficient than setting individual `style` properties; the browser can batch the recalculation.
 
 ### Use CSS Animations Instead of JavaScript Animations
 
@@ -232,6 +232,6 @@ CSS `transition` and `animation` run on the browser's compositor thread, bypassi
 ## Summary
 
 - The CSSOM is the tree structure built from parsed CSS; it merges with the DOM to form the Render Tree
-- CSS is render-blocking — the browser waits for a complete CSSOM before rendering
+- CSS is render-blocking: the browser waits for a complete CSSOM before rendering
 - Key CSSOM APIs: `element.style` (inline), `classList` (recommended), `getComputedStyle` (reading final values), `document.styleSheets` (stylesheet manipulation)
 - Avoid interleaving style reads and writes in loops to prevent Layout Thrashing

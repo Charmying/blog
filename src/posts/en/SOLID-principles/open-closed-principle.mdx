@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'SOLID Principles: Open/Closed Principle (OCP)',
   date: '2026-05-30',
-  excerpt: 'A practical guide to the Open/Closed Principle — what it actually means to be open for extension and closed for modification, with the classic shape area example and a real-world payment system.',
+  excerpt: 'A practical guide to the Open/Closed Principle: what it actually means to be open for extension and closed for modification, with the classic shape area example and a real-world payment system.',
   tags: ['Software Design', 'Best Practice', 'OOP'],
 };
 
@@ -40,7 +40,7 @@ The goal of OCP is: when requirements change, you don't have to touch code that'
 
 Two benefits:
 
-1. Less risk — code you don't touch can't break
+1. Less risk: code you don't touch can't break
 2. New features can be developed and tested in isolation
 
 ---
@@ -54,7 +54,7 @@ type Shape = { type: 'circle'; radius: number }
 
 function calculateArea(shape: Shape): number {
   if (shape.type === 'circle') {
-    return Math.PI * shape.radius  2;
+    return Math.PI * shape.radius ** 2;
   } else if (shape.type === 'rectangle') {
     return shape.width * shape.height;
   } else if (shape.type === 'triangle') {
@@ -64,7 +64,7 @@ function calculateArea(shape: Shape): number {
 }
 ```
 
-Every time you add a new shape, you must modify `calculateArea`. This function is closed for extension — you have to break it open every time.
+Every time you add a new shape, you must modify `calculateArea`. This function is closed for extension; you have to break it open every time.
 
 As the number of shapes grows, so does the if-else chain, and so does the blast radius of every change.
 
@@ -83,7 +83,7 @@ class Circle implements Shape {
   constructor(private radius: number) {}
 
   area(): number {
-    return Math.PI * this.radius  2;
+    return Math.PI * this.radius ** 2;
   }
 }
 
@@ -164,8 +164,8 @@ The `Checkout` class doesn't know or care what payment method it's working with.
 
 OCP in practice comes down to a few tools:
 
-- Interfaces / abstract classes — define the closed behavioral contract; concrete implementations are open
-- Strategy pattern — encapsulate swappable algorithms or behaviors as separate classes
-- Polymorphism — new behavior via new classes, not modified conditionals
+- **Interfaces / abstract classes**: define the closed behavioral contract; concrete implementations are open
+- **Strategy pattern**: encapsulate swappable algorithms or behaviors as separate classes
+- **Polymorphism**: new behavior via new classes, not modified conditionals
 
 The practical test: if adding a new feature requires editing code that already exists and is already tested, ask whether there's a design that would let you do it through addition instead.

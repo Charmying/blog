@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Scope Chain',
   date: '2026-03-16',
-  excerpt: 'A practical guide to the JavaScript scope chain — covering how variable lookup works, variable shadowing, and the connection to lexical scope.',
+  excerpt: 'A practical guide to the JavaScript scope chain, covering how variable lookup works, variable shadowing, and the connection to lexical scope.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -29,7 +29,7 @@ mindmap
 
 ## What Is the Scope Chain
 
-Every scope has access to its own variables — and to the variables of any outer scope that contains it.
+Every scope has access to its own variables and to the variables of any outer scope that contains it.
 
 These nested scopes form a chain, from the innermost to the outermost (global) scope.
 
@@ -73,7 +73,7 @@ test();
 
 ## Lookup Direction: Outward Only
 
-The scope chain only goes one way — from inner to outer. Outer scopes cannot access variables declared inside inner scopes.
+The scope chain only goes one way: from inner to outer. Outer scopes cannot access variables declared inside inner scopes.
 
 ```javascript
 function outer() {
@@ -87,7 +87,7 @@ function outer() {
 outer();
 ```
 
-`outer` has no access to `x` — it's locked inside `inner`.
+`outer` has no access to `x`; it's locked inside `inner`.
 
 This holds true for any level of nesting:
 
@@ -135,7 +135,7 @@ greet();
 console.log(name); // "global"
 ```
 
-Inside `greet`, `name` resolves to `"local"`. The outer `"global"` is shadowed — hidden, but not changed.
+Inside `greet`, `name` resolves to `"local"`. The outer `"global"` is shadowed: hidden, but not changed.
 
 Both variables coexist in their own scopes and don't affect each other.
 
@@ -182,7 +182,7 @@ This behavior is also what makes closures possible.
 The scope chain is how JavaScript resolves variable references:
 
 - Lookup starts in the current scope and moves outward toward global
-- The chain only goes outward — outer scopes can't access inner variables
+- The chain only goes outward; outer scopes can't access inner variables
 - Inner variables with the same name shadow outer ones
 - The chain is determined by where the code is written, not where it's called
 

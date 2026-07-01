@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Black-Box, White-Box, and Gray-Box Testing',
   date: '2026-05-12',
-  excerpt: 'A practical guide to black-box, white-box, and gray-box testing — covering the key techniques, when to use each, and how they fit together in a complete testing strategy.',
+  excerpt: 'A practical guide to black-box, white-box, and gray-box testing, covering the key techniques, when to use each, and how they fit together in a complete testing strategy.',
   tags: ['Testing', 'Software Design'],
 };
 
@@ -9,9 +9,9 @@ export const metadata = {
 
 Software testing methods are classified by how much the tester knows about the internal structure of the system:
 
-- Black-box testing — no knowledge of the internals; tests inputs and outputs only
-- White-box testing — full knowledge of the internals; tests are designed based on the code structure
-- Gray-box testing — partial knowledge of the internals
+- **Black-box testing**: no knowledge of the internals; tests inputs and outputs only
+- **White-box testing**: full knowledge of the internals; tests are designed based on the code structure
+- **Gray-box testing**: partial knowledge of the internals
 
 ```mermaid
 mindmap
@@ -39,7 +39,7 @@ mindmap
 
 ### Concept and Characteristics
 
-Black-box testing treats the system as a black box — the tester only knows what goes in and what should come out, with no knowledge of or interest in how it works internally.
+Black-box testing treats the system as a black box: the tester only knows what goes in and what should come out, with no knowledge of or interest in how it works internally.
 
 ```mermaid
 flowchart LR
@@ -87,10 +87,10 @@ Useful for logic with multiple condition combinations:
 
 ### When to Use It
 
-- Acceptance testing — confirming the product meets user requirements
-- Functional testing — verifying features work as specified
-- Regression testing — ensuring existing features still work after changes
-- API testing — validating input/output behavior against documentation
+- **Acceptance testing**: confirming the product meets user requirements
+- **Functional testing**: verifying features work as specified
+- **Regression testing**: ensuring existing features still work after changes
+- **API testing**: validating input/output behavior against documentation
 
 ---
 
@@ -138,11 +138,11 @@ function classify(score) {
 
 Path Coverage
 
-Every possible execution path through the code is tested, including all combinations of conditions. Path coverage is the most thorough — and the hardest to achieve at 100%.
+Every possible execution path through the code is tested, including all combinations of conditions. Path coverage is the most thorough, and the hardest to achieve at 100%.
 
 Unit Testing
 
-The most common form of white-box testing — testing individual functions or modules in isolation:
+The most common form of white-box testing: testing individual functions or modules in isolation:
 
 ```javascript
 // The function under test
@@ -160,16 +160,16 @@ test('add should return the sum of two numbers', () => {
 
 ### When to Use It
 
-- Unit testing — testing individual functions or modules
-- Integration testing — testing interactions between modules
-- Security testing — identifying vulnerabilities in the code
-- Code coverage analysis — measuring how much of the codebase is tested
+- **Unit testing**: testing individual functions or modules
+- **Integration testing**: testing interactions between modules
+- **Security testing**: identifying vulnerabilities in the code
+- **Code coverage analysis**: measuring how much of the codebase is tested
 
 ---
 
 ## Gray-Box Testing
 
-Gray-box testing sits between black-box and white-box — the tester has partial knowledge of the system's internals, but not full visibility.
+Gray-box testing sits between black-box and white-box: the tester has partial knowledge of the system's internals, but not full visibility.
 
 Common scenarios:
 
@@ -196,8 +196,8 @@ Gray-box testing produces more targeted test cases than pure black-box testing, 
 
 ## Conclusion
 
-- Black-box testing — tests from the outside; no code knowledge required; validates that the system behaves according to requirements
-- White-box testing — tests from the inside; based on code structure; ensures all paths and branches are covered
-- Gray-box testing — partial internal knowledge; enables more targeted testing
+- **Black-box testing**: tests from the outside; no code knowledge required; validates that the system behaves according to requirements
+- **White-box testing**: tests from the inside; based on code structure; ensures all paths and branches are covered
+- **Gray-box testing**: partial internal knowledge; enables more targeted testing
 
 In practice, a solid testing strategy combines all three: developers write unit tests (white-box), QA engineers handle functional and acceptance testing (black-box), and integration tests often fall somewhere in between (gray-box).

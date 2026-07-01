@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Functions: Understanding the Fundamentals',
   date: '2026-03-15',
-  excerpt: 'A practical guide to JavaScript functions — covering declarations, expressions, parameters, return values, callbacks, scope, hoisting and higher-order functions.',
+  excerpt: 'A practical guide to JavaScript functions, covering declarations, expressions, parameters, return values, callbacks, scope, hoisting and higher-order functions.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 When you find yourself writing the same logic more than once, that's usually a sign it belongs in a function.
 
-Functions let you break a program into small, focused pieces — making your code easier to read, maintain, and reuse.
+Functions let you break a program into small, focused pieces, making your code easier to read, maintain, and reuse.
 
 ```mermaid
 mindmap
@@ -47,9 +47,9 @@ flowchart LR
     Input --> Process --> Output
 ```
 
-- Input — data passed into the function (parameters)
-- Process — the logic that runs inside
-- Output — the returned value
+- **Input**: data passed into the function (parameters)
+- **Process**: the logic that runs inside
+- **Output**: the returned value
 
 For example:
 
@@ -107,12 +107,12 @@ plus(500, 600);
 
 The benefits:
 
-- Reusability — write the logic once, use it anywhere
-- Readability — a well-named function is self-documenting:
+- **Reusability**: write the logic once, use it anywhere
+- **Readability**: a well-named function is self-documenting:
     createUser();
     sendEmail();
     validateForm();
-- Modularity — split a large program into small, focused pieces
+- **Modularity**: split a large program into small, focused pieces
 
 ---
 
@@ -294,7 +294,7 @@ process(function () {
 });
 ```
 
-Callbacks are everywhere in JavaScript — array methods, event handlers, timers:
+Callbacks are everywhere in JavaScript: array methods, event handlers, timers:
 
 ```javascript
 [1, 2, 3].map(function (n) {
@@ -333,7 +333,7 @@ console.log(a); // ReferenceError
 
 ## Hoisting
 
-Function declarations are hoisted — JavaScript processes them before the code runs, so you can call them before they're defined:
+Function declarations are hoisted: JavaScript processes them before the code runs, so you can call them before they're defined:
 
 ```javascript
 sayHello();
@@ -367,7 +367,7 @@ numbers.map(function (n) {
 });
 ```
 
-`map` is a higher-order function — it takes a callback and applies it to each element.
+`map` is a higher-order function: it takes a callback and applies it to each element.
 
 Common examples:
 
@@ -407,7 +407,7 @@ fetch(url).then(function (response) {
 
 ---
 
-## What happens when a function is executed
+## What Happens When a Function Is Executed
 
 When a function is called, JavaScript:
 
@@ -434,4 +434,4 @@ Once you're comfortable with functions, the natural next topics are:
 - Closures
 - `this`
 
-These aren't separate topics — they're all part of how functions actually work.
+These aren't separate topics; they're all part of how functions actually work.

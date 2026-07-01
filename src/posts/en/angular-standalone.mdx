@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Understanding Angular Standalone Components',
   date: '2026-03-22',
-  excerpt: 'A practical guide to Angular standalone components — covering the basic syntax, importing dependencies, bootstrapApplication, how it compares to NgModule, and routing with lazy loading.',
+  excerpt: 'A practical guide to Angular standalone components, covering the basic syntax, importing dependencies, bootstrapApplication, how it compares to NgModule, and routing with lazy loading.',
   tags: ['Front-end', 'Angular'],
 };
 
@@ -33,9 +33,9 @@ mindmap
 
 ## What Is a Standalone Component
 
-In the traditional Angular architecture, every component has to be declared inside a NgModule's `declarations` array before it can be used. NgModules are responsible for wiring up the dependencies between components, directives, and pipes.
+In the traditional Angular architecture, every component has to be declared inside an NgModule's `declarations` array before it can be used. NgModules are responsible for wiring up the dependencies between components, directives, and pipes.
 
-Standalone components change that: each component declares its own dependencies and doesn't need a NgModule.
+Standalone components change that: each component declares its own dependencies and doesn't need an NgModule.
 
 This makes components more self-contained and portable, and removes a lot of the boilerplate that came with NgModule-based projects.
 
@@ -72,7 +72,7 @@ export class HelloComponent {}
 
 ## Importing Dependencies
 
-Standalone components use the `imports` array to declare what they need — other components, directives, pipes, and Angular's built-in modules.
+Standalone components use the `imports` array to declare what they need: other components, directives, pipes, and Angular's built-in modules.
 
 ### Using Built-in Directives
 
@@ -139,7 +139,7 @@ export class FormComponent {
 
 ## bootstrapApplication
 
-Traditional Angular apps bootstrap through a NgModule. Standalone apps use `bootstrapApplication` instead:
+Traditional Angular apps bootstrap through an NgModule. Standalone apps use `bootstrapApplication` instead:
 
 ```typescript
 // main.ts
@@ -178,7 +178,7 @@ bootstrapApplication(AppComponent, {
 | Complexity | Higher, requires extra NgModules | Lower, flatter structure |
 | Angular version | All versions | v14+ (default in v17+) |
 
-Standalone doesn't replace NgModule — it's a simpler alternative. Existing NgModule-based code still works, and you can migrate gradually.
+Standalone doesn't replace NgModule; it's a simpler alternative. Existing NgModule-based code still works, and you can migrate gradually.
 
 ---
 
@@ -235,7 +235,7 @@ export const adminRoutes: Routes = [
 
 Standalone components simplify Angular development:
 
-- Components manage their own dependencies — no NgModule required
+- **Components manage their own dependencies**: no NgModule required
 - `bootstrapApplication` replaces the traditional module-based bootstrap
 - `loadComponent` makes lazy loading straightforward, without extra NgModule wrappers
 - Default since Angular 17, and the standard approach for modern Angular projects

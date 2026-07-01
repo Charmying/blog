@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Execution Context',
   date: '2026-03-19',
-  excerpt: 'A practical guide to JavaScript execution context — covering global and function contexts, the two phases, the call stack, and how it connects to hoisting, scope, and closures.',
+  excerpt: 'A practical guide to JavaScript execution context, covering global and function contexts, the two phases, the call stack, and how it connects to hoisting, scope, and closures.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -55,7 +55,7 @@ In a browser, the global execution context's `this` points to `window`.
 
 ### Function Execution Context
 
-Created every time a function is called. Each call gets its own separate execution context — even if the same function is called multiple times.
+Created every time a function is called. Each call gets its own separate execution context, even if the same function is called multiple times.
 
 ```javascript
 function greet(name) {
@@ -105,15 +105,15 @@ let b = 2;
 
 ## The Call Stack
 
-JavaScript is single-threaded — it can only run one execution context at a time.
+JavaScript is single-threaded: it can only run one execution context at a time.
 
 The call stack keeps track of which execution contexts are active and in what order.
 
 Here's how it works:
 
-1. The program starts — the global execution context is pushed onto the stack
-2. A function is called — a new execution context is pushed on top
-3. The function finishes — its execution context is popped off
+1. The program starts: the global execution context is pushed onto the stack
+2. A function is called: a new execution context is pushed on top
+3. The function finishes: its execution context is popped off
 4. Execution resumes in the previous context
 
 ```javascript

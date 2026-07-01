@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Advanced Encryption Standard (AES)',
   date: '2026-04-29',
-  excerpt: 'A practical guide to AES — covering symmetric vs. asymmetric encryption, the three key lengths, and the differences between ECB, CBC, and GCM modes of operation.',
+  excerpt: 'A practical guide to AES, covering symmetric vs. asymmetric encryption, the three key lengths, and the differences between ECB, CBC, and GCM modes of operation.',
   tags: ['Security', 'Network'],
 };
 
@@ -38,11 +38,11 @@ mindmap
 
 ## What Is AES
 
-AES is a symmetric encryption algorithm — the same key encrypts and decrypts.
+AES is a symmetric encryption algorithm: the same key encrypts and decrypts.
 
 Designed by Belgian cryptographers Joan Daemen and Vincent Rijmen under the name Rijndael, it was selected by NIST as the US federal encryption standard in 2001.
 
-AES is a block cipher — it processes data in fixed 128-bit chunks.
+AES is a block cipher: it processes data in fixed 128-bit chunks.
 
 ---
 
@@ -130,7 +130,7 @@ Each column of the State is multiplied by a fixed matrix using GF(2⁸) (Galois 
 [3 1 1 2]   [d]   [d']
 ```
 
-This mixes each column's four bytes into four new bytes, creating a strong avalanche effect — changing a single input bit causes roughly half the output bits to flip.
+This mixes each column's four bytes into four new bytes, creating a strong avalanche effect: changing a single input bit causes roughly half the output bits to flip.
 
 ### AddRoundKey
 
@@ -159,7 +159,7 @@ flowchart LR
     P3["Plaintext block 3"] -->|AES encrypt| C3["Ciphertext block 3"]
 ```
 
-The problem: identical plaintext blocks produce identical ciphertext blocks — patterns in the data remain visible. ECB is fundamentally insecure. Don't use it.
+The problem: identical plaintext blocks produce identical ciphertext blocks; patterns in the data remain visible. ECB is fundamentally insecure. Don't use it.
 
 ### CBC (Cipher Block Chaining)
 
@@ -179,28 +179,28 @@ A random IV ensures the same plaintext always produces different ciphertext. Mor
 
 ### GCM (Galois/Counter Mode)
 
-The recommended choice. GCM provides AEAD — encryption and authentication together. Encryption is parallelizable (fast), and it produces an Authentication Tag that the receiver uses to verify the data hasn't been tampered with. TLS 1.3 uses AES-GCM as a primary cipher suite.
+The recommended choice. GCM provides AEAD (encryption and authentication together). Encryption is parallelizable (fast), and it produces an Authentication Tag that the receiver uses to verify the data hasn't been tampered with. TLS 1.3 uses AES-GCM as a primary cipher suite.
 
 ---
 
 ## Where AES Is Used
 
-Network transmission — HTTPS (TLS) uses AES-GCM to encrypt all data in transit.
+**Network transmission**: HTTPS (TLS) uses AES-GCM to encrypt all data in transit.
 
-Full-disk encryption — macOS FileVault, Windows BitLocker, and Linux LUKS all use AES.
+**Full-disk encryption**: macOS FileVault, Windows BitLocker, and Linux LUKS all use AES.
 
-File encryption — ZIP, 7z archives, and tools like VeraCrypt use AES.
+**File encryption**: ZIP, 7z archives, and tools like VeraCrypt use AES.
 
-Messaging apps — Signal, WhatsApp, and other E2EE apps use AES to encrypt message content.
+**Messaging apps**: Signal, WhatsApp, and other E2EE apps use AES to encrypt message content.
 
-Password managers — 1Password and Bitwarden use AES-256 to encrypt stored credentials.
+**Password managers**: 1Password and Bitwarden use AES-256 to encrypt stored credentials.
 
 ---
 
 ## Conclusion
 
-- AES is symmetric — the same key encrypts and decrypts
+- **AES is symmetric**: the same key encrypts and decrypts
 - Four steps per round: SubBytes (non-linear substitution), ShiftRows (row rotation), MixColumns (column mixing via GF(2⁸)), AddRoundKey (XOR with round key)
-- Three key lengths: 128, 192, 256 bits — more bits means more rounds
+- Three key lengths: 128, 192, 256 bits; more bits means more rounds
 - Modes: ECB is insecure and should never be used; CBC is secure but sequential; GCM is the recommended choice
 - Used everywhere: HTTPS, disk encryption, messaging apps, password managers

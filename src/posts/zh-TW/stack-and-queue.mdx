@@ -1,0 +1,197 @@
+export const metadata = {
+  title: 'Stack 與 Queue：掌控資料流的基礎與實踐',
+  date: '2026-08-01',
+  excerpt: '本文深入探討 Stack 與 Queue 兩種核心線性資料結構。透過 TypeScript、Python 與 Java 的程式碼實作，細心拆解 LIFO 與 FIFO 的操作邏輯，並解析其在底層記憶體與 runtime 中的時間複雜度表現。',
+  tags: ['資料結構'],
+};
+
+# Stack 與 Queue：掌控資料流的基礎與實踐
+
+在軟體開發的過程中，如何妥善且細心地梳理資料流向，是建構穩定系統的基石。當我們需要控管資料的存取順序時，Stack (堆疊) 與 Queue (佇列) 是最基礎也最可靠的選擇。
+
+這兩種資料結構雖然單純，卻各自代表了一種井然有序的紀律：
+
+- Stack (堆疊)：遵循後進先出 (LIFO, Last In, First Out) 的原則。
+- Queue (佇列)：守護先進先出 (FIFO, First In, First Out) 的公平。
+
+---
+
+## Stack：後進先出的內斂流動
+
+Stack 限制了資料的存取只能在同一個出口進行。最後一個被推入的元素，必須最先被移出並處理。
+
+### 核心操作與時空複雜度
+
+- `push`：將元素放入 Stack 頂端。時間複雜度為 $O(1)$。
+- `pop`：將頂端元素彈出並回傳。時間複雜度為 $O(1)$。
+- `peek`：查看頂端元素而不移除。時間複雜度為 $O(1)$。
+
+### 多語言實作實踐
+
+```typescript
+// TypeScript 實作
+class Stack<T> {
+  private storage: T[] = [];
+
+  push(item: T): void {
+    this.storage.push(item);
+  }
+
+  pop(): T | undefined {
+    return this.storage.pop();
+  }
+
+  peek(): T | undefined {
+    return this.storage[this.storage.length - 1];
+  }
+
+  get size(): number {
+    return this.storage.length;
+  }
+}
+```
+
+```python
+# Python 實作
+from typing import TypeVar, Generic, List, Optional
+
+T = TypeVar('T')
+
+class Stack(Generic[T]):
+    def __init__(self):
+        self._storage: List[T] = []
+
+    def push(self, item: T) -> None:
+        self._storage.append(item)
+
+    def pop(self) -> Optional[T]:
+        return self._storage.pop() if self._storage else None
+
+    def peek(self) -> Optional[T]:
+        return self._storage[-1] if self._storage else None
+
+    @property
+    def size(self) -> int:
+        return len(self._storage)
+```
+
+### 實際應用場景
+
+日常開發中，JavaScript 引擎便是利用 Call Stack 來追蹤函式的執行順序。每當呼叫一個函式，其執行上下文 (Execution Context) 就會被 `push` 進棧；當函式把工作完成後，再將其 `pop` 出去，把主導權交回前一個上下文。這種一脈相承的專注，就是 Stack 的核心特性。
+
+---
+
+## Queue：先進先出的踏實守候
+
+與 Stack 不同，Queue 開放了兩端的通道。資料在尾端 (Tail) 排隊加入，並從前端 (Head) 依序離開。先投入等待的元素，必定最早被處理。
+
+### 核心操作與時空複雜度
+
+- `enqueue`：讓元素在尾端加入排隊。時間複雜度為 $O(1)$。
+- `dequeue`：將前端等待最久的元素移出並處理。時間複雜度為 $O(1)$。
+
+```typescript
+// TypeScript 實作
+class Queue<T> {
+  private storage: T[] = [];
+
+  enqueue(item: T): void {
+    this.storage.push(item);
+  }
+
+  dequeue(): T | undefined {
+    // 提醒：JavaScript 的 Array.prototype.shift() 時間複雜度為 O(N)。
+    // 在高流量或大數據的實務場景中，資深高手會細心地改用雙向鏈結串列 (Doubly Linked List) 來維持 O(1) 的效能。
+    return this.storage.shift();
+  }
+
+  get size(): number {
+    return this.storage.length;
+  }
+}
+```
+
+```python
+# Python 實作
+# 由於 Python 的 list.pop(0) 具有 O(N) 的開銷，
+# 在此我們選用高效能的 collections.deque，以確保卓越的 O(1) 操作效能。
+from collections import deque
+from typing import TypeVar, Generic, Optional
+
+T = TypeVar('T')
+
+class Queue(Generic[T]):
+    def __init__(self):
+        self._storage = deque()
+
+    def enqueue(self, item: T) -> None:
+        self._storage.append(item)
+
+    def dequeue(self) -> Optional[T]:
+        return self._storage.popleft() if self._storage else None
+
+    @property
+    def size(self) -> int:
+        return len(self._storage)
+```
+
+### 實際應用場景
+
+在網頁非同步架構中，當非同步任務 (例如 `setTimeout` 或 API 請求) 完成時，其回呼函式 (Callback) 會被放進 Task Queue 中排隊。Event Loop 會很有耐心地等待主執行緒的 Call Stack 清空，再依序從 Task Queue 的最前端將任務請出來執行。這份踏實的守候，確保了非同步工作能夠被公正、有序地對待。
+
+---
+
+## 進階延伸：雙端佇列 (Deque) 的彈性
+
+在更複雜的系統架構中，有時我們需要兼顧 Stack 的專注與 Queue 的包容，這時就會引入 Deque (Double-ended Queue)。它允許我們在結構的前端與尾端，同時進行資料的投入與取出。
+
+在 Java 的 Collections Framework 中，當我們需要 Stack 的功能時，官方更推薦使用 `ArrayDeque` 來替代老舊的 `Stack` 類別。因為 `ArrayDeque` 表現得更輕巧、更高效，且免去了不必要的同步鎖負擔。
+
+```java
+// Java 範例：體會 Deque 帶來的優雅與多變
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class DataStructureNote {
+    public static void main(String[] args) {
+        // 作為 Stack 使用 (LIFO)
+        Deque<String> stack = new ArrayDeque<>();
+        stack.push("基礎步驟");
+        stack.push("進階細節");
+        System.out.println(stack.pop()); // 輸出 "進階細節"
+
+        // 作為 Queue 使用 (FIFO)
+        Deque<String> queue = new ArrayDeque<>();
+        queue.offer("第一位使用者");
+        queue.offer("第二位使用者");
+        System.out.println(queue.poll()); // 輸出 "第一位使用者"
+    }
+}
+```
+
+---
+
+## 精準的時空複雜度分析
+
+我們將 Stack 與 Queue (優化後) 的效能表現歸納如下：
+
+| 操作類型 | Stack | Queue (高度優化後) |
+| :--- | :--- | :--- |
+| 插入 (Push / Enqueue) | $O(1)$ | $O(1)$ |
+| 刪除 (Pop / Dequeue) | $O(1)$ | $O(1)$ |
+| 空間複雜度 | $O(N)$ | $O(N)$ |
+
+### 關於底層記憶體的細節
+
+不論是在 JavaScript 中直覺地使用 `Array.prototype.shift()`，還是在 Python 中對普通 list 使用 `pop(0)`，在底層機制中，這都意味著 runtime 需要把記憶體中後面的所有元素全都往前挪移一格。當資料量膨脹時，這會讓時間複雜度悄悄退化成 $O(N)$，成為系統的效能瓶頸。
+
+在前端使用鏈結串列結構封裝 Queue，或在 Python 中直接擁抱 `collections.deque`，是讓應用程式保持從容與優雅的小細節。
+
+---
+
+## 總結
+
+Stack 和 Queue 雖然單純，卻以最樸實的邏輯，承載了無數複雜系統的穩定運轉。
+
+- Stack 深入嵌套關係與狀態復原 (例如 Undo/Redo、頁面路由歷史)。
+- Queue 拓展廣度，精準處理資源分配與流量緩衝 (例如任務排程、訊息傳遞)。

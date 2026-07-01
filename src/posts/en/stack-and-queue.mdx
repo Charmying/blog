@@ -1,0 +1,198 @@
+export const metadata = {
+  title: 'Understanding Stacks and Queues: Foundations of Data Flow Control',
+  date: '2026-08-01',
+  excerpt: 'An in-depth exploration of Stacks and Queues as foundational linear data structures. Featuring concrete implementations in TypeScript, Python, and Java, this article breaks down LIFO and FIFO mechanics alongside a careful analysis of their time complexities.',
+  tags: ['Data Structures'],
+};
+
+# Understanding Stacks and Queues: Foundations of Data Flow Control
+
+In software engineering, carefully organizing how data flows is a vital step toward building stable, reliable applications. When a system requires precise control over the order of data access, Stacks and Queues serve as our most trusted foundation.
+
+Though simple in design, each structure enforces a beautiful form of order and discipline within our code:
+
+- Stack: Operates under the intuitive rule of Last-In, First-Out (LIFO).
+- Queue: Quietly upholds the fairness of First-In, First-Out (FIFO).
+
+---
+
+## Stack: The Quiet Flow of LIFO
+
+A Stack restricts data mutations to a single terminal. The very last element appended to this collection is always the first one to be extracted and processed.
+
+### Core Operations & Complexity
+
+- `push`: Appends an element to the top of the stack. Time complexity is $O(1)$.
+- `pop`: Removes and returns the top element. Time complexity is $O(1)$.
+- `peek`: Inspects the top element without disturbing its position. Time complexity is $O(1)$.
+
+### Multi-Language Implementations
+
+```typescript
+// TypeScript Implementation
+class Stack<T> {
+  private storage: T[] = [];
+
+  push(item: T): void {
+    this.storage.push(item);
+  }
+
+  pop(): T | undefined {
+    return this.storage.pop();
+  }
+
+  peek(): T | undefined {
+    return this.storage[this.storage.length - 1];
+  }
+
+  get size(): number {
+    return this.storage.length;
+  }
+}
+```
+
+```python
+# Python Implementation
+from typing import TypeVar, Generic, List, Optional
+
+T = TypeVar('T')
+
+class Stack(Generic[T]):
+    def __init__(self):
+        self._storage: List[T] = []
+
+    def push(self, item: T) -> None:
+        self._storage.append(item)
+
+    def pop(self) -> Optional[T]:
+        return self._storage.pop() if self._storage else None
+
+    def peek(self) -> Optional[T]:
+        return self._storage[-1] if self._storage else None
+
+    @property
+    def size(self) -> int:
+        return len(self._storage)
+```
+
+### Production Context
+
+In day-to-day development, the JavaScript engine relies entirely on a Call Stack to track function execution order. When a function is called, its execution context is `push`ed onto the stack; once it completes its work, it is `pop`ped off, seamlessly returning control to the previous context. This focused determination is the core charm of the Stack.
+
+---
+
+## Queue: The Patient Ingress of FIFO
+
+Unlike a Stack, a Queue leaves both ends open. Elements line up at the back (tail) and depart from the front (head). Those that arrive first are guaranteed to be served first.
+
+### Core Operations & Complexity
+
+- `enqueue`: Patiently adds an element to the back of the line. Time complexity is $O(1)$.
+- `dequeue`: Welcomes and removes the longest-waiting element from the front. Time complexity is $O(1)$.
+
+```typescript
+// TypeScript Implementation
+class Queue<T> {
+  private storage: T[] = [];
+
+  enqueue(item: T): void {
+    this.storage.push(item);
+  }
+
+  dequeue(): T | undefined {
+    // Note: Array.prototype.shift() runs in O(N) time.
+    // For high-throughput production scenarios, engineers implement a
+    // Doubly Linked List to maintain true O(1) dequeue performance.
+    return this.storage.shift();
+  }
+
+  get size(): number {
+    return this.storage.length;
+  }
+}
+```
+
+```python
+# Python Implementation
+# Because list.pop(0) incurs an O(N) memory reallocation cost in Python, 
+# we leverage collections.deque to preserve optimal O(1) efficiency.
+from collections import deque
+from typing import TypeVar, Generic, Optional
+
+T = TypeVar('T')
+
+class Queue(Generic[T]):
+    def __init__(self):
+        self._storage = deque()
+
+    def enqueue(self, item: T) -> None:
+        self._storage.append(item)
+
+    def dequeue(self) -> Optional[T]:
+        return self._storage.popleft() if self._storage else None
+
+    @property
+    def size(self) -> int:
+        return len(self._storage)
+```
+
+### Production Context
+
+In modern asynchronous web runtimes, when an async task (like a `setTimeout` or an API request) completes, its callback is gently placed into the Task Queue. The Event Loop waits patiently for the Call Stack to clear, then steadily `dequeue`s tasks from the front. This reliable stewardship ensures that every asynchronous task is handled fairly and predictably.
+
+---
+
+## Advanced Extensions: The Versatility of a Deque
+
+Sophisticated architectures frequently demand a synthesis of stack flexibility and queue fairness. This is achieved via a Deque (Double-ended Queue), which permits item insertions and deletions at both the head and the tail with equal grace.
+
+In Java's Collections Framework, modern best practices lean heavily toward using an `ArrayDeque` over the legacy `Stack` class when implementing LIFO logic. `ArrayDeque` is lightweight, exceptionally efficient, and entirely avoids the unnecessary overhead of synchronized locking. Similarly, Python’s built-in `collections.deque` stands as the highly optimized choice for sliding windows and double-ended pipelines.
+
+```java
+// Java Example: Embracing clarity and versatility with Deque
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public class DataStructureNote {
+    public static void main(String[] args) {
+        // Operating as a Stack (LIFO)
+        Deque<String> stack = new ArrayDeque<>();
+        stack.push("Base Layer");
+        stack.push("Refined Detail");
+        System.out.println(stack.pop()); // Outputs "Refined Detail"
+
+        // Operating as a Queue (FIFO)
+        Deque<String> queue = new ArrayDeque<>();
+        queue.offer("First Guest");
+        queue.offer("Second Guest");
+        System.out.println(queue.poll()); // Outputs "First Guest"
+    }
+}
+```
+
+---
+
+## Rigorous Time and Space Complexity Analysis
+
+Let's summarize the computational characteristics of Stacks and optimized Queues:
+
+| Operation | Stack | Queue (Highly Optimized) |
+| :--- | :--- | :--- |
+| Insertion (Push / Enqueue) | $O(1)$ | $O(1)$ |
+| Deletion (Pop / Dequeue) | $O(1)$ | $O(1)$ |
+| Space Complexity | $O(N)$ | $O(N)$ |
+
+### A Hidden Memory Detail
+
+Whether executing `Array.prototype.shift()` in JavaScript or calling `pop(0)` on a standard Python list, the underlying engine must shift all remaining elements forward in memory, silently degrading the runtime performance to $O(N)$.
+
+Wrapping front-end queue logic in a Doubly Linked List or embracing `collections.deque` in Python is a small but meaningful refinement that ensures your applications run smoothly under heavy workloads.
+
+---
+
+## Conclusion
+
+While Stacks and Queues are simple primitives, they carry the operational weight of complex systems with quiet humility.
+
+- Stacks shine through depth, thriving in nested structures and tracking state histories (like Undo/Redo or router histories).
+- Queues shine through breadth, excelling at fair resource coordination and traffic buffering (like task scheduling).

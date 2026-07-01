@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'SOLID Principles: Interface Segregation Principle (ISP)',
   date: '2026-06-01',
-  excerpt: 'A practical guide to the Interface Segregation Principle — what fat interfaces look like, why they cause problems, and how splitting them leads to cleaner, more flexible code.',
+  excerpt: 'A practical guide to the Interface Segregation Principle: what fat interfaces look like, why they cause problems, and how splitting them leads to cleaner, more flexible code.',
   tags: ['Software Design', 'Best Practice', 'OOP'],
 };
 
@@ -122,7 +122,7 @@ class AllInOnePrinter implements Printable, Scannable, Faxable, Copyable {
 }
 ```
 
-Code that needs scanning accepts `Scannable` — it doesn't need to know or care whether the device can also print or fax.
+Code that needs scanning accepts `Scannable`; it doesn't need to know or care whether the device can also print or fax.
 
 ---
 
@@ -172,4 +172,4 @@ Benefits:
 - No throwing from empty stubs (avoids LSP violations)
 - Different consumers depend only on the capabilities they use, completely isolated from the rest
 
-ISP and LSP go hand in hand — well-segregated interfaces mean subclasses are never forced to implement behavior they can't deliver.
+ISP and LSP go hand in hand; well-segregated interfaces mean subclasses are never forced to implement behavior they can't deliver.

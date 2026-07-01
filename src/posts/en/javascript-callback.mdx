@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript Callback Functions',
   date: '2026-03-18',
-  excerpt: 'A practical guide to JavaScript callback functions — covering synchronous and asynchronous callbacks, common use cases, Callback Hell and how to escape it, and the Error-First Callback convention.',
+  excerpt: 'A practical guide to JavaScript callback functions, covering synchronous and asynchronous callbacks, common use cases, Callback Hell and how to escape it, and the Error-First Callback convention.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 In JavaScript, a callback is just a function you pass into another function to be called later.
 
-Simple idea — but it shows up everywhere.
+Simple idea, but it shows up everywhere.
 
 ```mermaid
 mindmap
@@ -53,7 +53,7 @@ Hello, Charmy
 Goodbye!
 ```
 
-`sayBye` is passed into `greet` and called inside it — that makes it a callback.
+`sayBye` is passed into `greet` and called inside it; that makes it a callback.
 
 You can also pass an anonymous function directly:
 
@@ -81,7 +81,7 @@ const doubled = numbers.map(function (n) {
 console.log(doubled); // [2, 4, 6, 8, 10]
 ```
 
-`map` calls the callback on each element right away — no waiting involved.
+`map` calls the callback on each element right away; no waiting involved.
 
 Other common synchronous callbacks:
 
@@ -132,7 +132,7 @@ button.addEventListener("click", function () {
 });
 ```
 
-This callback fires when the user clicks the button — could be 1 second from now, could be never.
+This callback fires when the user clicks the button; it could fire 1 second from now, or never.
 
 ### Network Requests (legacy XMLHttpRequest)
 
@@ -301,10 +301,10 @@ fs.readFile("file.txt", "utf8", function (error, data) {
 
 ## Conclusion
 
-A callback is a function you pass into another function to be called at a specific point — immediately, or once some operation finishes.
+A callback is a function you pass into another function to be called at a specific point, either immediately or once some operation finishes.
 
-- Synchronous callbacks run immediately — `map`, `filter`, `forEach`
-- Asynchronous callbacks run later — `setTimeout`, event listeners, network requests
+- Synchronous callbacks run immediately: `map`, `filter`, `forEach`
+- Asynchronous callbacks run later: `setTimeout`, event listeners, network requests
 - Nest too many of them and you end up with Callback Hell
 - For error handling, the Error-First convention is the standard
 

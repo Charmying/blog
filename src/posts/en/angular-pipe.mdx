@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Understanding Angular Pipe',
   date: '2026-03-22',
-  excerpt: 'A practical guide to Angular pipes — covering built-in pipes, creating custom pipes, the difference between pure and impure pipes, and how to use them in standalone components.',
+  excerpt: 'A practical guide to Angular pipes, covering built-in pipes, creating custom pipes, the difference between pure and impure pipes, and how to use them in standalone components.',
   tags: ['Front-end', 'Angular'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 Pipes are Angular's way to transform data directly in templates.
 
-Instead of formatting logic living in the component, pipes let you handle it inline — keeping components cleaner and templates more expressive.
+Instead of formatting logic living in the component, pipes let you handle it inline, keeping components cleaner and templates more expressive.
 
 ```mermaid
 mindmap
@@ -49,7 +49,7 @@ And chain multiple pipes:
 {{ value | pipe1 | pipe2 }}
 ```
 
-Pipes don't modify the original data — they only change how it's displayed.
+Pipes don't modify the original data; they only change how it's displayed.
 
 ---
 
@@ -132,7 +132,7 @@ Formats percentages:
 
 ### JsonPipe
 
-Serializes an object to JSON — handy for debugging:
+Serializes an object to JSON (handy for debugging):
 
 ```html
 <pre>{{ user | json }}</pre>
@@ -283,7 +283,7 @@ export class FilterPipe implements PipeTransform {
 }
 ```
 
-Impure pipes re-run on every change detection cycle, so they catch mutations inside arrays and objects. The trade-off is performance — they can slow things down if the transformation is expensive.
+Impure pipes re-run on every change detection cycle, so they catch mutations inside arrays and objects. The trade-off is performance: they can slow things down if the transformation is expensive.
 
 Default to pure pipes. Use impure pipes only when you need them, and be mindful of the performance cost.
 
@@ -328,7 +328,7 @@ import { CommonModule } from '@angular/common';
 export class DemoComponent {}
 ```
 
-Custom pipes with `standalone: true` can be added directly to a component's `imports` — no NgModule needed.
+Custom pipes with `standalone: true` can be added directly to a component's `imports` (no NgModule needed).
 
 ---
 
@@ -338,6 +338,6 @@ Pipes keep formatting logic out of components and make templates more readable:
 
 - Built-in pipes handle dates, currency, numbers, strings, and async data
 - Custom pipes are built with `@Pipe` and `PipeTransform`
-- Pure pipes (the default) only recalculate on reference changes — better for performance
-- Impure pipes recalculate on every change detection cycle — use sparingly
+- **Pure pipes (the default) only recalculate on reference changes**: better for performance
+- **Impure pipes recalculate on every change detection cycle**: use sparingly
 - In standalone components, pipes go in the `imports` array

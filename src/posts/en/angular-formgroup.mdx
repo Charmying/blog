@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Angular FormGroup: Reactive Forms',
   date: '2026-03-23',
-  excerpt: 'A practical guide to Angular reactive forms — covering FormControl, FormGroup, built-in and custom validators, FormArray for dynamic fields, and form submission and reset.',
+  excerpt: 'A practical guide to Angular reactive forms: covering FormControl, FormGroup, built-in and custom validators, FormArray for dynamic fields, and form submission and reset.',
   tags: ['Front-end', 'Angular'],
 };
 
@@ -31,7 +31,7 @@ mindmap
 
 ## FormControl
 
-`FormControl` is the basic unit of a reactive form — it represents a single input field.
+`FormControl` is the basic unit of a reactive form: it represents a single input field.
 
 ```typescript
 import { Component } from '@angular/core';
@@ -218,7 +218,7 @@ Displaying the custom error:
 
 ## FormArray
 
-`FormArray` manages a dynamic list of form controls — useful when the number of fields isn't known upfront, like a list of phone numbers or line items.
+`FormArray` manages a dynamic list of form controls, useful when the number of fields isn't known upfront, like a list of phone numbers or line items.
 
 ```typescript
 import { Component } from '@angular/core';
@@ -305,9 +305,9 @@ this.form.reset({
 
 Reactive forms are built around three classes:
 
-- `FormControl` — a single field, manages its value and validation state
-- `FormGroup` — a group of fields representing a form or a section of one
-- `FormArray` — a dynamic list of controls for when the field count isn't fixed
+- **`FormControl`**: a single field, manages its value and validation state
+- **`FormGroup`**: a group of fields representing a form or a section of one
+- **`FormArray`**: a dynamic list of controls for when the field count isn't fixed
 
 | | FormControl | FormGroup | FormArray |
 | - | - | - | - |

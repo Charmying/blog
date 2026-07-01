@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'MVC vs. MVVM vs. MVW: Architectural Patterns Explained',
   date: '2026-04-11',
-  excerpt: 'A practical guide to MVC, MVVM, and MVW — covering how each pattern separates concerns, the difference in data flow, and how Angular, Vue, and React map to these patterns.',
+  excerpt: 'A practical guide to MVC, MVVM, and MVW: covering how each pattern separates concerns, the difference in data flow, and how Angular, Vue, and React map to these patterns.',
   tags: ['Architecture', 'Design Patterns'],
 };
 
@@ -31,9 +31,9 @@ mindmap
 
 MVC (Model-View-Controller) is the classic architectural pattern. It divides an application into three roles:
 
-- Model — data and business logic; manages application state and handles data storage and retrieval
-- View — the UI; responsible only for displaying data, no business logic
-- Controller — the intermediary; receives user input, updates the Model, and decides which View to show
+- **Model**: data and business logic; manages application state and handles data storage and retrieval
+- **View**: the UI; responsible only for displaying data, no business logic
+- **Controller**: the intermediary; receives user input, updates the Model, and decides which View to show
 
 ```mermaid
 flowchart TD
@@ -52,7 +52,7 @@ flowchart TD
 
 ### MVC's Problem
 
-In frontend applications, Controllers tend to grow bloated — taking on too much logic over time, a problem sometimes called "Massive View Controller." As applications scale, this becomes increasingly painful to manage.
+In frontend applications, Controllers tend to grow bloated, taking on too much logic over time, a problem sometimes called "Massive View Controller." As applications scale, this becomes increasingly painful to manage.
 
 ---
 
@@ -60,9 +60,9 @@ In frontend applications, Controllers tend to grow bloated — taking on too muc
 
 MVVM (Model-View-ViewModel) is an evolution of MVC, particularly well-suited to frontend frameworks with data binding.
 
-- Model — data and business logic, same as in MVC
-- View — the UI; declaratively describes the layout and structure
-- ViewModel — the View's data and state; provides what the View needs and handles View behavior, but never directly manipulates the DOM
+- **Model**: data and business logic, same as in MVC
+- **View**: the UI; declaratively describes the layout and structure
+- **ViewModel**: the View's data and state; provides what the View needs and handles View behavior, but never directly manipulates the DOM
 
 ```mermaid
 flowchart LR
@@ -76,15 +76,15 @@ The defining feature of MVVM is two-way data binding between View and ViewModel:
 - Model data changes → ViewModel updates → View updates automatically
 - User interacts with the View → ViewModel is notified → Model is updated
 
-Developers don't need to touch the DOM — the framework handles View updates automatically.
+Developers don't need to touch the DOM; the framework handles View updates automatically.
 
 ### Angular and MVVM
 
 Angular is a classic MVVM framework:
 
-- Model — Services and data objects
-- ViewModel — The Component's TypeScript class (properties and methods)
-- View — The Component's HTML template
+- **Model**: Services and data objects
+- **ViewModel**: The Component's TypeScript class (properties and methods)
+- **View**: The Component's HTML template
 
 ```typescript
 @Component({
@@ -107,11 +107,11 @@ export class CounterComponent {
 
 ### Vue and MVVM
 
-Vue is also a MVVM framework:
+Vue is also an MVVM framework:
 
-- Model — reactive data in `data()` or `ref()` / `reactive()`
-- ViewModel — logic in `setup()` or the Options API
-- View — the template
+- **Model**: reactive data in `data()` or `ref()` / `reactive()`
+- **ViewModel**: logic in `setup()` or the Options API
+- **View**: the template
 
 ```vue
 <template>
@@ -129,13 +129,13 @@ const count = ref(0);
 
 ## MVW
 
-MVW (Model-View-Whatever) was a term coined by the Angular team. The point: don't worry too much about what the middle layer is called — what matters is that you separate concerns properly.
+MVW (Model-View-Whatever) was a term coined by the Angular team. The point: don't worry too much about what the middle layer is called; what matters is that you separate concerns properly.
 
 It reflects a real-world truth: modern frameworks don't map cleanly onto traditional MVC or MVVM definitions, and forcing them into those boxes creates more confusion than clarity.
 
 ### Where React Fits
 
-React has never claimed to be MVC or MVVM. Officially, it's a View library — it handles rendering and nothing else.
+React has never claimed to be MVC or MVVM. Officially, it's a View library; it handles rendering and nothing else.
 
 How you organize state, data flow, and business logic is up to you (or delegated to tools like Redux or Zustand).
 
@@ -179,8 +179,8 @@ React's data flow is one-directional: state changes trigger re-renders. This is 
 
 ## Summary
 
-- MVC is the classic separation pattern — the Controller bridges View and Model
-- MVVM uses two-way data binding to keep View and ViewModel in sync automatically — well-suited to modern frontend frameworks
+- **MVC** is the classic separation pattern: the Controller bridges View and Model
+- **MVVM** uses two-way data binding to keep View and ViewModel in sync automatically, well-suited to modern frontend frameworks
 - MVW is the pragmatic acknowledgment that modern frameworks don't always fit neatly into traditional categories
 
 The goal behind all three is the same: keep UI, data, and logic separate, reduce coupling, and make the codebase easier to maintain.

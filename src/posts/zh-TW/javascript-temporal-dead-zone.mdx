@@ -35,7 +35,7 @@ mindmap
 
 從作用域開始，到宣告語句被執行為止，這段期間就是暫時死區。
 
-在 暫時死區內存取變數，會拋出 `ReferenceError`：
+在暫時死區內存取變數，會拋出 `ReferenceError`：
 
 ```javascript
 console.log(name); // ReferenceError: Cannot access 'name' before initialization
@@ -160,7 +160,7 @@ let count = 10;
 - `var` 沒有暫時死區，宣告前存取會得到 `undefined`
 - 暫時死區的設計讓錯誤更容易被發現，強制先宣告再使用
 
-理解 暫時死區之後，接下來通常會進一步學習：
+理解暫時死區之後，接下來通常會進一步學習：
 
 - Hoisting
 - Scope

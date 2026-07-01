@@ -185,12 +185,12 @@ flowchart TD
 
 三種渲染方式各有取捨，沒有絕對的最佳解：
 
-- CSR — 開發簡單、互動性好，但 SEO 和首次載入較弱
-- SSR — SEO 好、資料即時，但伺服器成本高
-- SSG — 速度最快、成本最低，但資料不即時
+- CSR：開發簡單、互動性好，但 SEO 和首次載入較弱
+- SSR：SEO 好、資料即時，但伺服器成本高
+- SSG：速度最快、成本最低，但資料不即時
 
 現代框架 (Next.js、Nuxt.js) 讓你可以在同一個專案中混用三種方式，對不同頁面選擇最適合的策略。
 
-其中值得一提的是 Next.js 的 ISR (Incremental Static Regeneration) —— SSG 的延伸，透過設定 `revalidate` 讓靜態頁面可以在背景定期重新生成，不需要完整重建整個網站。對於內容會更新但不需要每次請求都即時產生的頁面，ISR 是 SSG 與 SSR 之間實用的折衷選擇。
+其中值得一提的是 Next.js 的 ISR (Incremental Static Regeneration) (SSG 的延伸)，透過設定 `revalidate` 讓靜態頁面可以在背景定期重新生成，不需要完整重建整個網站。對於內容會更新但不需要每次請求都即時產生的頁面，ISR 是 SSG 與 SSR 之間實用的折衷選擇。
 
-CSR / SSR / SSG 是 Runtime 階段的渲染策略。無論採用哪種策略，瀏覽器收到 HTML 後都要走過同樣的渲染流程，參考 [瀏覽器渲染流程](/articles/web-browser-rendering)；想了解完整執行週期，參考 [從原始碼到畫面](/articles/web-sourcecode-to-screen)。
+CSR / SSR / SSG 是 Runtime 階段的渲染策略。無論採用哪種策略，瀏覽器收到 HTML 後都要走過同樣的渲染流程，參考 [瀏覽器渲染流程](/articles/web-browser-rendering)；想了解完整執行週期，參考 [從原始碼到畫面](/articles/web-source-to-screen)。

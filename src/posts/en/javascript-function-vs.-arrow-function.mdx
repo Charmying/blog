@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'Regular Functions vs. Arrow Functions: Key Differences and When to Use Each',
   date: '2026-03-16',
-  excerpt: 'A practical comparison of regular functions and arrow functions — covering this behavior, arguments, constructors, hoisting, and when to use each.',
+  excerpt: 'A practical comparison of regular functions and arrow functions, covering this behavior, arguments, constructors, hoisting, and when to use each.',
   tags: ['Front-end', 'JavaScript'],
 };
 
 # Regular Functions vs. Arrow Functions: Key Differences and When to Use Each
 
-Regular functions and arrow functions aren't just different ways to write the same thing — they actually behave differently, and the most important difference is how they handle `this`.
+Regular functions and arrow functions aren't just different ways to write the same thing: they actually behave differently, and the most important difference is how they handle `this`.
 
 ```mermaid
 mindmap
@@ -46,7 +46,7 @@ Arrow function:
 const plus = (a, b) => a + b;
 ```
 
-Arrow functions are more concise and support implicit returns — a natural fit for short callbacks and simple expressions.
+Arrow functions are more concise and support implicit returns, a natural fit for short callbacks and simple expressions.
 
 ---
 
@@ -55,7 +55,7 @@ Arrow functions are more concise and support implicit returns — a natural fit 
 This is the most important difference between the two.
 
 ### Regular Functions
-In a regular function, `this` is dynamic — it depends on who calls the function.
+In a regular function, `this` is dynamic: it depends on who calls the function.
 ```javascript
 const obj = {
   value: 10,
@@ -80,7 +80,7 @@ const obj = {
 
 obj.show();
 ```
-`this` doesn't point to `obj` — it points to whatever `this` is in the outer scope.
+`this` doesn't point to `obj`; it points to whatever `this` is in the outer scope.
 
 ### Real-World Example: `setTimeout`
 The difference becomes especially clear in async contexts.
@@ -155,7 +155,7 @@ const p = new Person("Charmy");
 console.log(p.name); // "Charmy"
 ```
 
-Arrow functions cannot — they have no `prototype` and don't support `new`:
+Arrow functions cannot; they have no `prototype` and don't support `new`:
 
 ```javascript
 const Person = (name) => {
@@ -242,7 +242,7 @@ function Person(name) {
   this.name = name;
 }
 ```
-#### When hoisting matters — for example, placing function definitions at the bottom of a file:
+#### When hoisting matters (for example, placing function definitions at the bottom of a file):
 ```javascript
 init();
 
@@ -257,6 +257,6 @@ function init() {
 
 Regular functions and arrow functions each have their place.
 
-Need dynamic this? Use a regular function. Need to inherit it from the outer scope? Use an arrow function.
+Need dynamic `this`? Use a regular function. Need to inherit it from the outer scope? Use an arrow function.
 
 Concise syntax is a nice perk of arrow functions, but it shouldn't be the only reason you reach for one. Understanding the differences is what lets you pick the right tool for the job.

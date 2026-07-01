@@ -43,11 +43,11 @@ Build Time 是在開發環境或 CI/CD 流程 (例如 GitHub Actions) 中執行�
 
 ### 轉譯與打包 (Transpiling & Bundling)
 
-工具 —— 例如 SWC 或 esbuild —— 把 TypeScript、JSX/TSX 轉成目標瀏覽器支援的 JavaScript。接著打包工具 (Vite 內建的 Rollup、Webpack) 分析整個模組依賴圖，將數百個分散的原始碼檔案合併成少數幾個 Bundle。
+工具 (例如 SWC 或 esbuild) 把 TypeScript、JSX/TSX 轉成目標瀏覽器支援的 JavaScript。接著打包工具 (Vite 內建的 Rollup、Webpack) 分析整個模組依賴圖，將數百個分散的原始碼檔案合併成少數幾個 Bundle。
 
 ### Tree-shaking 與 Code Splitting
 
-ES Modules 的靜態結構讓打包工具能在 AST 層級分析，找出「被引入但從未使用」的程式碼並剔 —— 就是 Tree-shaking，能顯著縮小 Bundle 體積。
+ES Modules 的靜態結構讓打包工具能在 AST 層級分析，找出「被引入但從未使用」的程式碼並剔除，這就是 Tree-shaking，能顯著縮小 Bundle 體積。
 
 Code Splitting 則利用動態 `import()` 把應用切成多個非同步 Chunks，讓初次載入只下載必要的程式碼，其餘按需載入。
 
@@ -94,7 +94,7 @@ SSR 需要一個持續運行的 Node.js 環境接收請求並即時渲染 HTML�
 
 ### Hydration
 
-SSG 和 SSR 的第一幀 HTML 有內容，使用者能立刻看到畫面，但此時頁面還沒有任何互動能 —— avaScript 還沒執行，事件監聽器都還沒綁定。
+SSG 和 SSR 的第一幀 HTML 有內容，使用者能立刻看到畫面，但此時頁面還沒有任何互動能力，JavaScript 還沒執行，事件監聽器都還沒綁定。
 
 Hydration (水合) 是讓靜態 HTML「活起來」的過程。框架不是重新建立整個 DOM，而是走過伺服器已渲染的 DOM 節點，和自己虛擬 DOM 的預期結構做比對，然後就地綁定事件監聽器：
 
@@ -118,7 +118,7 @@ hydrateRoot(container, <App />);
 常見誤解：Googlebot 無法執行 JavaScript。事實上，Google 使用基於 Chromium 的 Web Rendering Service (WRS) 是可以跑 JS 的，但索引流程是兩階段的：
 
 1. 第一階段 (即時解析)：爬蟲抓到 HTML 後立刻解析文字內容。SSR/SSG 頁面此時已有完整內容，可以立刻被精確索引。
-2. 第二階段 (延遲渲染)：純 CSR 頁面在第一階段只有空殼，Googlebot 會把它放進「渲染佇列」，等到雲端計算資源空閒再執行 J —— 個延遲可能是數天到數週。
+2. 第二階段 (延遲渲染)：純 CSR 頁面在第一階段只有空殼，Googlebot 會把它放進「渲染佇列」，等到雲端計算資源空閒再執行 JavaScript，這個延遲可能是數天到數週。
 
 對 SEO 有要求的頁面，SSR 或 SSG 能確保爬蟲在第一階段就拿到完整內容。
 
@@ -148,13 +148,13 @@ flowchart LR
 5. Paint：根據 Layout 結果繪製視覺元素 (文字、顏色、邊框、陰影)。
 6. Composite：各圖層提交給 GPU，按 z-index 順序合層輸出到螢幕。
 
-這條管線的快慢直接影響 Core Web Vital —— CP (First Contentful Paint) 衡量使用者首次看到有意義內容的時間；LCP (Largest Contentful Paint) 衡量最大可見元素完成渲染的時間。Chrome DevTools 的 Performance 面板可以錄製完整的渲染過程，幫助找出瓶頸所在。
+這條管線的快慢直接影響 Core Web Vital：FCP (First Contentful Paint) 衡量使用者首次看到有意義內容的時間；LCP (Largest Contentful Paint) 衡量最大可見元素完成渲染的時間。Chrome DevTools 的 Performance 面板可以錄製完整的渲染過程，幫助找出瓶頸所在。
 
 ### 效能關鍵：只觸發 Composite，跳過 Layout 和 Paint
 
 修改 `top`、`left` 等幾何屬性會觸發 Layout → Paint → Composite 的完整流程，每一幀都重新計算，代價高。
 
-`transform` 和 `opacity` 則只觸發 Composit —— 接交給 GPU 處理，完全繞過 Layout 和 Paint，動畫流暢度明顯更好：
+`transform` 和 `opacity` 則只觸發 Compositing，直接交給 GPU 處理，完全繞過 Layout 和 Paint，動畫流暢度明顯更好：
 
 ```css
 /* 每幀觸發 Layout → Paint → Composite */

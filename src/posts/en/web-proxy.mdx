@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Proxy: Forward Proxy and Reverse Proxy',
   date: '2026-03-30',
-  excerpt: 'A practical guide to proxies — covering how Forward Proxy and Reverse Proxy work, their common uses, and how to configure a Dev Server Proxy in frontend development.',
+  excerpt: 'A practical guide to proxies, covering how Forward Proxy and Reverse Proxy work, their common uses, and how to configure a Dev Server Proxy in frontend development.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -11,8 +11,8 @@ A proxy is an intermediary that sits between a client and a server, forwarding r
 
 There are two types, and the distinction comes down to which side the proxy represents:
 
-- Forward Proxy — acts on behalf of the client
-- Reverse Proxy — acts on behalf of the server
+- **Forward Proxy**: acts on behalf of the client
+- **Reverse Proxy**: acts on behalf of the server
 
 ```mermaid
 mindmap
@@ -70,7 +70,7 @@ flowchart LR
     client["Client"] --> proxy["Reverse Proxy"] --> server["Backend Server"]
 ```
 
-The client only knows the reverse proxy exists — it has no visibility into what's behind it.
+The client only knows the reverse proxy exists; it has no visibility into what's behind it.
 
 ### Common Uses
 
@@ -139,7 +139,7 @@ This routes `/api/` requests to a backend on port 3000, and serves the frontend'
 
 In frontend development, the dev server proxy is a specialized forward proxy used to work around CORS during local development.
 
-When your frontend on `localhost:4200` needs to call an API at `https://api.example.com`, the browser blocks the request due to cross-origin restrictions. The dev server proxy intercepts the request and forwards it on your behalf — the browser only sees `localhost:4200`, so no CORS error is triggered.
+When your frontend on `localhost:4200` needs to call an API at `https://api.example.com`, the browser blocks the request due to cross-origin restrictions. The dev server proxy intercepts the request and forwards it on your behalf; the browser only sees `localhost:4200`, so no CORS error is triggered.
 
 ```mermaid
 flowchart LR
@@ -195,6 +195,6 @@ Important: The dev server proxy only works in development. In production, CORS m
 
 ## Conclusion
 
-- Forward Proxy — acts on behalf of the client; used for bypassing restrictions, anonymity, and access control
-- Reverse Proxy — acts on behalf of the server; used for load balancing, SSL termination, and hiding backend infrastructure
-- Dev Server Proxy — a forward proxy for local development that bypasses CORS; not suitable for production
+- **Forward Proxy**: acts on behalf of the client; used for bypassing restrictions, anonymity, and access control
+- **Reverse Proxy**: acts on behalf of the server; used for load balancing, SSL termination, and hiding backend infrastructure
+- **Dev Server Proxy**: a forward proxy for local development that bypasses CORS; not suitable for production

@@ -105,7 +105,7 @@ observable.pipe(
 
 ### 轉換 Operator
 
-map — 對每個值進行轉換：
+**map**：對每個值進行轉換：
 
 ```typescript
 import { of } from 'rxjs';
@@ -117,7 +117,7 @@ of(1, 2, 3).pipe(
 // 2, 4, 6
 ```
 
-switchMap — 映射成新的 Observable，切換到最新的 (取消前一個)。常用於搜尋：
+**switchMap**：映射成新的 Observable，切換到最新的 (取消前一個)。常用於搜尋：
 
 ```typescript
 fromEvent(input, 'input').pipe(
@@ -126,7 +126,7 @@ fromEvent(input, 'input').pipe(
 ).subscribe(results => console.log(results));
 ```
 
-mergeMap — 映射成新的 Observable，所有同時執行，不取消前一個：
+**mergeMap**：映射成新的 Observable，所有同時執行，不取消前一個：
 
 ```typescript
 of(1, 2, 3).pipe(
@@ -134,7 +134,7 @@ of(1, 2, 3).pipe(
 ).subscribe(user => console.log(user));
 ```
 
-concatMap — 映射成新的 Observable，依序執行，等前一個完成才執行下一個：
+**concatMap**：映射成新的 Observable，依序執行，等前一個完成才執行下一個：
 
 ```typescript
 of(1, 2, 3).pipe(
@@ -144,7 +144,7 @@ of(1, 2, 3).pipe(
 
 ### 過濾 Operator
 
-filter — 只讓符合條件的值通過：
+**filter**：只讓符合條件的值通過：
 
 ```typescript
 of(1, 2, 3, 4, 5).pipe(
@@ -153,7 +153,7 @@ of(1, 2, 3, 4, 5).pipe(
 // 2, 4
 ```
 
-debounceTime — 在指定時間內沒有新值才讓值通過：
+**debounceTime**：在指定時間內沒有新值才讓值通過：
 
 ```typescript
 fromEvent(input, 'input').pipe(
@@ -161,7 +161,7 @@ fromEvent(input, 'input').pipe(
 ).subscribe(event => console.log(event.target.value));
 ```
 
-distinctUntilChanged — 只有在值與前一個不同時才讓值通過：
+**distinctUntilChanged**：只有在值與前一個不同時才讓值通過：
 
 ```typescript
 of(1, 1, 2, 2, 3).pipe(
@@ -170,7 +170,7 @@ of(1, 1, 2, 2, 3).pipe(
 // 1, 2, 3
 ```
 
-take — 只取前 n 個值：
+**take**：只取前 n 個值：
 
 ```typescript
 of(1, 2, 3, 4, 5).pipe(
@@ -181,7 +181,7 @@ of(1, 2, 3, 4, 5).pipe(
 
 ### 組合 Operator
 
-combineLatest — 任一 Observable 發出值時，取得所有 Observable 的最新值：
+**combineLatest**：任一 Observable 發出值時，取得所有 Observable 的最新值：
 
 ```typescript
 combineLatest([userStream$, postsStream$]).subscribe(
@@ -189,7 +189,7 @@ combineLatest([userStream$, postsStream$]).subscribe(
 );
 ```
 
-forkJoin — 等待所有 Observable 完成，類似 `Promise.all`：
+**forkJoin**：等待所有 Observable 完成，類似 `Promise.all`：
 
 ```typescript
 forkJoin([fetchUser(1), fetchPosts(1)]).subscribe(

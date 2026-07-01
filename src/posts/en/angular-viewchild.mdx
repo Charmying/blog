@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Angular @ViewChild',
   date: '2026-03-23',
-  excerpt: 'A practical guide to Angular @ViewChild — covering DOM element and child component references, @ViewChildren and QueryList, the static option, and the modern viewChild() Signal API in Angular 17+.',
+  excerpt: 'A practical guide to Angular @ViewChild, covering DOM element and child component references, @ViewChildren and QueryList, the static option, and the modern viewChild() Signal API in Angular 17+.',
   tags: ['Front-end', 'Angular'],
 };
 
@@ -189,8 +189,8 @@ ngAfterViewInit() {
 
 `@ViewChild` has a `static` option that defaults to `false`:
 
-- `static: false` (default) — resolved after change detection; available in `ngAfterViewInit`
-- `static: true` — resolved before change detection; available in `ngOnInit`, but only works for elements that aren't inside `*ngIf` or `*ngFor`
+- `static: false` (default): resolved after change detection; available in `ngAfterViewInit`
+- `static: true`: resolved before change detection; available in `ngOnInit`, but only works for elements that aren't inside `*ngIf` or `*ngFor`
 
 ```typescript
 @ViewChild('nameInput', { static: true }) nameInput!: ElementRef;
@@ -202,7 +202,7 @@ ngOnInit() {
 
 ### Don't Overuse It
 
-Direct DOM manipulation bypasses Angular's change detection and can lead to hard-to-track bugs. Reach for data binding first — use `@ViewChild` only when you genuinely need direct DOM access.
+Direct DOM manipulation bypasses Angular's change detection and can lead to hard-to-track bugs. Reach for data binding first; use `@ViewChild` only when you genuinely need direct DOM access.
 
 ---
 
@@ -248,7 +248,7 @@ ngAfterViewInit() {
 
 ## Summary
 
-- `@ViewChild` — gets a reference to a single DOM element or child component
-- `@ViewChildren` — gets a `QueryList` of all matching elements or components
+- **`@ViewChild`**: gets a reference to a single DOM element or child component
+- **`@ViewChildren`**: gets a `QueryList` of all matching elements or components
 - References aren't available until `ngAfterViewInit`
-- Angular 17+ offers `viewChild()` as a Signal-based alternative — the recommended approach for new projects
+- Angular 17+ offers `viewChild()` as a Signal-based alternative, the recommended approach for new projects

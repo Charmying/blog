@@ -1,7 +1,7 @@
 export const metadata = {
   title: '設計模式：橋接模式 (Bridge)',
   date: '2026-06-30',
-  excerpt: '介紹結構型設計模式中的橋接模 —— 何將抽象與實作分離，避免繼承層級爆炸，讓兩邊可以各自獨立演進。',
+  excerpt: '介紹結構型設計模式中的橋接模式：如何將抽象與實作分離，避免繼承層級爆炸，讓兩邊可以各自獨立演進。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
@@ -93,7 +93,7 @@ class SoundBar implements Device {
   }
 }
 
-// Abstractio —— 控器持有一個指向 Device 的引用 (這就是橋)
+// Abstraction：遙控器持有一個指向 Device 的引用 (這就是橋)
 class RemoteControl {
   constructor(protected device: Device) {}
 
@@ -111,7 +111,7 @@ class RemoteControl {
   }
 }
 
-// RefinedAbstractio —— 充功能，完全不動 Device 層
+// RefinedAbstraction：擴充功能，完全不動 Device 層
 class SmartRemoteControl extends RemoteControl {
   mute(): void {
     this.device.setVolume(0);
@@ -144,4 +144,4 @@ smartSoundbar.mute();
 
 Bridge 的核心就是「繼承 → 組合」的轉變。
 
-一旦發現某個類別可能往兩個彼此獨立的方向成長，就該考慮把其中一個維度抽出來、做成獨立的介 —— 就是橋。如此一來，兩邊都能完整擴充，而不必互相牽動。
+一旦發現某個類別可能往兩個彼此獨立的方向成長，就該考慮把其中一個維度抽出來、做成獨立的介面，這就是橋。如此一來，兩邊都能完整擴充，而不必互相牽動。

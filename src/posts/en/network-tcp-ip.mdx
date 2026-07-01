@@ -1,16 +1,16 @@
 export const metadata = {
   title: 'TCP/IP: The Foundation of Internet Communication',
   date: '2026-04-09',
-  excerpt: 'A practical guide to TCP/IP — covering IP addressing and packet routing, three-way handshake of TCP handshake and reliable delivery mechanisms, TCP vs. UDP, and the four-layer model.',
+  excerpt: 'A practical guide to TCP/IP, covering IP addressing and packet routing, the TCP three-way handshake and reliable delivery mechanisms, TCP vs. UDP, and the four-layer model.',
   tags: ['Network'],
 };
 
 # TCP/IP: The Foundation of Internet Communication
 
-Nearly all data transmission on the internet runs on TCP/IP — a combination of two protocols:
+Nearly all data transmission on the internet runs on TCP/IP, a combination of two protocols:
 
-- IP (Internet Protocol) — handles addressing and routing; determines where packets go
-- TCP (Transmission Control Protocol) — handles reliable delivery; ensures data arrives complete and in order
+- **IP (Internet Protocol)**: handles addressing and routing; determines where packets go
+- **TCP (Transmission Control Protocol)**: handles reliable delivery; ensures data arrives complete and in order
 
 ```mermaid
 mindmap
@@ -38,9 +38,9 @@ IP defines how devices on the internet are addressed and how data packets travel
 
 ### IP Addresses
 
-Every device on a network has an IP address — its unique identifier.
+Every device on a network has an IP address, its unique identifier.
 
-IPv4 — four groups of numbers from 0 to 255, separated by dots:
+IPv4: four groups of numbers from 0 to 255, separated by dots:
 
 ```
 192.168.1.1
@@ -49,7 +49,7 @@ IPv4 — four groups of numbers from 0 to 255, separated by dots:
 
 IPv4 supports around 4.3 billion addresses. With the explosion of connected devices, that's no longer enough.
 
-IPv6 — a 128-bit hexadecimal format with a vastly larger address space:
+IPv6: a 128-bit hexadecimal format with a vastly larger address space:
 
 ```
 2001:0db8:85a3:0000:0000:8a2e:0370:7334
@@ -63,7 +63,7 @@ IP doesn't send data as one continuous stream. It splits data into small packets
 - Destination IP address
 - Payload (the actual data)
 
-Packets travel different routes across the network and may arrive out of order. IP itself makes no guarantees about delivery or ordering — that's TCP's job.
+Packets travel different routes across the network and may arrive out of order. IP itself makes no guarantees about delivery or ordering; that's TCP's job.
 
 ---
 
@@ -86,9 +86,9 @@ sequenceDiagram
     Server-->>Client: Data
 ```
 
-- SYN (Synchronize) — client initiates the connection
-- SYN-ACK — server acknowledges and responds
-- ACK (Acknowledge) — client confirms; connection is established
+- **SYN (Synchronize)**: client initiates the connection
+- **SYN-ACK**: server acknowledges and responds
+- **ACK (Acknowledge)**: client confirms; connection is established
 
 ### Reliable Delivery Mechanisms
 
@@ -135,7 +135,7 @@ UDP (User Datagram Protocol) is the alternative. It drops all of TCP's reliabili
 | Speed | Slower | Faster |
 | Best for | HTTP, email, file transfer | Video streaming, gaming, DNS |
 
-UDP's lack of reliability isn't always a problem. In a video call, a dropped packet means a brief visual glitch — which is far preferable to freezing while waiting for a retransmission.
+UDP's lack of reliability isn't always a problem. In a video call, a dropped packet means a brief visual glitch, which is far preferable to freezing while waiting for a retransmission.
 
 ---
 
@@ -152,7 +152,7 @@ flowchart TD
     A --- B --- C --- D
 ```
 
-When data is sent, each layer wraps the data with its own header — a process called encapsulation. On the receiving end, each layer strips its header back off — decapsulation:
+When data is sent, each layer wraps the data with its own header, a process called encapsulation. On the receiving end, each layer strips its header back off: decapsulation:
 
 ```mermaid
 flowchart LR
@@ -175,8 +175,8 @@ flowchart LR
 
 ## Conclusion
 
-- IP handles addressing and routing — getting packets to the right destination
-- TCP provides reliable delivery — using the handshake, sequence numbers, and ACKs to ensure data arrives complete and in order
+- **IP handles addressing and routing**: getting packets to the right destination
+- **TCP provides reliable delivery**: using the handshake, sequence numbers, and ACKs to ensure data arrives complete and in order
 - The Three-Way Handshake (SYN → SYN-ACK → ACK) establishes a TCP connection before any data flows
-- UDP trades reliability for speed — the right choice when latency matters more than guaranteed delivery
+- **UDP trades reliability for speed**: the right choice when latency matters more than guaranteed delivery
 - The TCP/IP four-layer model describes how each layer contributes to getting data from one place to another

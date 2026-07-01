@@ -1,7 +1,7 @@
 export const metadata = {
   title: '設計模式：組合模式 (Composite)',
   date: '2026-06-30',
-  excerpt: '介紹結構型設計模式中的組合模 —— 何將物件組合成樹狀結構，並讓客戶端程式碼一視同仁地對待單一物件與組合。',
+  excerpt: '介紹結構型設計模式中的組合模式：如何將物件組合成樹狀結構，並讓客戶端程式碼一視同仁地對待單一物件與組合。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
@@ -78,7 +78,7 @@ class Directory implements FileSystemNode {
     this.children = this.children.filter(c => c !== node);
   }
 
-  // 遞迴加總子節點的大 —— 戶端不必知道細節
+  // 遞迴加總子節點的大小，客戶端不必知道細節
   getSize(): number {
     return this.children.reduce((sum, child) => sum + child.getSize(), 0);
   }

@@ -1,7 +1,7 @@
 export const metadata = {
   title: '設計模式：抽象工廠 (Abstract Factory)',
   date: '2026-06-30',
-  excerpt: '介紹創建型設計模式中的抽象工 —— 何建立一整族相關物件的工廠，在不指定具體類別的情況下，確保物件之間彼此相容。',
+  excerpt: '介紹創建型設計模式中的抽象工廠模式：如何建立一整族相關物件的工廠，在不指定具體類別的情況下，確保物件之間彼此相容。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
@@ -93,7 +93,7 @@ class DarkThemeFactory implements UIFactory {
   createInput(): Input { return new DarkInput(); }
 }
 
-// 呼叫端只認得 UIFactor —— 全不需要知道是哪個主題
+// 呼叫端只認得 UIFactory，完全不需要知道是哪個主題
 function buildForm(factory: UIFactory): void {
   const button = factory.createButton();
   const input = factory.createInput();
@@ -128,6 +128,6 @@ Factory Method 建立一種物件，Abstract Factory 建立一族相關的物件
 
 ## 總結
 
-Abstract Factory 是「工廠的工廠 —— 管的不是單一物件的建立，而是一整族彼此協調的物件。
+Abstract Factory 是「工廠的工廠」，管的不是單一物件的建立，而是一整族彼此協調的物件。
 
 它最大的價值在於相容性保證：呼叫端永遠不需要知道具體實作，只要換一個工廠，就能得到一組完全不同、但內部彼此一致的物件。

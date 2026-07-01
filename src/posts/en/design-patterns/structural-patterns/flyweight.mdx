@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Design Patterns: Flyweight',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Flyweight pattern — how sharing intrinsic state across large numbers of fine-grained objects can dramatically reduce memory usage.',
+  excerpt: 'A practical guide to the Flyweight pattern: how sharing intrinsic state across large numbers of fine-grained objects can dramatically reduce memory usage.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
@@ -29,7 +29,7 @@ mindmap
 
 ## Intent
 
-Imagine a text editor with 100,000 characters. Each character has font, size, color, and position. Storing a full copy of font + size + color per character would consume enormous memory.
+Imagine a text editor with 100,000 characters. Each character has font, size, color, and position. Storing a full copy of font + size + color per character would consume an enormous amount of memory.
 
 Most characters sharing the same font and style can share a single style object. Only position is unique to each character.
 

@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Generics: Reusable Code with Full Type Safety',
   date: '2026-06-11',
-  excerpt: 'A practical guide to generics — covering why any and Object fall short, how TypeScript and Java each implement the pattern, type constraints, and what type erasure means under the hood.',
+  excerpt: 'A practical guide to generics: covering why any and Object fall short, how TypeScript and Java each implement the pattern, type constraints, and what type erasure means under the hood.',
   tags: ['Software Design'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 Writing reusable code and maintaining type safety often feel like competing goals. Use `any` or `Object` for flexibility and you lose type information. Hardcode every type and you end up duplicating the same logic for every type you need to support.
 
-Generics resolve this by parameterizing types — you write a function, class, or interface once without committing to a specific type, and the actual type gets filled in at the call site.
+Generics resolve this by parameterizing types: you write a function, class, or interface once without committing to a specific type, and the actual type gets filled in at the call site.
 
 ```mermaid
 mindmap
@@ -35,7 +35,7 @@ mindmap
 
 ## The Problem Before Generics
 
-Before generics, building a reusable container meant relying on a language's catch-all type — and accepting that type errors would only surface at runtime.
+Before generics, building a reusable container meant relying on a language's catch-all type, and accepting that type errors would only surface at runtime.
 
 ### TypeScript
 
@@ -68,7 +68,7 @@ box.set("Hello");
 String str = (String) box.get(); 
 ```
 
-Generics move this risk from runtime to compile time — the wrong type gets caught during development, before anything runs.
+Generics move this risk from runtime to compile time: the wrong type gets caught during development, before anything runs.
 
 ---
 
@@ -102,7 +102,7 @@ String output = Utility.<String>identity("Spring Boot");
 
 ### 2. Generic Classes and Data Structures
 
-A common real-world use case is a typed API response wrapper — the same structure reused across every endpoint, with the payload type changing each time.
+A common real-world use case is a typed API response wrapper: the same structure reused across every endpoint, with the payload type changing each time.
 
 TypeScript (front-end API response):
 
@@ -148,7 +148,7 @@ Generics are flexible by design, but sometimes you need to restrict what types a
 
 ### Structural Constraints in TypeScript
 
-TypeScript uses a structural type system, so constraints check whether an object has the right shape — not what class it belongs to:
+TypeScript uses a structural type system, so constraints check whether an object has the right shape, not what class it belongs to:
 
 ```typescript
 interface HasId {
@@ -189,13 +189,13 @@ TypeScript and Java are very different ecosystems, but they arrive at a similar 
 
 ### TypeScript
 
-TypeScript generics exist entirely at compile time. When the code is compiled to JavaScript, all type annotations and generic markers like `<T>` are stripped out completely. There's no trace of them at runtime — and no overhead for it.
+TypeScript generics exist entirely at compile time. When the code is compiled to JavaScript, all type annotations and generic markers like `<T>` are stripped out completely. There's no trace of them at runtime, and no overhead for it.
 
 ### Java
 
 Java takes the same approach, largely for backward compatibility with pre-generics code. The compiler replaces generic type parameters with their upper bounds (usually `Object`, or the constrained base type) and inserts the necessary casts into the compiled bytecode automatically.
 
-In both cases, the conclusion is the same: generics are a development-time tool. They help you write safer, cleaner code — they don't change what happens when the code runs.
+In both cases, the conclusion is the same: generics are a development-time tool. They help you write safer, cleaner code; they don't change what happens when the code runs.
 
 ---
 

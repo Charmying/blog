@@ -1,15 +1,15 @@
 export const metadata = {
   title: 'Getters and Setters: Controlled Access to Object Properties',
   date: '2026-06-17',
-  excerpt: 'A practical guide to getters and setters — covering why controlled access matters, how data validation and computed properties work, and how the pattern is implemented across JavaScript, Python, and Java.',
+  excerpt: 'A practical guide to getters and setters: covering why controlled access matters, how data validation and computed properties work, and how the pattern is implemented across JavaScript, Python, and Java.',
   tags: ['OOP', 'Software Design'],
 };
 
 # Getters and Setters: Controlled Access to Object Properties
 
-When a class exposes its internal fields directly, any code can write anything — valid or not. Getters and setters fix that by intercepting property reads and writes.
+When a class exposes its internal fields directly, any code can write anything, valid or not. Getters and setters fix that by intercepting property reads and writes.
 
-Instead of letting outside code reach directly into an object's state, you define the logic that runs whenever a value is read or changed. You get to validate input, derive values on the fly, and trigger side effects — all while the outside world just sees a clean property interface. That's encapsulation in practice.
+Instead of letting outside code reach directly into an object's state, you define the logic that runs whenever a value is read or changed. You get to validate input, derive values on the fly, and trigger side effects, all while the outside world just sees a clean property interface. That's encapsulation in practice.
 
 The concept isn't unique to JavaScript. Every major language has its own way to implement accessors, even if the syntax looks different.
 
@@ -49,10 +49,10 @@ user.age = -5; // Intercepted, throws an error or silently rejects
 
 But accessors give you several things raw property access can't:
 
-- Data validation — reject invalid values before they corrupt internal state (e.g. age can't be negative)
-- Computed properties — derive a value on read instead of storing a redundant copy (e.g. calculate `age` from a birthdate)
-- Read-only properties — expose a getter without a setter and the property becomes immutable from the outside
-- Side effects — automatically run logging, state sync, or UI updates when a value changes
+- **Data validation**: reject invalid values before they corrupt internal state (e.g. age can't be negative)
+- **Computed properties**: derive a value on read instead of storing a redundant copy (e.g. calculate `age` from a birthdate)
+- **Read-only properties**: expose a getter without a setter and the property becomes immutable from the outside
+- **Side effects**: automatically run logging, state sync, or UI updates when a value changes
 
 ---
 
@@ -168,7 +168,7 @@ const item = new Product(100, 0.2);
 console.log(item.finalPrice); // 80
 ```
 
-`finalPrice` doesn't have a backing field. Every read calculates it fresh from `price` and `discount`. If either changes, the result is automatically correct — no manual sync required.
+`finalPrice` doesn't have a backing field. Every read calculates it fresh from `price` and `discount`. If either changes, the result is automatically correct, with no manual sync required.
 
 ### Reactive Patterns
 
@@ -209,7 +209,7 @@ set age(value: number) {
 }
 ```
 
-The fix is to store the value in a differently named field — `#age` or `_age`.
+The fix is to store the value in a differently named field: `#age` or `_age`.
 
 ### Expensive operations inside a getter
 

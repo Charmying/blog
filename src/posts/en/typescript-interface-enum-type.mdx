@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'TypeScript Interface, Enum, and Type: Roles and Differences',
   date: '2026-04-19',
-  excerpt: 'A practical guide to TypeScript Interface, Type, and Enum — covering their syntax, key differences, declaration merging, union types, how Enum compiles, and when to use each.',
+  excerpt: 'A practical guide to TypeScript Interface, Type, and Enum, covering their syntax, key differences, declaration merging, union types, how Enum compiles, and when to use each.',
   tags: ['Front-end', 'TypeScript'],
 };
 
@@ -31,7 +31,7 @@ mindmap
 
 ## Interface
 
-`interface` describes the shape of an object — what properties and methods it should have.
+`interface` describes the shape of an object: what properties and methods it should have.
 
 ```typescript
 interface User {
@@ -85,7 +85,7 @@ interface C extends A, B { ... }
 
 ### Declaration Merging
 
-Declaring the same interface name twice merges them — this is unique to `interface`:
+Declaring the same interface name twice merges them; this is unique to `interface`:
 
 ```typescript
 interface User {
@@ -106,7 +106,7 @@ This is particularly useful for augmenting types from third-party libraries.
 
 ## Type
 
-`type` creates a type alias — a name you can give to any type, not just objects.
+`type` creates a type alias: a name you can give to any type, not just objects.
 
 ```typescript
 type UserId = number;
@@ -182,7 +182,7 @@ String enums are more readable at runtime and easier to debug than numbers.
 
 ### Const Enum
 
-Adding `const` causes the enum to be inlined at compile time — no JavaScript object is generated:
+Adding `const` causes the enum to be inlined at compile time (no JavaScript object is generated):
 
 ```typescript
 const enum Direction {
@@ -212,7 +212,7 @@ var Status;
 })(Status || (Status = {}));
 ```
 
-This means the enum exists at runtime — you can iterate over it and look up names by value.
+This means the enum exists at runtime; you can iterate over it and look up names by value.
 
 ---
 
@@ -312,8 +312,8 @@ type Status = typeof Status[keyof typeof Status];
 
 ## Summary
 
-- `interface` — defines object shapes; supports extension and declaration merging; best for public API types
-- `type` — type alias for anything; best for union types, intersection types, and utility types
-- `enum` — named constant set; compiles to a real JavaScript object; best for fixed sets of values
+- **`interface`**: defines object shapes; supports extension and declaration merging; best for public API types
+- **`type`**: type alias for anything; best for union types, intersection types, and utility types
+- **`enum`**: named constant set; compiles to a real JavaScript object; best for fixed sets of values
 
 A practical rule of thumb: use `interface` for object shapes, `type` for union and intersection types, and `enum` (or `as const`) for fixed constant sets.

@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Design Patterns: Builder',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Builder pattern — how to construct complex objects step by step, avoid telescoping constructors, and make object creation readable and maintainable.',
+  excerpt: 'A practical guide to the Builder pattern: how to construct complex objects step by step, avoid telescoping constructors, and make object creation readable and maintainable.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
@@ -131,7 +131,7 @@ Each step is named. The call site reads like a description of the request being 
 
 ## Method Chaining
 
-The `return this` on each method is intentional — it returns the builder itself so calls can be chained. This is the Builder pattern's signature style.
+The `return this` on each method is intentional: it returns the builder itself so calls can be chained. This is the Builder pattern's signature style.
 
 You see it everywhere: the Fetch API, ORM query builders, test assertion libraries. When an API feels natural to compose step by step, Builder is usually behind it.
 

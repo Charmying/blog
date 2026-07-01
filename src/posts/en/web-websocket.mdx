@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'WebSocket: Full-Duplex Real-Time Communication',
   date: '2026-03-31',
-  excerpt: 'A practical guide to WebSocket — covering the handshake process, how it differs from HTTP, the browser WebSocket API, and when WebSocket is the right tool versus when HTTP or SSE is a better fit.',
+  excerpt: 'A practical guide to WebSocket, covering the handshake process, how it differs from HTTP, the browser WebSocket API, and when WebSocket is the right tool versus when HTTP or SSE is a better fit.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 With traditional HTTP, every interaction follows the same pattern: the client sends a request, the server responds, and the connection closes.
 
-WebSocket is different. It establishes a persistent connection between the client and server, letting either side send messages at any time — no new request needed.
+WebSocket is different. It establishes a persistent connection between the client and server, letting either side send messages at any time, with no new request needed.
 
 ```mermaid
 mindmap
@@ -31,7 +31,7 @@ mindmap
 
 ## What Is WebSocket
 
-WebSocket is an application-layer protocol built on top of TCP. It provides a full-duplex communication channel — both sides can send and receive messages simultaneously, like a phone call rather than a letter exchange.
+WebSocket is an application-layer protocol built on top of TCP. It provides a full-duplex communication channel: both sides can send and receive messages simultaneously, like a phone call rather than a letter exchange.
 
 WebSocket URLs use `ws://` or `wss://` (the encrypted version):
 
@@ -44,7 +44,7 @@ wss://example.com/chat
 
 ## The WebSocket Handshake
 
-A WebSocket connection starts with an HTTP request — this is the WebSocket Handshake.
+A WebSocket connection starts with an HTTP request: this is the WebSocket Handshake.
 
 ### 1. Client Sends an Upgrade Request
 
@@ -97,7 +97,7 @@ sequenceDiagram
 
 ## WebSocket API
 
-The browser has a built-in WebSocket API — no library required.
+The browser has a built-in WebSocket API (no library required).
 
 ### Opening a Connection
 
@@ -189,11 +189,11 @@ ws.addEventListener('close', () => {
 
 ### Use WebSocket when you need low-latency, bidirectional real-time communication:
 
-- Chat applications — messages need to reach all participants immediately
-- Collaborative tools — simultaneous document editing, live cursor sync (Figma, Google Docs)
-- Multiplayer games — player positions and game state need continuous synchronization
-- Live feeds — stock prices, sports scores, system alerts
-- IoT data streams — continuous sensor data pushed from devices
+- **Chat applications**: messages need to reach all participants immediately
+- **Collaborative tools**: simultaneous document editing, live cursor sync (Figma, Google Docs)
+- **Multiplayer games**: player positions and game state need continuous synchronization
+- **Live feeds**: stock prices, sports scores, system alerts
+- **IoT data streams**: continuous sensor data pushed from devices
 
 ### Don't use WebSocket for:
 
@@ -209,9 +209,9 @@ If the server only needs to push updates to the client (no messages going the ot
 
 ## Conclusion
 
-WebSocket establishes a persistent, full-duplex connection — both client and server can send messages at any time:
+WebSocket establishes a persistent, full-duplex connection: both client and server can send messages at any time.
 
 - Starts with an HTTP handshake that upgrades to a WebSocket connection
 - Low latency, well-suited for real-time bidirectional communication
-- Overkill for standard API requests — HTTP is simpler and sufficient
+- Overkill for standard API requests; HTTP is simpler and sufficient
 - For server-only push, consider SSE as a lighter alternative

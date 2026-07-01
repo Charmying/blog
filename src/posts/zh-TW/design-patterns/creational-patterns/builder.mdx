@@ -1,7 +1,7 @@
 export const metadata = {
   title: '設計模式：建造者模式 (Builder)',
   date: '2026-06-30',
-  excerpt: '介紹創建型設計模式中的建造者模 —— 何一步一步建立複雜物件，避開多參數建構子的惡夢，並讓建立過程清晰可讀。',
+  excerpt: '介紹創建型設計模式中的建造者模式：如何一步一步建立複雜物件，避開多參數建構子的惡夢，並讓建立過程清晰可讀。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
@@ -131,7 +131,7 @@ const request = new HttpRequestBuilder()
 
 ## 連鎖呼叫 (Method Chaining)
 
-注意每個方法最後的 `return this —— 是刻意的，它回傳 Builder 本身，所以呼叫可以一路串接下去。這正是 Builder 模式的標誌性寫法。
+注意每個方法最後的 `return this`，是刻意的，它回傳 Builder 本身，所以呼叫可以一路串接下去。這正是 Builder 模式的標誌性寫法。
 
 你會在很多地方看到它：Fetch API、ORM 的 query builder、測試框架的 assertion chain。每當一個 API 用起來很自然就能一步步組合時，背後通常都是 Builder。
 

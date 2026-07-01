@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Hashing',
   date: '2026-05-17',
-  excerpt: 'A practical guide to hashing — covering the key properties, common algorithms (MD5, SHA-256, bcrypt, Argon2), and real-world applications in password storage, data integrity, and digital signatures.',
+  excerpt: 'A practical guide to hashing, covering the key properties, common algorithms (MD5, SHA-256, bcrypt, Argon2), and real-world applications in password storage, data integrity, and digital signatures.',
   tags: ['Security', 'Network'],
 };
 
@@ -74,7 +74,7 @@ SHA-256("Hello") = 185f8db32921bd46d35c...
 SHA-256("hello") = 2cf24dba5fb0a30e26e8...  (completely different)
 ```
 
-Changing one character — just the case of the first letter — produces an entirely different hash.
+Changing one character (just the case of the first letter) produces an entirely different hash.
 
 ### Collision Resistance
 
@@ -92,7 +92,7 @@ Produces a 128-bit output (32 hex characters).
 MD5("Hello") = 8b1a9953c4611296a827abf8c47804d7
 ```
 
-MD5 has been broken — collisions can be found quickly. Do not use for security purposes. It's still fine for non-security use cases like file deduplication.
+MD5 has been broken; collisions can be found quickly. Do not use for security purposes. It's still fine for non-security use cases like file deduplication.
 
 ### SHA-1
 
@@ -112,15 +112,15 @@ The most widely used secure hash algorithm today. Used in TLS, digital certifica
 
 ### SHA-3
 
-SHA-3 is an alternative to SHA-2 (not an improvement — a separate design), based on the Keccak algorithm. Highly secure, but less widely adopted than SHA-2.
+SHA-3 is an alternative to SHA-2 (not an improvement, a separate design), based on the Keccak algorithm. Highly secure, but less widely adopted than SHA-2.
 
 ### bcrypt / Argon2 / scrypt (Password Hashing)
 
-These are slow hash algorithms designed specifically for password storage. The computational cost is intentional — it makes brute-force attacks far more expensive:
+These are slow hash algorithms designed specifically for password storage. The computational cost is intentional; it makes brute-force attacks far more expensive:
 
-- bcrypt — the most widely used password hash; adjustable work factor
-- Argon2 — winner of the 2015 Password Hashing Competition; the current best-practice recommendation
-- scrypt — memory-intensive; designed to resist GPU and ASIC-based attacks
+- **bcrypt**: the most widely used password hash; adjustable work factor
+- **Argon2**: winner of the 2015 Password Hashing Competition; the current best-practice recommendation
+- **scrypt**: memory-intensive; designed to resist GPU and ASIC-based attacks
 
 General-purpose hash functions like SHA-256 should never be used directly for password storage. Always use a dedicated password hashing algorithm.
 
@@ -130,7 +130,7 @@ General-purpose hash functions like SHA-256 should never be used directly for pa
 
 ### Password Storage
 
-Never store passwords in plain text — store the hash instead. During login, hash the submitted password and compare it to the stored hash:
+Never store passwords in plain text; store the hash instead. During login, hash the submitted password and compare it to the stored hash:
 
 ```javascript
 const bcrypt = require('bcrypt');
@@ -161,7 +161,7 @@ Git uses SHA-1 (legacy) and SHA-256 (modern) to identify every commit and file, 
 
 ### Digital Signatures
 
-In asymmetric cryptography, you don't sign the raw data directly — you hash it first, then sign the hash:
+In asymmetric cryptography, you don't sign the raw data directly; you hash it first, then sign the hash:
 
 1. Hash the data: H = SHA-256(data)
 2. Sign the hash with the private key: Signature = RSA(H, privateKey)
@@ -195,8 +195,8 @@ JWT's HS256 signature is HMAC-SHA256.
 
 ## Summary
 
-- Hashing is one-way — you cannot recover the original data from a hash
+- **Hashing is one-way**: you cannot recover the original data from a hash
 - A good hash function is deterministic, has a strong avalanche effect, and resists collisions
-- MD5 and SHA-1 are no longer secure — use SHA-256 or stronger
+- **MD5 and SHA-1 are no longer secure**: use SHA-256 or stronger
 - For password storage, always use a slow algorithm like bcrypt or Argon2
 - Hashing is used everywhere: password storage, data integrity, digital signatures, and HMAC

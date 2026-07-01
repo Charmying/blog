@@ -1,13 +1,13 @@
 export const metadata = {
   title: '設計模式：裝飾器模式 (Decorator)',
   date: '2026-06-30',
-  excerpt: '介紹結構型設計模式中的裝飾器模 —— 何透過包裝在執行期動態地對物件附加新行為，而不需修改原始類別，也不依賴繼承。',
+  excerpt: '介紹結構型設計模式中的裝飾器模式：如何透過包裝在執行期動態地對物件附加新行為，而不需修改原始類別，也不依賴繼承。',
   tags: ['軟體設計', '設計模式', 'OOP'],
 };
 
 # 設計模式：裝飾器模式 (Decorator)
 
-Decorator 透過「包裝」在執行期動態地對物件附加新行 —— 必修改底層類別，也不必為每一種組合各開一個子類別。
+Decorator 透過「包裝」在執行期動態地對物件附加新行為，不必修改底層類別，也不必為每一種組合各開一個子類別。
 
 ```mermaid
 mindmap
@@ -29,7 +29,7 @@ mindmap
 
 ## 意圖與用途
 
-繼承是靜態 —— 一種行為組合都得新建一個子類別。Decorator 把這種組合變成動態的：在執行期自由疊加行為。
+繼承是靜態的，每一種行為組合都得新建一個子類別。Decorator 把這種組合變成動態的：在執行期自由疊加行為。
 
 常見的例子：
 
@@ -70,19 +70,19 @@ class CoffeeDecorator implements Coffee {
   description(): string { return this.coffee.description(); }
 }
 
-// ConcreteDecorato —— 牛奶
+// ConcreteDecorator：牛奶
 class MilkDecorator extends CoffeeDecorator {
   cost(): number { return this.coffee.cost() + 15; }
   description(): string { return this.coffee.description() + ' + 牛奶'; }
 }
 
-// ConcreteDecorato —— 糖漿
+// ConcreteDecorator：糖漿
 class SyrupDecorator extends CoffeeDecorator {
   cost(): number { return this.coffee.cost() + 10; }
   description(): string { return this.coffee.description() + ' + 糖漿'; }
 }
 
-// ConcreteDecorato —— 大杯
+// ConcreteDecorator：大杯
 class LargeDecorator extends CoffeeDecorator {
   cost(): number { return this.coffee.cost() + 20; }
   description(): string { return this.coffee.description() + ' (L)'; }
@@ -98,7 +98,7 @@ console.log(myOrder.description()); // '黑咖啡 + 牛奶 + 糖漿 (L)'
 console.log(myOrder.cost());        // 75
 ```
 
-不需要建立 `MilkSyrupLargeCoffee` 這種子類 —— 個 Decorator 都包住前一層，一層層動態組合起來。
+不需要建立 `MilkSyrupLargeCoffee` 這種子類別，每個 Decorator 都包住前一層，一層層動態組合起來。
 
 ---
 
@@ -117,4 +117,4 @@ console.log(myOrder.cost());        // 75
 
 ## 總結
 
-Decorator 是實務上實現 OCP 最乾淨俐落的方式之 —— 擴充開放，對修改封閉。TypeScript 的 Decorators 語法 (TC39 提案) 正是直接以這個模式命名的。
+Decorator 是實務上實現 OCP 最乾淨俐落的方式之一：對擴充開放，對修改封閉。TypeScript 的 Decorators 語法 (TC39 提案) 正是直接以這個模式命名的。

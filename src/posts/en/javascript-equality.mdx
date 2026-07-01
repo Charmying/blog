@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Equality in JavaScript: == vs. === vs. Object.is',
   date: '2026-03-21',
-  excerpt: 'A practical guide to JavaScript equality — comparing ==, ===, and Object.is, covering type coercion, the special cases of NaN and -0, and when to use each.',
+  excerpt: 'A practical guide to JavaScript equality, comparing ==, ===, and Object.is, covering type coercion, the special cases of NaN and -0, and when to use each.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,9 +9,9 @@ export const metadata = {
 
 JavaScript has three ways to check equality, and they don't all behave the same way.
 
-- `==` — loose equality, performs type conversion before comparing
-- `===` — strict equality, no type conversion
-- `Object.is` — like `===`, but handles `NaN` and `-0` differently
+- **`==`**: loose equality, performs type conversion before comparing
+- **`===`**: strict equality, no type conversion
+- **`Object.is`**: like `===`, but handles `NaN` and `-0` differently
 
 ```mermaid
 mindmap
@@ -33,7 +33,7 @@ mindmap
 
 ## `==` Loose Equality
 
-When comparing values of different types, `==` performs type coercion — it converts one or both values before comparing.
+When comparing values of different types, `==` performs type coercion: it converts one or both values before comparing.
 
 The results can be surprising:
 
@@ -57,7 +57,7 @@ The main rules behind `==`:
 - Boolean comparisons: the boolean is converted to a number first (`true` → `1`, `false` → `0`)
 - Object vs. primitive: the object is converted via `.valueOf()` or `.toString()`
 
-The rules are complex and easy to get wrong. The rules are complex enough that most developers just avoid `==` altogether.
+The rules are complex and easy to get wrong. Most developers just avoid `==` altogether.
 
 ---
 
@@ -112,7 +112,7 @@ Object.is(-0, -0)   // true
 
 `===` treats `-0` and `+0` as equal. `Object.is` distinguishes between them.
 
-For most code, the difference between `-0` and `+0` doesn't matter. But in cases where direction or sign is meaningful — like vector math or coordinate systems — `Object.is` gives you a more precise comparison.
+For most code, the difference between `-0` and `+0` doesn't matter. But in cases where direction or sign is meaningful (like vector math or coordinate systems), `Object.is` gives you a more precise comparison.
 
 ---
 
@@ -162,7 +162,7 @@ if (value === null || value === undefined) {
 }
 ```
 
-It works, but it relies on a specific quirk of `==` that not everyone knows. If your team is comfortable with it, fine — otherwise, the explicit version is clearer.
+It works, but it relies on a specific quirk of `==` that not everyone knows. If your team is comfortable with it, fine; otherwise, the explicit version is clearer.
 
 ### When to Use `Object.is`
 
@@ -181,6 +181,6 @@ function isNaNValue(value) {
 
 ## Conclusion
 
-- `==` — coerces types before comparing, results are hard to predict, avoid it in most cases
-- `===` — no coercion, predictable, the default choice for everyday comparisons
-- `Object.is` — nearly identical to `===`, but correctly handles `NaN` and `-0` for cases where precision matters
+- **`==`**: coerces types before comparing, results are hard to predict, avoid it in most cases
+- **`===`**: no coercion, predictable, the default choice for everyday comparisons
+- **`Object.is`**: nearly identical to `===`, but correctly handles `NaN` and `-0` for cases where precision matters

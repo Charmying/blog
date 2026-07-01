@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'CSR vs. SSR vs. SSG: Frontend Rendering Strategies',
   date: '2026-03-29',
-  excerpt: 'A practical guide to frontend rendering strategies — covering how CSR, SSR, and SSG work, their trade-offs, and when to use each.',
+  excerpt: 'A practical guide to frontend rendering strategies: covering how CSR, SSR, and SSG work, their trade-offs, and when to use each.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -9,9 +9,9 @@ export const metadata = {
 
 There are three main ways to render a web application, and they differ in one fundamental question: where and when is the HTML generated?
 
-- CSR (Client-Side Rendering) — in the browser, at runtime
-- SSR (Server-Side Rendering) — on the server, on every request
-- SSG (Static Site Generation) — at build time, before any user requests
+- **CSR (Client-Side Rendering)**: in the browser, at runtime
+- **SSR (Server-Side Rendering)**: on the server, on every request
+- **SSG (Static Site Generation)**: at build time, before any user requests
 
 The choice affects load speed, SEO, infrastructure costs, and deployment complexity.
 
@@ -52,14 +52,14 @@ flowchart LR
 
 ### Pros
 
-- Smooth page transitions — no full page reloads
-- Low server load — the server only serves static files and an API
+- Smooth page transitions, no full page reloads
+- Low server load: the server only serves static files and an API
 - Clean separation between frontend and backend
 
 ### Cons
 
-- Slow initial load (slow FCP) — users see nothing until JavaScript downloads and runs
-- Weaker SEO — crawlers may not see dynamically rendered content (though modern crawlers have improved)
+- Slow initial load (slow FCP): users see nothing until JavaScript downloads and runs
+- Weaker SEO: crawlers may not see dynamically rendered content (though modern crawlers have improved)
 - If JavaScript fails, the page is blank
 
 ### Good For
@@ -89,15 +89,15 @@ flowchart LR
 
 ### Pros
 
-- Fast FCP — the browser receives complete HTML, no waiting for JS
-- Good SEO — crawlers see fully populated content
+- Fast FCP: the browser receives complete HTML, no waiting for JS
+- Good SEO: crawlers see fully populated content
 - Works well for pages that need fresh, real-time data
 
 ### Cons
 
-- Slower TTFB — the server has to fetch data before it can respond
-- Higher server load — HTML is regenerated on every request
-- More complex deployment — requires a Node.js server
+- Slower TTFB: the server has to fetch data before it can respond
+- Higher server load: HTML is regenerated on every request
+- More complex deployment: requires a Node.js server
 
 ### Good For
 
@@ -109,7 +109,7 @@ flowchart LR
 
 ## SSG
 
-With SSG, all pages are pre-generated at build time. The server just serves static files — no computation happens at request time.
+With SSG, all pages are pre-generated at build time. The server just serves static files; no computation happens at request time.
 
 ### How It Works
 
@@ -130,14 +130,14 @@ flowchart TD
 
 ### Pros
 
-- Fastest load times — static files served from a CDN, globally distributed
-- Best SEO — complete HTML is ready before any user visits
-- Minimal server costs — no computation per request
-- More secure — no dynamic server means fewer attack surfaces
+- Fastest load times: static files served from a CDN, globally distributed
+- Best SEO: complete HTML is ready before any user visits
+- Minimal server costs: no computation per request
+- More secure: no dynamic server means fewer attack surfaces
 
 ### Cons
 
-- Data isn't live — content is fixed at build time; updates require a rebuild
+- Data isn't live: content is fixed at build time; updates require a rebuild
 - Long build times when there are many pages
 - Not suitable for highly personalized or frequently changing content
 
@@ -183,14 +183,14 @@ Choose SSG when:
 
 ## Conclusion
 
-No single strategy is universally best — each involves trade-offs:
+No single strategy is universally best; each involves trade-offs:
 
-- CSR — simplest to build, great interactivity, weaker on SEO and initial load
-- SSR — strong SEO, real-time data, higher server cost and complexity
-- SSG — fastest, cheapest, but content isn't live
+- **CSR**: simplest to build, great interactivity, weaker on SEO and initial load
+- **SSR**: strong SEO, real-time data, higher server cost and complexity
+- **SSG**: fastest, cheapest, but content isn't live
 
 Modern frameworks like Next.js and Nuxt.js let you mix all three strategies within the same project, choosing the right approach on a page-by-page basis.
 
-Worth mentioning: Next.js's ISR (Incremental Static Regeneration) extends SSG by adding a revalidation window. Static pages are silently regenerated in the background after a set interval — no full site rebuild required. For content that updates occasionally but doesn't need to be fresh on every request, ISR is a practical middle ground between SSG's performance and SSR's data freshness.
+Worth mentioning: Next.js's ISR (Incremental Static Regeneration) extends SSG by adding a revalidation window. Static pages are silently regenerated in the background after a set interval, with no full site rebuild required. For content that updates occasionally but doesn't need to be fresh on every request, ISR is a practical middle ground between SSG's performance and SSR's data freshness.
 
-CSR, SSR, and SSG are runtime rendering strategies. Regardless of which strategy delivers the HTML, the browser processes it through the same rendering pipeline — see [Browser Rendering Pipeline](/articles/web-browser-rendering). For the full execution lifecycle, see [From Source to Screen](/articles/web-sourcecode-to-screen).
+CSR, SSR, and SSG are runtime rendering strategies. Regardless of which strategy delivers the HTML, the browser processes it through the same rendering pipeline; see [Browser Rendering Pipeline](/articles/web-browser-rendering). For the full execution lifecycle, see [From Source to Screen](/articles/web-source-to-screen).

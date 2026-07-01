@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'SOLID Principles: Dependency Inversion Principle (DIP)',
   date: '2026-06-02',
-  excerpt: 'A practical guide to the Dependency Inversion Principle — why high-level modules should not depend on low-level implementations, and how abstractions and dependency injection fix the relationship.',
+  excerpt: 'A practical guide to the Dependency Inversion Principle: why high-level modules should not depend on low-level implementations, and how abstractions and dependency injection fix the relationship.',
   tags: ['Software Design', 'Best Practice', 'OOP'],
 };
 
@@ -12,7 +12,7 @@ The Dependency Inversion Principle (DIP) is the D in SOLID:
 > 1. High-level modules should not depend on low-level modules. Both should depend on abstractions.
 > 2. Abstractions should not depend on details. Details should depend on abstractions.
 
-The word "inversion" doesn't mean flip the dependency. It means abstractions control the direction — high-level modules define what they need, and low-level implementations conform to those needs.
+The word "inversion" doesn't mean flipping the dependency. It means abstractions control the direction: high-level modules define what they need, and low-level implementations conform to those needs.
 
 ```mermaid
 mindmap
@@ -36,8 +36,8 @@ mindmap
 
 Consider an order service that needs a database connection, an email sender, and a logger. If the service creates those dependencies directly, it's what DIP calls a high-level module depending on low-level modules.
 
-High-level module: OrderService — owns the business logic
-Low-level modules: database, email, logger — handle implementation details
+High-level module: OrderService (owns the business logic)
+Low-level modules: database, email, logger (handle implementation details)
 
 DIP says: neither should depend directly on the other. Both should depend on abstractions.
 
@@ -121,13 +121,13 @@ class OrderService {
 }
 ```
 
-Now `OrderService` and `MySQLOrderRepository` both depend on `OrderRepository` — they no longer depend directly on each other.
+Now `OrderService` and `MySQLOrderRepository` both depend on `OrderRepository`; they no longer depend directly on each other.
 
 ---
 
 ## Dependency Injection
 
-DIP is usually implemented through dependency injection (DI) — dependencies are passed in from outside rather than created internally:
+DIP is usually implemented through dependency injection (DI): dependencies are passed in from outside rather than created internally:
 
 ```typescript
 // wire up the concrete implementations
@@ -165,4 +165,4 @@ DIP in practice:
 - Abstractions act as a firewall between high-level logic and low-level details
 - Both layers can evolve and be tested independently
 
-DIP is the foundation for dependency injection containers, service locators, and other advanced inversion-of-control patterns. All five SOLID principles are now complete — independent, but each one reinforcing the others.
+DIP is the foundation for dependency injection containers, service locators, and other advanced inversion-of-control patterns. All five SOLID principles are now complete, independent but each one reinforcing the others.

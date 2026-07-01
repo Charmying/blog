@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript this: How It Works and What It Points To',
   date: '2026-03-17',
-  excerpt: 'A practical guide to JavaScript this — covering global context, regular functions, object methods, constructors, call/apply/bind, and arrow functions.',
+  excerpt: 'A practical guide to JavaScript this, covering global context, regular functions, object methods, constructors, call/apply/bind, and arrow functions.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,7 +9,7 @@ export const metadata = {
 
 `this` is one of the most confusing parts of JavaScript.
 
-Its value isn't fixed — it changes depending on how a function is called, not where it's defined.
+Its value isn't fixed: it changes depending on how a function is called, not where it's defined.
 
 ```mermaid
 mindmap
@@ -35,7 +35,7 @@ mindmap
 
 ## What Is `this`
 
-`this` is a keyword available inside functions. It refers to the object the function is operating on — and that value changes depending on how the function is called.
+`this` is a keyword available inside functions. It refers to the object the function is operating on, and that value changes depending on how the function is called.
 
 The key rule: `this` depends on how the function is called, not where it's defined.
 
@@ -64,7 +64,7 @@ console.log(this); // {}
 
 When you call a function directly, `this` depends on whether strict mode is enabled.
 
-Non-strict mode — `this` is the global object:
+In non-strict mode, `this` is the global object:
 
 ```javascript
 function show() {
@@ -74,7 +74,7 @@ function show() {
 show();
 ```
 
-Strict mode — `this` is `undefined`:
+In strict mode, `this` is `undefined`:
 
 ```javascript
 "use strict";
@@ -105,7 +105,7 @@ user.greet();
 
 `this` is `user` because `user` is the one calling `greet`.
 
-Watch out — `this` is determined at call time, not definition time. Pulling the method out and calling it separately changes `this`:
+Watch out: `this` is determined at call time, not definition time. Pulling the method out and calling it separately changes `this`:
 
 ```javascript
 const greet = user.greet;
@@ -164,7 +164,7 @@ greet.apply(user, ["Hello"]); // "Hello, Charmy"
 
 ### `bind`
 
-Doesn't call the function immediately — returns a new function with `this` permanently bound:
+Doesn't call the function immediately; returns a new function with `this` permanently bound:
 
 ```javascript
 const boundGreet = greet.bind(user);
@@ -207,7 +207,7 @@ const user = {
 user.greet();
 ```
 
-`this` here isn't `user` — it's whatever `this` is in the outer scope (the global object in this case).
+`this` here isn't `user`; it's whatever `this` is in the outer scope (the global object in this case).
 
 Arrow functions' `this` can't be overridden with `call`, `apply`, or `bind`:
 

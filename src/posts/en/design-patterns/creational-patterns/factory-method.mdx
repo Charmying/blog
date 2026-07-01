@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'Design Patterns: Factory Method',
   date: '2026-06-30',
-  excerpt: 'A practical guide to the Factory Method pattern — how it defers object creation to subclasses, why that makes adding new types cheap, and when a simple factory function is actually enough.',
+  excerpt: 'A practical guide to the Factory Method pattern: how it defers object creation to subclasses, why that makes adding new types cheap, and when a simple factory function is actually enough.',
   tags: ['Software Design', 'Design Patterns', 'OOP'],
 };
 
@@ -157,7 +157,7 @@ function createNotification(type: 'email' | 'sms', target: string): Notification
 }
 ```
 
-Factory Method earns its complexity when the creator has shared logic that leverages the factory method — when inheritance and the template method structure are already in play.
+Factory Method earns its complexity when the creator has shared logic that leverages the factory method, when inheritance and the template method structure are already in play.
 
 ---
 
@@ -165,4 +165,4 @@ Factory Method earns its complexity when the creator has shared logic that lever
 
 Factory Method's core idea: defer object creation to subclasses.
 
-The parent class can work with objects without knowing their concrete type. Subclasses control what gets created. Adding a new type means adding a new subclass — not editing a growing if-else chain or an existing class.
+The parent class can work with objects without knowing their concrete type. Subclasses control what gets created. Adding a new type means adding a new subclass, not editing a growing if-else chain or an existing class.

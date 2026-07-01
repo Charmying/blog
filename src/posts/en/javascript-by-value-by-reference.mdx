@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript By Value vs. By Reference: How JavaScript Copies Data',
   date: '2026-03-20',
-  excerpt: 'A practical guide to JavaScript by value vs. by reference — covering how primitives and objects behave differently when assigned or passed to functions, and how to correctly copy objects with shallow and deep copy.',
+  excerpt: 'A practical guide to JavaScript by value vs. by reference, covering how primitives and objects behave differently when assigned or passed to functions, and how to correctly copy objects with shallow and deep copy.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,8 +9,8 @@ export const metadata = {
 
 How JavaScript copies and passes data depends entirely on the type of value involved.
 
-- Primitives are passed by value — you get a copy
-- Objects are passed by reference — you get a pointer to the same thing
+- Primitives are passed by value: you get a copy
+- Objects are passed by reference: you get a pointer to the same thing
 
 Get this wrong and you'll end up with bugs that are surprisingly hard to track down.
 
@@ -46,7 +46,7 @@ console.log(a); // 10 — unchanged
 console.log(b); // 20
 ```
 
-`b = a` copies the value `10` into `b`. From that point on, they're completely independent — changing `b` has no effect on `a`.
+`b = a` copies the value `10` into `b`. From that point on, they're completely independent; changing `b` has no effect on `a`.
 
 ---
 
@@ -115,7 +115,7 @@ updateName(person);
 console.log(person.name); // "Charmying" — affected
 ```
 
-But reassigning the parameter entirely inside the function doesn't affect the original — you're just pointing the local variable somewhere else:
+But reassigning the parameter entirely inside the function doesn't affect the original; you're just pointing the local variable somewhere else:
 
 ```javascript
 function replace(user) {
@@ -209,5 +209,5 @@ Works for simple data, but can't handle `undefined`, functions, `Date`, `RegExp`
 | Types | `string`, `number`, `boolean`, etc. | `Object`, `Array`, `Function` |
 | Assignment | Copies the value | Copies the reference |
 | Modifying the copy | No effect on the original | Affects the original |
-| Shallow copy | — | `...spread`, `Object.assign` |
-| Deep copy | — | `structuredClone`, `JSON.parse/stringify` |
+| Shallow copy | N/A | `...spread`, `Object.assign` |
+| Deep copy | N/A | `structuredClone`, `JSON.parse/stringify` |

@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'JavaScript undefined vs. null vs. undeclared',
   date: '2026-03-21',
-  excerpt: 'A practical guide to the difference between undefined, null, and undeclared in JavaScript — covering what each means, how typeof behaves, and how to check for each one correctly.',
+  excerpt: 'A practical guide to the difference between undefined, null, and undeclared in JavaScript, covering what each means, how typeof behaves, and how to check for each one correctly.',
   tags: ['Front-end', 'JavaScript'],
 };
 
@@ -9,9 +9,9 @@ export const metadata = {
 
 `undefined`, `null`, and undeclared are three concepts that look similar but mean very different things.
 
-- `undefined` — the variable exists, but hasn't been assigned a value
-- `null` — the variable exists, and has been explicitly set to "empty"
-- undeclared — the variable doesn't exist at all
+- **`undefined`**: the variable exists, but hasn't been assigned a value
+- **`null`**: the variable exists, and has been explicitly set to "empty"
+- **undeclared**: the variable doesn't exist at all
 
 ```mermaid
 mindmap
@@ -82,7 +82,7 @@ typeof undefined // "undefined"
 
 ## null
 
-`null` is also a primitive value, but it means something different from `undefined`. It represents an intentional absence of value — someone explicitly set it to empty.
+`null` is also a primitive value, but it means something different from `undefined`. It represents an intentional absence of value: someone explicitly set it to empty.
 
 ```javascript
 let user = null; // no user yet, by choice
@@ -112,13 +112,13 @@ function findUser(id) {
 typeof null // "object"
 ```
 
-This is a bug from JavaScript's early days that's been kept for backward compatibility. `null` is not an object — `typeof null === "object"` is simply wrong, and shouldn't be relied on.
+This is a bug from JavaScript's early days that's been kept for backward compatibility. `null` is not an object; `typeof null === "object"` is simply wrong, and shouldn't be relied on.
 
 ---
 
 ## undeclared
 
-Undeclared isn't a value — it's a state. It means the variable was never declared at all.
+Undeclared isn't a value; it's a state. It means the variable was never declared at all.
 
 Accessing an undeclared variable throws a `ReferenceError`:
 
@@ -137,7 +137,7 @@ console.log(y); // ReferenceError — never declared
 
 ### The typeof Exception
 
-`typeof` is special — it won't throw a `ReferenceError` on undeclared variables. It returns `"undefined"` instead:
+`typeof` is special: it won't throw a `ReferenceError` on undeclared variables. It returns `"undefined"` instead:
 
 ```javascript
 typeof undeclaredVariable // "undefined" — no error
@@ -172,7 +172,7 @@ let x = null;
 x === null // true
 ```
 
-Don't use `typeof` to check for `null` — you'll get `"object"`, which is misleading:
+Don't use `typeof` to check for `null`; you'll get `"object"`, which is misleading:
 
 ```javascript
 typeof null === "object" // true — but this is a bug, don't rely on it
@@ -224,11 +224,11 @@ if (typeof someVariable !== "undefined") {
 
 ## Conclusion
 
-- `undefined` — JavaScript's default empty value; the variable exists but hasn't been given a value yet
-- `null` — an intentional empty value set by the developer; means "this is deliberately empty"
-- undeclared — the variable doesn't exist; accessing it throws a `ReferenceError`
+- **`undefined`**: JavaScript's default empty value; the variable exists but hasn't been given a value yet
+- **`null`**: an intentional empty value set by the developer; means "this is deliberately empty"
+- **undeclared**: the variable doesn't exist; accessing it throws a `ReferenceError`
 
 A couple of practical tips:
 
-- When initializing a variable you'll fill in later, use `null` instead of leaving it `undefined` — the intent is clearer
+- When initializing a variable you'll fill in later, use `null` instead of leaving it `undefined`, as the intent is clearer
 - When checking whether an unknown variable exists, use `typeof` instead of accessing it directly to avoid a `ReferenceError`

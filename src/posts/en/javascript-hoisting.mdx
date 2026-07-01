@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'JavaScript Hoisting',
   date: '2026-03-17',
-  excerpt: 'A practical guide to JavaScript hoisting — covering var, let, and const behavior, the temporal dead zone, and the difference between function declarations and expressions.',
+  excerpt: 'A practical guide to JavaScript hoisting, covering var, let, and const behavior, the temporal dead zone, and the difference between function declarations and expressions.',
   tags: ['Front-end', 'JavaScript'],
 };
 
 # JavaScript Hoisting
 
-Hoisting is one of those JavaScript behaviors that catches people off guard until they understand what's actually happening. Before any code runs, the engine processes all variable and function declarations — meaning some things are available earlier than you might expect.
+Hoisting is one of those JavaScript behaviors that catches people off guard until they understand what's actually happening. Before any code runs, the engine processes all variable and function declarations, meaning some things are available earlier than you might expect.
 
 ```mermaid
 mindmap
@@ -35,7 +35,7 @@ Before executing any code, JavaScript creates an execution environment. During t
 
 This is hoisting.
 
-It doesn't rearrange your code — it's just the engine registering declarations before anything else runs.
+It doesn't rearrange your code; it's just the engine registering declarations before anything else runs.
 
 ---
 
@@ -76,7 +76,7 @@ console.log(count); // ReferenceError: Cannot access 'count' before initializati
 const count = 0;
 ```
 
-This is the Temporal Dead Zone (TDZ) — the period from the start of the scope to the point where the declaration is reached. The variable exists, but can't be accessed.
+This is the Temporal Dead Zone (TDZ): the period from the start of the scope to the point where the declaration is reached. The variable exists, but can't be accessed.
 
 The TDZ is intentional. It makes bugs easier to catch by throwing an error immediately, rather than silently returning `undefined`.
 
@@ -84,7 +84,7 @@ The TDZ is intentional. It makes bugs easier to catch by throwing an error immed
 
 ## Function Declaration Hoisting
 
-Function declarations are fully hoisted — the entire function body is available before the declaration appears in the code.
+Function declarations are fully hoisted: the entire function body is available before the declaration appears in the code.
 
 This means you can call a function before it's defined:
 
@@ -100,7 +100,7 @@ function greet() {
 
 ## Function Expression Hoisting
 
-Function expressions follow the same hoisting rules as variables — depending on whether they use `var`, `let`, or `const`.
+Function expressions follow the same hoisting rules as variables, depending on whether they use `var`, `let`, or `const`.
 
 ### With `var`
 
@@ -154,9 +154,9 @@ const greet = () => {
 
 ## Conclusion
 
-- `var` is hoisted and initialized to `undefined` — no error before the declaration, but can produce subtle bugs
-- `let` and `const` are hoisted but enter the TDZ — accessing them early throws an error immediately, making issues easier to spot
+- `var` is hoisted and initialized to `undefined`: no error before the declaration, but it can produce subtle bugs
+- `let` and `const` are hoisted but enter the TDZ: accessing them early throws an error immediately, making issues easier to spot
 - Function declarations are fully hoisted and can be called before they appear in the code
-- Function expressions are not fully hoisted — they follow the same rules as their variable type
+- Function expressions are not fully hoisted; they follow the same rules as their variable type
 
 In practice, always declare variables and functions before using them. Relying on hoisting makes code harder to read and reason about.

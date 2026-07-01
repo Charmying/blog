@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'RSA Encryption',
   date: '2026-05-03',
-  excerpt: 'A practical guide to RSA encryption — covering the mathematical foundation, key generation, encryption and decryption, digital signatures, why padding schemes matter, and how RSA compares to ECC.',
+  excerpt: 'A practical guide to RSA encryption, covering the mathematical foundation, key generation, encryption and decryption, digital signatures, why padding schemes matter, and how RSA compares to ECC.',
   tags: ['Security', 'Network'],
 };
 
 # RSA Encryption
 
-RSA is the most widely used asymmetric encryption algorithm. It was invented in 1977 by Ron Rivest, Adi Shamir, and Leonard Adleman — the name is their initials.
+RSA is the most widely used asymmetric encryption algorithm. It was invented in 1977 by Ron Rivest, Adi Shamir, and Leonard Adleman; the name is their initials.
 
 RSA's security rests on a mathematical hard problem: integer factorization. Multiplying two large prime numbers together is easy. Factoring the product back into its original primes is computationally infeasible at the key sizes used in practice.
 
@@ -74,7 +74,7 @@ In real use, `p` and `q` are each over 1024 bits long.
 n = p × q = 61 × 53 = 3233
 ```
 
-`n` is shared by both keys and determines the key length — RSA-2048 means `n` is 2048 bits.
+`n` is shared by both keys and determines the key length: RSA-2048 means `n` is 2048 bits.
 
 3. Compute λ(n)
 
@@ -86,7 +86,7 @@ n = p × q = 61 × 53 = 3233
 
 `e` must satisfy: `1 < e < λ(n)` and `gcd(e, λ(n)) = 1`.
 
-The most common value is 65537 (`2^16 + 1`) — it's prime, has only two 1-bits in binary, and is computationally efficient.
+The most common value is 65537 (`2^16 + 1`); it's prime, has only two 1-bits in binary, and is computationally efficient.
 
 5. Compute the private exponent d
 
@@ -98,9 +98,9 @@ e × d ≡ 1 (mod λ(n))
 d = 413
 ```
 
-Public key: `(e, n)` = `(17, 3233)` — shared openly
+Public key: `(e, n)` = `(17, 3233)`, shared openly
 
-Private key: `(d, n)` = `(413, 3233)` — kept secret
+Private key: `(d, n)` = `(413, 3233)`, kept secret
 
 ---
 
@@ -128,7 +128,7 @@ The ciphertext `2790` is sent to the recipient. Using private key `d = 413`, the
 
 ## Digital Signatures
 
-RSA also works for digital signatures — the direction is the reverse of encryption: private key signs, public key verifies.
+RSA also works for digital signatures; the direction is the reverse of encryption: private key signs, public key verifies.
 
 Signing (with the private key):
 
@@ -168,9 +168,9 @@ NIST recommends at least 3072-bit RSA keys beyond 2030, or switching to ECC.
 
 Raw RSA (Textbook RSA) applies modular exponentiation directly and is vulnerable to several well-known attacks. Modern RSA must use a padding scheme:
 
-- PKCS#1 v1.5 — the older standard; has known vulnerabilities (Bleichenbacher attack); avoid in new systems
-- OAEP (Optimal Asymmetric Encryption Padding) — the modern standard for encryption; currently recommended
-- PSS (Probabilistic Signature Scheme) — the modern standard for signatures; currently recommended
+- **PKCS#1 v1.5**: the older standard; has known vulnerabilities (Bleichenbacher attack); avoid in new systems
+- **OAEP (Optimal Asymmetric Encryption Padding)**: the modern standard for encryption; currently recommended
+- **PSS (Probabilistic Signature Scheme)**: the modern standard for signatures; currently recommended
 
 Using RSA without padding is a serious security mistake.
 
@@ -198,5 +198,5 @@ For new systems, ECC (especially Ed25519 or P-256) is generally the better choic
 - RSA's security is based on the difficulty of factoring large numbers
 - Public key `(e, n)` encrypts; private key `(d, n)` decrypts
 - The private key also signs; the public key verifies
-- Always use padding — OAEP for encryption, PSS for signatures; Textbook RSA is not secure
+- Always use padding: OAEP for encryption, PSS for signatures; Textbook RSA is not secure
 - Minimum 2048-bit keys; 3072-bit or higher is recommended for new systems, or use ECC instead

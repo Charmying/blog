@@ -1,13 +1,13 @@
 export const metadata = {
   title: 'JWT (JSON Web Token)',
   date: '2026-05-04',
-  excerpt: 'A practical guide to JWT — covering the three-part structure, how verification works, signing algorithms, the Refresh Token pattern, and the security trade-offs of different storage options.',
+  excerpt: 'A practical guide to JWT, covering the three-part structure, how verification works, signing algorithms, the Refresh Token pattern, and the security trade-offs of different storage options.',
   tags: ['Security', 'Network'],
 };
 
 # JWT (JSON Web Token)
 
-JWT (JSON Web Token) is an open standard (RFC 7519) for securely transmitting information between two parties. Its most common use is authentication — the server issues a JWT after login, and the client includes it with every subsequent request so the server can verify the user's identity.
+JWT (JSON Web Token) is an open standard (RFC 7519) for securely transmitting information between two parties. Its most common use is authentication: the server issues a JWT after login, and the client includes it with every subsequent request so the server can verify the user's identity.
 
 ```mermaid
 mindmap
@@ -44,7 +44,7 @@ A real JWT looks like this:
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkNoYXJteSIsImlhdCI6MTUxNjIzOTAyMn0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
 ```
 
-Each part is Base64Url encoded — not encrypted. Anyone can decode and read it.
+Each part is Base64Url encoded, not encrypted. Anyone can decode and read it.
 
 ### Header
 
@@ -59,7 +59,7 @@ Contains the token type and signing algorithm:
 
 ### Payload
 
-Contains claims — the actual information the token carries:
+Contains claims, the actual information the token carries:
 
 ```json
 {
@@ -75,12 +75,12 @@ Common standard claims:
 
 | Claim | Description |
 | - | - |
-| `sub` | Subject — who the token is about (usually a user ID) |
-| `iss` | Issuer — who issued the token |
-| `aud` | Audience — who the token is intended for |
+| `sub` | Subject: who the token is about (usually a user ID) |
+| `iss` | Issuer: who issued the token |
+| `aud` | Audience: who the token is intended for |
 | `exp` | Expiration time (Unix timestamp) |
 | `iat` | Issued at time |
-| `nbf` | Not before — token is invalid before this time |
+| `nbf` | Not before: token is invalid before this time |
 
 The Payload is not encrypted. Anyone can Base64Url decode it and read the contents. Never put passwords, credit card numbers, or other sensitive data in a JWT payload.
 
@@ -116,7 +116,7 @@ sequenceDiagram
     end
 ```
 
-JWT is stateless — the server doesn't store session data. Everything needed to verify the user is in the token itself. This makes JWT particularly well-suited for distributed systems and microservices.
+JWT is stateless: the server doesn't store session data. Everything needed to verify the user is in the token itself. This makes JWT particularly well-suited for distributed systems and microservices.
 
 ---
 
@@ -128,7 +128,7 @@ JWT supports two categories of signing algorithms:
 
 | Algorithm | Description |
 | - | - |
-| HS256 | HMAC-SHA256 — same secret signs and verifies |
+| HS256 | HMAC-SHA256: same secret signs and verifies |
 | HS384 | HMAC-SHA384 |
 | HS512 | HMAC-SHA512 |
 
@@ -138,13 +138,13 @@ Best for: signing and verification happening in the same service, where the secr
 
 | Algorithm | Description |
 | - | - |
-| RS256 | RSA-SHA256 — private key signs, public key verifies |
+| RS256 | RSA-SHA256: private key signs, public key verifies |
 | RS384 | RSA-SHA384 |
 | RS512 | RSA-SHA512 |
-| ES256 | ECDSA-SHA256 — private key signs, public key verifies |
+| ES256 | ECDSA-SHA256: private key signs, public key verifies |
 | ES384 | ECDSA-SHA384 |
 
-Best for: signing and verification in different services — for example, an Auth Server signs and an API Server verifies. The public key can be shared safely with any verifier.
+Best for: signing and verification in different services, for example, an Auth Server signs and an API Server verifies. The public key can be shared safely with any verifier.
 
 ---
 
@@ -154,13 +154,13 @@ Best for: signing and verification in different services — for example, an Aut
 
 localStorage is accessible to any JavaScript on the page. If the site has an XSS vulnerability, an attacker can steal the JWT.
 
-The safer option is an HttpOnly Cookie — JavaScript can't access HttpOnly cookies, which prevents XSS from stealing tokens.
+The safer option is an HttpOnly Cookie; JavaScript can't access HttpOnly cookies, which prevents XSS from stealing tokens.
 
 Using cookies requires handling CSRF (Cross-Site Request Forgery) separately. Use the `SameSite` cookie attribute or a CSRF token.
 
 ### Set a Short Expiry
 
-A JWT can't be revoked before it expires — not without implementing a blocklist. Keep `exp` short:
+A JWT can't be revoked before it expires, not without implementing a blocklist. Keep `exp` short:
 
 - Short-lived access tokens: 15 minutes to 1 hour
 - Pair with a Refresh Token for longer sessions
@@ -179,7 +179,7 @@ Refresh Tokens are typically stored server-side (in a database) so they can be r
 
 ### Never Allow alg: none
 
-The JWT spec permits `alg: none`, which means no signature verification. This is dangerous — an attacker can forge any token.
+The JWT spec permits `alg: none`, which means no signature verification. This is dangerous; an attacker can forge any token.
 
 When validating JWTs, always explicitly specify which algorithms are allowed and reject `none`.
 
@@ -199,8 +199,8 @@ When validating JWTs, always explicitly specify which algorithms are allowed and
 
 ## Summary
 
-- A JWT has three parts: Header, Payload, Signature — separated by dots
-- The Payload is Base64Url encoded, not encrypted — never put sensitive data in it
+- A JWT has three parts: Header, Payload, Signature, separated by dots
+- The Payload is Base64Url encoded, not encrypted; never put sensitive data in it
 - The Signature ensures the token hasn't been modified
 - JWT is stateless, great for distributed systems, but hard to revoke
 - Store in HttpOnly cookies, not localStorage

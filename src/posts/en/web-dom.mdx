@@ -1,7 +1,7 @@
 export const metadata = {
   title: 'DOM: Document Object Model',
   date: '2026-03-25',
-  excerpt: 'A practical guide to the DOM — covering element selection, modifying content and styles, adding and removing elements, and event listeners including bubbling and delegation.',
+  excerpt: 'A practical guide to the DOM, covering element selection, modifying content and styles, adding and removing elements, and event listeners including bubbling and delegation.',
   tags: ['Front-end', 'Web'],
 };
 
@@ -50,7 +50,7 @@ graph TD
     body --> p["p\n&quot;World&quot;"]
 ```
 
-`document` is the entry point — all DOM operations start there.
+`document` is the entry point; all DOM operations start there.
 
 ---
 
@@ -96,7 +96,7 @@ document.getElementsByClassName('item');
 document.getElementsByTagName('p');
 ```
 
-In modern code, `querySelector` and `querySelectorAll` are the go-to choice — they support the full CSS selector syntax and are more flexible than the older methods.
+In modern code, `querySelector` and `querySelectorAll` are the go-to choice: they support the full CSS selector syntax and are more flexible than the older methods.
 
 ---
 
@@ -117,7 +117,7 @@ title.textContent = 'Hello World';
 title.innerHTML = '<span>Hello</span> World';
 ```
 
-`textContent` deals with plain text only. `innerHTML` can contain HTML markup — but inserting unsanitized user input into `innerHTML` is an XSS risk, so be careful.
+`textContent` deals with plain text only. `innerHTML` can contain HTML markup, but inserting unsanitized user input into `innerHTML` is an XSS risk, so be careful.
 
 ### Modifying Attributes
 
@@ -159,7 +159,7 @@ button.classList.toggle('active');   // adds if absent, removes if present
 button.classList.contains('active'); // true / false
 ```
 
-Manipulating classes is generally better than setting `style` directly — it keeps styles in CSS where they belong and is easier to maintain.
+Manipulating classes is generally better than setting `style` directly, keeping styles in CSS where they belong and is easier to maintain.
 
 ### Adding and Removing Elements
 
@@ -253,7 +253,7 @@ button.addEventListener('click', handleClick);
 button.removeEventListener('click', handleClick);
 ```
 
-Anonymous functions can't be removed — always use a named function if you need to clean up later.
+Anonymous functions can't be removed; always use a named function if you need to clean up later.
 
 ### Event Bubbling
 
@@ -316,4 +316,4 @@ The DOM gives JavaScript the ability to read and control what's on the page:
 - Select elements with `querySelector` / `querySelectorAll`
 - Modify content and appearance with `textContent`, `innerHTML`, `classList`, and `style`
 - Add and remove elements with `createElement`, `appendChild`, and `remove`
-- Listen for events with `addEventListener` — and use bubbling and delegation to keep event handling efficient
+- Listen for events with `addEventListener`, using bubbling and delegation to keep event handling efficient

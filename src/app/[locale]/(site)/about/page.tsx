@@ -113,9 +113,9 @@ const timeline: TimelineItem[] = [
       { title: 'Developed a React + Electron-based Lighthouse auditing tool that generates batch performance reports and Excel-based analysis, significantly improving reporting efficiency' },
       { title: 'Defined and prioritized SEO and performance optimization initiatives based on technical impact and business value' },
       { title: 'Investigated and resolved front-end issues to improve website performance, accessibility, and user experience' },
-      { title: 'Developed and maintained internal AI applications using React, collaborating with cross-functional teams to integrate AI services and implement new features.' },
+      { title: 'Developed and maintained internal AI applications using React, collaborating with cross-functional teams to integrate AI services and implement new features' },
       { title: 'Performed third-party dependency upgrades and security vulnerability remediation in accordance with information security requirements' },
-      { title: 'Conducted website load and performance testing using JMeter to identify bottlenecks and support optimization efforts' },
+      { title: 'Conducted website load and performance testing using JMeter to identify bottlenecks and support optimization effort' },
     ],
   },
   {
@@ -128,72 +128,55 @@ const timeline: TimelineItem[] = [
     locationZh: '臺中市',
     locationEn: 'Taichung City, Taiwan',
     skills: ['HTML5', 'CSS3', 'SCSS', 'Tailwind CSS', 'JavaScript', 'TypeScript', 'Angular', 'Cordova', 'App', 'Git'],
-    summaryZh: "銀行企網銀系統 Web 與 App 開發。",
-    summaryEn: "Web and App development for corporate online banking systems.",
+    summaryZh: "企業網路銀行 Web/App 開發",
+    summaryEn: "Developed and maintained enterprise corporate online banking web and mobile applications.",
     highlightsZh: [
       {
-        title: '負責企網銀 App / Web 前端功能開發與維運',
+        title: '使用 Angular 8、Angular 11、Angular 18 與 TypeScript 開發及維護企業網路銀行 Web/App，採用 SPA 架構進行前端開發',
       },
       {
-        title: '負責企網銀 App 對客戶教育訓練',
-        items: [
-          'Cordova、Angular 等技術分享',
-          'App 與 API 互動模式與加解密介紹',
-          '交易放行流程介紹',
-          '系統設計架構、軟體設計架構技術分享',
-          '營運環境維護、日常檢核維護、異常處理程序等技術分享與實戰範例分享',
-        ]
+        title: '參與企業網路銀行 Web 2.0 專案，將既有 XML 架構重構為 Angular 前端架構，提升系統可維護性與開發效率',
       },
       {
-        title: '使用 Angular 8、Angular 11、Angular 18、TypeScript 進行 SPA 架構開發',
+        title: '負責 App 與後端 API 串接、功能開發、問題排查、缺陷修正及系統維運',
       },
       {
-        title: '參與企網銀 Web 2.0 專案，將既有 XML 架構重構為 Angular 前端',
+        title: '修改、整合與測試 Cordova Plugin，完成 App 功能整合與平台相容性驗證',
       },
       {
-        title: '負責 App 與後端 API 串接、Issue 處理與功能修正',
+        title: '進行 Angular、Cordova、系統架構、軟體架構、營運環境維護、日常檢核、異常處理流程等技術分享，並結合實務案例協助客戶與團隊理解系統設計及維運流程',
       },
       {
-        title: 'Cordova Plugin 修改、介接、測試與 App 功能整合',
+        title: '協助新進同仁建置開發環境，提供 Git Flow、Angular 與專案開發流程教學，加速團隊 onboarding',
       },
       {
-        title: '協助新進同仁電腦環境建置、進行 Git Flow 與 Angular 教學加速專案上手',
-      },
-      {
-        title: '撰寫 JavaScript / Python 腳本協助 i18n 與資料整理以及加速開發',
+        title: '撰寫 JavaScript 與 Python 自動化腳本，協助 i18n、多語系資料整理及開發流程自動化，提升開發效率',
       },
     ],
     highlightsEn: [
       {
-        title: 'Responsible for frontend development and maintenance of corporate online banking App / Web',
+        title: 'Developed and maintained frontend features for enterprise corporate online banking web and mobile applications using Angular (v8, v11, v18) and TypeScript with a Single-Page Application (SPA) architecture',
       },
       {
-        title: 'Responsible for customer education training of corporate online banking App',
-        items: [
-          'Technical sharing of Cordova, Angular and other technologies',
-          'Introduction to App and API interaction patterns and encryption/decryption',
-          'Introduction to transaction release processes',
-          'Technical sharing of system design architecture and software design architecture',
-          'Technical sharing and practical examples of operational environment maintenance, daily inspection maintenance, and abnormal handling procedures',
-        ]
+        title: 'Contributed to the Corporate Online Banking Web 2.0 modernization project by migrating legacy XML-based pages to a modern Angular application',
       },
       {
-        title: 'Using Angular 8, Angular 11, Angular 18, and TypeScript to develop SPA architecture',
+        title: 'Integrated mobile applications with backend APIs, resolved production issues, and implemented feature enhancements',
       },
       {
-        title: 'Participated in the corporate online banking Web 2.0 project, refactoring existing XML architecture to Angular frontend',
+        title: 'Modified, integrated, and tested Cordova plugins to support mobile application functionality and platform compatibility',
       },
       {
-        title: 'Responsible for App and backend API integration, issue handling, and feature modifications',
+        title: 'Delivered technical training for customers on the corporate online banking mobile application, covering application workflows, transaction approval processes, API communication, encryption and decryption mechanisms, and operational best practices',
       },
       {
-        title: 'Cordova Plugin modification, integration, testing, and App function integration',
+        title: 'Conducted internal technical knowledge sharing sessions on Angular, Cordova, software architecture, system design, production environment maintenance, daily operational checks, incident handling procedures, and real-world troubleshooting practices',
       },
       {
-        title: 'Assisted new hires in setting up computer environments, conducted Git Flow and Angular training to accelerate project onboarding',
+        title: 'Mentored new team members by setting up development environments and providing Git Flow and Angular training to accelerate onboarding and improve development efficiency',
       },
       {
-        title: 'Wrote JavaScript / Python scripts to assist with i18n and data organization, as well as to accelerate development',
+        title: 'Developed JavaScript and Python automation scripts for internationalization (i18n), data processing, and workflow automation to improve development productivity',
       },
     ],
   },
@@ -207,28 +190,28 @@ const timeline: TimelineItem[] = [
     locationZh: '新竹市',
     locationEn: 'Hsinchu City, Taiwan',
     skills: ['HTML5', 'CSS3', 'Ant Design', 'JavaScript', 'Vue 3'],
-    summaryZh: "驗證 Vue 3 Composition 所學知識並應用於工作中。",
-    summaryEn: "Validated knowledge of Vue 3 Composition and applied it to work.",
+    summaryZh: "內部新人培訓與技術指導",
+    summaryEn: "Internal Training & Technical Mentorship",
     highlightsZh: [
       {
-        title: '修正與優化新人入職測驗前端題目',
+        title: '修正與優化前端新人入職測驗內容，提升測驗品質與培訓成效',
       },
       {
-        title: '指導新人理解 Vue 前端架構與常見開發問題',
+        title: '規劃並執行 Vue 3 新人教育訓練，協助新人理解前端架構、開發流程與常見開發問題',
       },
       {
-        title: '進行簡易 Code Review 與程式問題排查',
+        title: '提供程式碼審查 (Code Review)、技術問題排查及開發指導，協助新人快速完成專案 onboarding',
       },
     ],
     highlightsEn: [
       {
-        title: 'Refined and optimized frontend test questions for new hires',
+        title: 'Reviewed and refined frontend onboarding assessments to improve the quality and effectiveness of new hire evaluations',
       },
       {
-        title: 'Guided new hires in understanding Vue frontend architecture and common development issues',
+        title: 'Delivered Vue 3 training sessions, helping new team members understand application architecture, development workflows, and frontend best practice',
       },
       {
-        title: 'Conducted simple code reviews and troubleshooting of programming issues',
+        title: 'Mentored new hires by answering technical questions, troubleshooting development issues, and providing code reviews to accelerate onboarding',
       },
     ],
   },
@@ -242,16 +225,16 @@ const timeline: TimelineItem[] = [
     locationZh: '臺中市',
     locationEn: 'Taichung City, Taiwan',
     skills: ['HTML5', 'CSS3', 'JavaScript', 'jQuery', 'Git'],
-    summaryZh: "與客戶、設計師、工程師溝通需求後撰寫網頁，並進行專案排程以及與客戶溝通協調問題與成果。",
-    summaryEn: "Communicated with clients, designers, and engineers to understand requirements, then developed web pages, managed project schedules, and coordinated issues and deliverables with clients.",
+    summaryZh: "與客戶、設計師及工程師密切合作，進行需求訪談、網站開發、專案時程管理與跨部門協調，確保專案順利交付並達成客戶需求。",
+    summaryEn: "Collaborated with clients, designers, and engineers to gather requirements, develop responsive websites, manage project schedules, and ensure successful project delivery through effective communication and coordination.",
     highlightsZh: [
       {
-        title: "部分專案：",
+        title: "代表專案：",
         items: [
-          '製造業企業網站 (越南市場)',
-          '衛浴品牌 (經銷商招募)',
-          '大型電子支付公司 (永續與投資人專區)',
-          '多家上市櫃企業網站專案'
+          '製造業企業官方網站 (越南市場)',
+          '衛浴品牌官方網站 (經銷商招募平台)',
+          '大型電子支付公司官方網站 (永續發展與投資人關係專區)',
+          '多家上市櫃企業官方網站建置專案'
         ],
       },
     ],
@@ -259,10 +242,10 @@ const timeline: TimelineItem[] = [
       {
         title: "Selected Projects:",
         items: [
-          'Manufacturing company website (Vietnam market)',
-          'Large-scale e-payment platform (Sustainability & IR sections)',
-          'Sanitary brand (dealer recruitment)',
-          'Web projects for listed companies'
+          'Manufacturing company website for the Vietnam market',
+          'Corporate website for a sanitary ware brand, including a dealer recruitment platform',
+          'Corporate website for a leading electronic payment company, including Sustainability and Investor Relations (IR) sections',
+          'Corporate website projects for multiple publicly listed companies',
         ],
       },
     ],
@@ -277,29 +260,23 @@ const timeline: TimelineItem[] = [
     locationZh: "桃園市中壢區",
     locationEn: "Zhongli District, Taoyuan City, Taiwan",
     skills: ["UI/UX", "Figma", "HTML5", "CSS3", "JavaScript", "Vue 2", "Git"],
-    summaryZh: "系統學習 UI/UX 設計、HTML/CSS/JavaScript、Vue.js 等前端技術。",
-    summaryEn: "Systematic learning of UI/UX design, HTML/CSS/JavaScript, Vue.js and other frontend technologies.",
+    summaryZh: "完成前端開發培訓，系統學習 UI/UX 設計、HTML、CSS、JavaScript、Vue.js 與 Git 等前端開發技術。",
+    summaryEn: "Completed an intensive frontend development program covering UI/UX design, HTML, CSS, JavaScript, Vue.js, and Git.",
     highlightsZh: [
       {
-        title: "課程重點",
+        title: "專案：",
         items: [
-          "UI/UX 設計原理與實作：視覺設計、PhotoShop、Figma",
-          "前端技術：HTML5、CSS3、JavaScript、jQuery、Vue 2 Option API",
-          "後端與資料庫技術：IIS PHP、MySQL",
-          "團隊開發：Git、GitHub、敏捷開發",
-          "專案實作與作品集建立",
+          "KOALA+ 募資平台 (團隊專案) －負責登入驗證系統與前端互動功能開發",
+          "PANGOLIN 手機殼購物網站 (個人專案) －獨立完成 UI/UX 設計、網站介面開發與前端功能實作",
         ],
       },
     ],
     highlightsEn: [
       {
-        title: "Course highlights",
+        title: "Projects:",
         items: [
-          "UI/UX design principles and practice: visual design, PhotoShop, Figma",
-          "Frontend: HTML5, CSS3, JavaScript, jQuery, Vue 2 Option API",
-          "Backend & database: IIS PHP, MySQL",
-          "Team development: Git, GitHub, Agile",
-          "Project practice and portfolio building",
+          "KOALA+ Crowdfunding Platform (Team Project) — Developed the user authentication system and implemented interactive frontend features",
+          "PANGOLIN Phone Case Store (Personal Project) — Designed and developed a complete e-commerce website from UI/UX design to frontend implementation",
         ],
       },
     ],

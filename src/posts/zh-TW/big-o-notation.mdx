@@ -1,0 +1,443 @@
+export const metadata = {
+  title: 'Big O 表示法 (Big O Notation)',
+  date: '2026-08-01',
+  excerpt: 'Big O 表示法是一種數學符號，用來描述演算法在輸入資料量增加時，執行時間或記憶體使用量的成長趨勢。本文深入解析常見的複雜度類型、分析原則與實務應用，並提供 TypeScript、Python 與 Java 的程式碼範例。',
+  tags: ['演算法'],
+};
+
+# Big O 表示法 (Big O Notation)
+
+Big O 表示法是一種數學符號，用來描述「演算法在輸入資料量增加時，執行時間或記憶體使用量的成長趨勢」，尤其著重於最壞情況的效率。它不代表實際執行秒數，而是幫助評估演算法是否具有良好的擴展性 (Scalability) 與效率 (Efficiency)，特別在處理大量資料時更顯重要。
+
+### Big O 的用途
+
+- 分析演算法的時間複雜度 (Time Complexity)
+- 分析演算法空間複雜度 (Space Complexity)
+- 幫助選擇最適合的資料結構與演算法解法
+- 比較兩個演算法在大資料下的效能差異，找出程式的效能瓶頸 (CPU 或記憶體)
+- 判斷一段程式是否可擴展 (Scalable)
+
+---
+
+## 時間複雜度 & 空間複雜度
+
+- 時間複雜度 (Time Complexity)：表示演算法所需的執行時間隨著輸入資料量 ($n$) 變化的情形。
+- 空間複雜度 (Space Complexity)：表示演算法所需的記憶體空間隨著輸入資料量變化的情形。
+
+---
+
+## 常見的 Big O 類型
+
+以下是從效率最高到最低的常見時間複雜度，由小到大排列：
+
+| Big O | 名稱 | 舉例程式 / 演算法 | 說明 |
+| :--- | :--- | :--- | :--- |
+| $O(1)$ | 常數時間 | 存取陣列特定索引的值 | 無論輸入多大，執行時間固定不變 |
+| $O(\log n)$ | 對數時間 | 二分搜尋法 (Binary Search) | 資料規模每次執行操作都減半 |
+| $O(n)$ | 線性時間 | 單層迴圈遍歷 (Linear Scan) | 輸入多大，時間就花多長 (每個元素走一次) |
+| $O(n \log n)$ | 線性對數時間 | 快速排序 (Quick Sort)、合併排序 (Merge Sort) | 分治法排序演算法的典型複雜度 (例如 Merge Sort、Quick Sort 的平均情況) |
+| $O(n^2)$ | 平方時間 | 雙層巢狀迴圈 (Nested Loops) | 每個元素與所有其他元素互動 (例如氣泡排序。常見於暴力解法) |
+| $O(2^n)$ | 指數時間 | 遞迴費波那契數列 (未最佳化) | 每次呼叫觸發兩次新的遞迴，資料稍多就呈爆炸性成長 |
+| $O(n!)$ | 階乘時間 | 全排列 (Permutations) | 組合與排列問題的暴力解法 (例如旅行推銷員問題，TSP) |
+
+---
+
+## 時間複雜度範例
+
+### $O(1)$：常數時間 – 陣列取值
+
+不論陣列有幾個元素，這個函式只會做一次存取，時間固定。
+
+```typescript
+// TypeScript
+function getFirst<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+```
+
+```python
+# Python
+from typing import List, Any, Optional
+
+def get_first(arr: List[Any]) -> Optional[Any]:
+    return arr[0] if arr else None
+```
+
+```java
+// Java
+public class ArrayUtils {
+    public static <T> T getFirst(T[] arr) {
+        if (arr == null || arr.length == 0) return null;
+        return arr[0];
+    }
+}
+```
+
+### $O(n)$：線性時間 – 遍歷陣列
+
+資料越多，執行次數就越多。
+
+```typescript
+// TypeScript
+function printAll<T>(arr: T[]): void {
+  for (let i = 0; i < arr.length; i++) {
+    console.log(arr[i]);
+  }
+}
+```
+
+```python
+# Python
+from typing import List, Any
+
+def print_all(arr: List[Any]) -> None:
+    for item in arr:
+        print(item)
+```
+
+```java
+// Java
+public class Traversal {
+    public static <T> void printAll(T[] arr) {
+        for (T item : arr) {
+            System.out.println(item);
+        }
+    }
+}
+```
+
+### $O(n^2)$：平方時間 – 巢狀迴圈
+
+巢狀迴圈導致執行次數為 $n \times n$。
+
+```typescript
+// TypeScript
+function printPairs<T>(arr: T[]): void {
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = 0; j < arr.length; j++) {
+      console.log(arr[i], arr[j]);
+    }
+  }
+}
+```
+
+```python
+# Python
+from typing import List, Any
+
+def print_pairs(arr: List[Any]) -> None:
+    for i in range(len(arr)):
+        for j in range(len(arr)):
+            print(arr[i], arr[j])
+```
+
+```java
+// Java
+public class Pairs {
+    public static <T> void printPairs(T[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length; j++) {
+                System.out.println(arr[i] + " " + arr[j]);
+            }
+        }
+    }
+}
+```
+
+### $O(\log n)$：對數時間 – 二分搜尋
+
+每次搜尋都把問題切一半。
+
+```typescript
+// TypeScript
+function binarySearch(arr: number[], target: number): number {
+  let left = 0;
+  let right = arr.length - 1;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    if (arr[mid] === target) return mid;
+    if (arr[mid] < target) left = mid + 1;
+    else right = mid - 1;
+  }
+  return -1;
+}
+```
+
+```python
+# Python
+def binary_search(arr: list[int], target: int) -> int:
+    left, right = 0, len(arr) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if arr[mid] == target:
+            return mid
+        if arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+```
+
+```java
+// Java
+public class BinarySearch {
+    public static int binarySearch(int[] arr, int target) {
+        int left = 0;
+        int right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2; // 防止整數溢位
+            if (arr[mid] == target) return mid;
+            if (arr[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+}
+```
+
+### 「非對稱巢狀迴圈」與「多變數」情況
+
+若巢狀迴圈的次數不相等，需考慮不同變數。例如：外層執行 $n$ 次、內層執行 $m$ 次，則時間複雜度為 $O(n \times m)$。
+
+```typescript
+// TypeScript
+function processTwoSizes(n: number, m: number): void {
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      // ...
+    }
+  }
+}
+```
+
+```python
+# Python
+def process_two_sizes(n: int, m: int) -> None:
+    for i in range(n):
+        for j in range(m):
+            pass
+```
+
+```java
+// Java
+public class NestedLoops {
+    public static void processTwoSizes(int n, int m) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                // ...
+            }
+        }
+    }
+}
+```
+
+---
+
+## 如何判斷一段程式的時間複雜度
+
+1. 找出重複結構 (例如迴圈、遞迴)。
+2. 確認輸入變數與其關係 (確認其是否依據 $n$ 執行多次)。
+3. 忽略常數、只看增長趨勢 (例如 $O(3n) \to O(n)$)。
+
+---
+
+## 空間複雜度範例
+
+### $O(1)$ – 單一變數儲存總和
+
+時間複雜度：$O(n)$，空間複雜度：$O(1)$。此演算法只用了固定常數空間儲存 `total` 變數。
+
+```typescript
+// TypeScript
+function sumArray(arr: number[]): number {
+  let total = 0; // O(1) 空間
+  for (let i = 0; i < arr.length; i++) {
+    total += arr[i];
+  }
+  return total;
+}
+```
+
+```python
+# Python
+def sum_array(arr: list[int]) -> int:
+    total = 0 # O(1) 空間
+    for num in arr:
+        total += num
+    return total
+```
+
+```java
+// Java
+public class ArraySum {
+    public static int sumArray(int[] arr) {
+        int total = 0; // O(1) 空間
+        for (int num : arr) {
+            total += num;
+        }
+        return total;
+    }
+}
+```
+
+### $O(n)$ – 建立新陣列
+
+空間複雜度為 $O(n)$，因為建立了一個長度與輸入參數 $n$ 成正比的新資料結構。
+
+```typescript
+// TypeScript
+function createArray(n: number): number[] {
+  let result: number[] = [];
+  for (let i = 0; i < n; i++) {
+    result.push(i);
+  }
+  return result;
+}
+```
+
+```python
+# Python
+def create_array(n: int) -> list[int]:
+    result = []
+    for i in range(n):
+        result.append(i)
+    return result
+```
+
+```java
+// Java
+import java.util.ArrayList;
+import java.util.List;
+
+public class ArrayFactory {
+    public static List<Integer> createArray(int n) {
+        List<Integer> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            result.add(i);
+        }
+        return result;
+    }
+}
+```
+
+### 遞迴 $O(2^n)$ – 費波那契遞迴 (未最佳化) 與其空間開銷
+
+每次呼叫會觸發兩次新的遞迴，因此時間複雜度為 $O(2^n)$。
+
+同時，空間複雜度為 $O(n)$。在最深的遞迴展開時，呼叫堆疊 (Call Stack) 會保留 $n$ 個待回傳的函式框架，因此其堆疊空間隨 $n$ 線性增長。
+
+```typescript
+// TypeScript
+function fib(n: number): number {
+  if (n <= 1) return n;
+  return fib(n - 1) + fib(n - 2);
+}
+```
+
+```python
+# Python
+def fib(n: int) -> int:
+    if n <= 1:
+        return n
+    return fib(n - 1) + fib(n - 2)
+```
+
+```java
+// Java
+public class Fibonacci {
+    public static int fib(int n) {
+        if (n <= 1) return n;
+        return fib(n - 1) + fib(n - 2);
+    }
+}
+```
+
+---
+
+## Big O 的規則 (只保留最主要的增長項)
+
+| 分析技巧 | 說明與範例 |
+| :--- | :--- |
+| 去除常數 | 忽略常數係數：$O(3n) \to O(n)$ |
+| 只保留最高次項 | 忽略低階項：$O(n^2 + n) \to O(n^2)$ |
+| 巢狀迴圈要相乘 | 雙層嵌套迴圈：$O(n \times n) \to O(n^2)$ |
+| 多段執行 $\to$ 取最大項 | 依序執行的獨立區塊取極大值：$O(n) + O(\log n) \to O(n)$ |
+| 遞迴需推展關係式 | 找出遞迴邊界與拆解樹，例如最佳化費波那契 (動態規劃) $\to O(n)$ |
+
+---
+
+## 演算法分析的意義
+
+使用 Big O 的好處：
+
+- 幫助比較不同演算法的效率。
+- 提前預測在「大量資料」情況下的實際效能表現。
+- 優化程式碼時，能夠精確找出效能瓶頸所在。
+
+---
+
+## 判斷效率的黃金法則
+
+| 程式碼特徵 | Big O 類型 |
+| :--- | :--- |
+| 無迴圈、無遞迴結構 | $O(1)$ |
+| 單層迴圈遍歷 | $O(n)$ |
+| 雙層巢狀迴圈 | $O(n^2)$ |
+| 每次操作皆將問題規模切減一半 | $O(\log n)$ |
+| 遞迴中每次呼叫兩次 (呈現二元樹狀展開) | $O(2^n)$ |
+
+---
+
+## Big O 在面試與實務的應用
+
+| 常見題目 | 時間複雜度 |
+| :--- | :--- |
+| 陣列中尋找最大值 / 最小值 | $O(n)$ |
+| 判斷字串是否為回文 (Palindrome) | $O(n)$ |
+| 泡沫排序 (Bubble Sort) | $O(n^2)$ |
+| 快速排序 (Quick Sort) | $O(n \log n)$ |
+| 建立 Hash Map 並進行查詢 | $O(n)$ 建立 + $O(1)$ 單次查詢 |
+| 求費波那契數列第 $n$ 項 | $O(2^n)$ (暴力遞迴) 或 $O(n)$ (動態規劃) |
+
+### 實務情境對比
+
+| 任務 | 低效實作 (劣) | 高效實作 (優) |
+| :--- | :--- | :--- |
+| 搜尋資料 | $O(n)$ 線性搜尋 | $O(\log n)$ 二分搜尋 |
+| 排序資料 | $O(n^2)$ 泡沫排序 | $O(n \log n)$ 合併/快速排序 |
+| 查找字典中某單字是否存在 | $O(n)$ 遍歷陣列 | $O(1)$ 使用 HashSet / Set 查找 |
+| 預測效能瓶頸 | 盲目重構程式碼 | 利用 Big O 精確鎖定高耗時核心邏輯 |
+
+---
+
+## 最好 / 平均 / 最壞情況
+
+Big O 通常分析最壞情況，但在特定演算法評估中，我們也會通盤考量：
+
+- 最好情況 (Best Case)：以 Bubble Sort 為例，若輸入資料已完全排序，只需遍歷一次，此時複雜度為 $O(n)$。
+- 平均情況 (Average Case)：快速排序 (Quick Sort) 在隨機分佈資料下的平均時間複雜度為 $O(n \log n)$。
+- 最壞情況 (Worst Case)：若快速排序的基準點 (Pivot) 選擇不當且輸入資料已完全排序，可能會退化至 $O(n^2)$。實務上採用隨機化選軸法或三點取中法 (Median-of-three) 能有效降低退化機率。
+
+---
+
+## 常見誤解與陷阱
+
+| 常見誤解 | 正確觀念 |
+| :--- | :--- |
+| $O(n)$ 的演算法就一定很慢 | 效能表現取決於實際資料規模與具體實作方式。 |
+| 只有最壞情況需要進行分析 | 最好、平均、最壞情況皆有其分析價值，視系統工程需求而定。 |
+| Big O 代表精確的執行時間 | 它描述的是隨資料量增長的「趨勢與速率」，而非具體執行秒數。 |
+| Big O 越小在任何情況下都跑得越快 | 當資料量極小時，常數項與系統配置開銷可能主導實際速度。 |
+| 多段獨立程式的 Big O 必須全部相加 | 只需保留隨資料量增長影響最大的最高階項目。 |
+| $O(n^2)$ 的效能很差，在專案中絕對不能使用 | 在資料規模極小或執行頻率極低的特定情境下，其簡潔的實作仍可接受。 |
+
+---
+
+## 總結
+
+Big O 並不表示實際執行時間，而是描述資料量增加時的「趨勢」與「成長速率」。掌握 Big O 能幫助工程師：
+
+- 寫出高執行效率與低記憶體佔用的優質程式。
+- 建構穩健且具高擴充性的大型系統。
+
+因此，在設計系統與演算法時，Big O 是用來評估可擴展性與潛在效能瓶頸的重要指標，而非實際執行速度的絕對衡量。

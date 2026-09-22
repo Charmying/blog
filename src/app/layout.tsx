@@ -4,6 +4,7 @@ import "./globals.css";
 import "katex/dist/katex.min.css";
 import { THEME_STORAGE_KEY, THEME_DEFAULT } from "@/config/theme";
 import { generateOrganizationSchema, generateWebsiteSchema, getSEOConfig } from "@/lib/seo";
+import { Analytics } from '@vercel/analytics/next';
 
 const themeInitScript = `(function(){try{var s=localStorage.getItem("${THEME_STORAGE_KEY}");var t=s==="dark"||s==="light"?s:"${THEME_DEFAULT}";document.documentElement.dataset.theme=t;document.documentElement.style.colorScheme=t}catch(e){}})();`;
 const seoConfig = getSEOConfig();
@@ -87,7 +88,10 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationSchema()) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebsiteSchema()) }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }

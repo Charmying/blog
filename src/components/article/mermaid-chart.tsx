@@ -31,6 +31,9 @@ const MINDMAP_TOKENS = {
   },
 } as const;
 
+const MINDMAP_ROOT_CSS =
+  ".section-root foreignObject *, .section--1 foreignObject *, .section-root text, .section--1 text { font-weight: 600; }";
+
 function applyMindmapTheme(container: HTMLDivElement, isDark: boolean): void {
   const svg = container.querySelector("svg");
   if (!svg) return;
@@ -105,6 +108,30 @@ function applyMindmapTheme(container: HTMLDivElement, isDark: boolean): void {
   });
 }
 
+function centerSequenceLabels(container: HTMLDivElement): void {
+  const svg = container.querySelector("svg");
+  if (!svg) return;
+
+  const texts = Array.from(svg.querySelectorAll<SVGTextElement>("text.noteText, text.labelText"));
+
+  svg.querySelectorAll<SVGGraphicsElement>("rect.note, polygon.labelBox").forEach((box) => {
+    const b = box.getBBox();
+    const inside = texts
+      .map((text) => ({ text, bbox: text.getBBox() }))
+      .filter(({ bbox }) => {
+        const cx = bbox.x + bbox.width / 2;
+        const cy = bbox.y + bbox.height / 2;
+        return cx >= b.x && cx <= b.x + b.width && cy >= b.y && cy <= b.y + b.height;
+      });
+    if (inside.length === 0) return;
+
+    const top = Math.min(...inside.map(({ bbox }) => bbox.y));
+    const bottom = Math.max(...inside.map(({ bbox }) => bbox.y + bbox.height));
+    const dy = b.y + b.height / 2 - (top + bottom) / 2;
+    inside.forEach(({ text }) => text.setAttribute("transform", `translate(0 ${dy})`));
+  });
+}
+
 export function MermaidChart({ children }: MermaidChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rawId = useId();
@@ -117,6 +144,7 @@ export function MermaidChart({ children }: MermaidChartProps) {
 
     let cancelled = false;
     const isMindmap = children.trim().startsWith("mindmap");
+    const isSequence = children.trim().startsWith("sequenceDiagram");
 
     const render = async () => {
       if (cancelled || !containerRef.current) return;
@@ -130,6 +158,7 @@ export function MermaidChart({ children }: MermaidChartProps) {
         theme: isDark ? "dark" : "default",
         securityLevel: "loose",
         fontFamily: "inherit",
+        themeCSS: MINDMAP_ROOT_CSS,
       });
 
       const rawDiagram = decodeHtmlEntities(children).trim();
@@ -142,6 +171,9 @@ export function MermaidChart({ children }: MermaidChartProps) {
           containerRef.current.innerHTML = svg;
           if (isMindmap) {
             applyMindmapTheme(containerRef.current, isDark);
+          }
+          if (isSequence) {
+            centerSequenceLabels(containerRef.current);
           }
         }
       } catch (err) {

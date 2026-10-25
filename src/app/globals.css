@@ -1389,6 +1389,10 @@ body.theme-ready {
   border-radius: 0.75rem;
 }
 
+.mermaid-chart foreignObject p {
+  line-height: inherit;
+}
+
 .mermaid-chart__error {
   margin: 0;
   padding: 1rem 1.25rem;

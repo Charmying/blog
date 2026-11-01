@@ -1,5 +1,7 @@
 import { getLocale } from "next-intl/server";
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
 import "katex/dist/katex.min.css";
 import { THEME_STORAGE_KEY, THEME_DEFAULT } from "@/config/theme";
@@ -79,6 +81,7 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const locale = await getLocale();
+  const gaId = process.env.NEXT_PUBLIC_GA_ID;
 
   return (
     <html lang={locale} data-theme={THEME_DEFAULT} suppressHydrationWarning>
@@ -87,7 +90,11 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationSchema()) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(generateWebsiteSchema()) }} />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
+      {gaId && <GoogleAnalytics gaId={gaId} />}
     </html>
   );
 }

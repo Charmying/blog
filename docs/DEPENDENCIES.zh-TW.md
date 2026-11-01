@@ -11,6 +11,7 @@
 - [核心依賴](#核心依賴)
 - [內容處理](#內容處理)
 - [國際化](#國際化)
+- [網站分析](#網站分析)
 - [開發工具](#開發工具)
 - [樣式工具](#樣式工具)
 - [依賴關係圖](#依賴關係圖)
@@ -140,6 +141,34 @@
 
 ---
 
+## 網站分析
+
+### @vercel/analytics
+
+| 項目 | 內容 |
+|------|------|
+| **套件名稱** | `@vercel/analytics` |
+| **版本** | `^2.0.1` |
+| **用途** | 透過 Vercel Web Analytics 統計頁面瀏覽，不使用 cookie |
+| **為什麼選擇** | • 部署在 Vercel 上零設定，只需在根 layout 加入一個元件<br>• 不使用 cookie，不需要同意橫幅<br>• 儀表板可快速查看熱門頁面、來源與國家 |
+| **替代方案** | • Google Analytics 4 — 歷史資料較長，但依賴 cookie<br>• Plausible / Umami — 注重隱私，但需付費或自行架設<br>• Cloudflare Web Analytics — 免費，但保留期限較短 |
+| **限制** | • Hobby 方案只保留 1 個月資料，每月上限 50,000 events<br>• 長期趨勢交由 GA4 負責 |
+
+---
+
+### @next/third-parties
+
+| 項目 | 內容 |
+|------|------|
+| **套件名稱** | `@next/third-parties` |
+| **版本** | `16.1.6` (與 `next` 版本保持一致) |
+| **用途** | Next.js 官方提供的 Google Analytics 4 載入元件 |
+| **為什麼選擇** | • Next.js 團隊維護<br>• 自動追蹤用戶端路由切換<br>• 標準報表不受資料保留期限設定影響，可查看每日、每週、每月、每年的歷史資料<br>• 頁面可互動後才載入腳本，降低效能影響 |
+| **替代方案** | • 手動使用 `next/script` 搭配 gtag 片段 — 需要更多樣板程式碼<br>• Google Tag Manager — 更彈性但設定較繁瑣 |
+| **設定方式** | • 在 Vercel 環境變數設定 `NEXT_PUBLIC_GA_ID` (量測 ID，格式 `G-XXXXXXXXXX`)，僅勾選 Production<br>• 未設定時不會載入任何腳本 |
+
+---
+
 ## 開發工具
 
 ### TypeScript
@@ -235,6 +264,8 @@ Next.js
     ├─ React
     │   └─ react-dom
     ├─ next-intl (i18n)
+    ├─ @vercel/analytics (Vercel Web Analytics)
+    ├─ @next/third-parties (Google Analytics 4)
     └─ next-mdx-remote (MDX)
         ├─ remark-gfm (Markdown 擴充)
         ├─ rehype-slug (標題 id)
@@ -422,7 +453,6 @@ Tailwind CSS
 
 | 套件 | 用途 | 引入時機 |
 |------|------|----------|
-| @vercel/analytics | 網站分析 | 當需要追蹤使用者行為時 |
 | @vercel/speed-insights | 效能監控 | 當需要監控網站效能時 |
 
 ---

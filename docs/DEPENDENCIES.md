@@ -11,6 +11,7 @@ This document explains all npm packages used in the project, including their pur
 - [Core Dependencies](#core-dependencies)
 - [Content Processing](#content-processing)
 - [Internationalization](#internationalization)
+- [Analytics](#analytics)
 - [Development Tools](#development-tools)
 - [Styling Tools](#styling-tools)
 - [Dependency Graph](#dependency-graph)
@@ -140,6 +141,34 @@ This document explains all npm packages used in the project, including their pur
 
 ---
 
+## Analytics
+
+### @vercel/analytics
+
+| Item | Content |
+|------|---------|
+| **Package** | `@vercel/analytics` |
+| **Version** | `^2.0.1` |
+| **Purpose** | Cookieless page view statistics through Vercel Web Analytics |
+| **Why Chosen** | • Zero-config on Vercel, one component in the root layout<br>• No cookies, so no consent banner needed<br>• Dashboard for quick checks on top pages, referrers and countries |
+| **Alternatives** | • Google Analytics 4 — Longer history but cookie-based<br>• Plausible / Umami — Privacy-friendly but need a paid plan or self-hosting<br>• Cloudflare Web Analytics — Free but shorter history |
+| **Limitations** | • Hobby plan keeps only 1 month of data, capped at 50,000 events per month<br>• Long-term trends are covered by GA4 |
+
+---
+
+### @next/third-parties
+
+| Item | Content |
+|------|---------|
+| **Package** | `@next/third-parties` |
+| **Version** | `16.1.6` (keep in sync with `next`) |
+| **Purpose** | Official Next.js component for loading Google Analytics 4 |
+| **Why Chosen** | • Maintained by the Next.js team<br>• Tracks client-side route changes automatically<br>• Standard reports are not affected by the data retention setting, so daily / weekly / monthly / yearly history stays available<br>• Script loads after the page becomes interactive, limiting performance impact |
+| **Alternatives** | • Manual `next/script` with the gtag snippet — More boilerplate<br>• Google Tag Manager — More flexible but heavier setup |
+| **Configuration** | • Set `NEXT_PUBLIC_GA_ID` (Measurement ID, `G-XXXXXXXXXX`) in Vercel environment variables, Production only<br>• Nothing is loaded when the variable is unset |
+
+---
+
 ## Development Tools
 
 ### TypeScript
@@ -235,6 +264,8 @@ Next.js
     ├─ React
     │   └─ react-dom
     ├─ next-intl (i18n)
+    ├─ @vercel/analytics (Vercel Web Analytics)
+    ├─ @next/third-parties (Google Analytics 4)
     └─ next-mdx-remote (MDX)
         ├─ remark-gfm (Markdown extensions)
         ├─ rehype-slug (Heading IDs)
@@ -422,7 +453,6 @@ Tailwind CSS
 
 | Package | Purpose | When to Introduce |
 |---------|---------|-------------------|
-| @vercel/analytics | Website analytics | When user behavior tracking is needed |
 | @vercel/speed-insights | Performance monitoring | When website performance monitoring is needed |
 
 ---

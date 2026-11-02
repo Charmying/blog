@@ -58,6 +58,10 @@ function normalizeCode(raw: string): string {
     .trim();
 }
 
+function escapeHtml(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 interface CodeBlockProps {
   children: string;
   language?: string;
@@ -69,7 +73,7 @@ export function CodeBlock({ children, language = "text" }: CodeBlockProps) {
 
   const plain = normalizeCode(children);
 
-  const [highlightedCode, setHighlightedCode] = useState(plain);
+  const [highlightedCode, setHighlightedCode] = useState(escapeHtml(plain));
 
   useEffect(() => {
     if (!plain) {
@@ -162,7 +166,7 @@ export function CodeBlock({ children, language = "text" }: CodeBlockProps) {
         const result = hljs.highlight(plain, { language: lang, ignoreIllegals: true }).value;
         if (!cancelled) setHighlightedCode(result);
       } catch {
-        if (!cancelled) setHighlightedCode(plain);
+        if (!cancelled) setHighlightedCode(escapeHtml(plain));
       }
     });
     return () => { cancelled = true; };

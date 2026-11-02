@@ -18,8 +18,8 @@
     "switchLocale": "Switch language to {locale}"
   },
   "HomePage": {
-    "title": "Home",
-    "description": "Charmy's frontend blog — a frontend developer sharing articles.",
+    "title": "Charmy Tseng (曾韋翰) — Frontend Developer Blog | Charmy's Lab",
+    "description": "Charmy Tseng (曾韋翰, aka Charmying) is a frontend developer from Taiwan writing about JavaScript, Angular, design patterns, networking and web development.",
     "heroTitle": "Hello, I'm Charmy",
     "heroSubtitle": "Frontend Developer & Digital Creator",
     "introHeading": "Crafting refined ",
@@ -33,10 +33,11 @@
   },
   "AboutPage": {
     "title": "About",
-    "description": "About Charmy — a frontend developer from Taiwan experienced in React, Next.js, TypeScript, Angular, Vue.js, and enterprise-level financial system development.",
+    "metaTitle": "About Charmy Tseng (曾韋翰) — Frontend Developer",
+    "description": "Charmy Tseng (曾韋翰, aka Charmying) is a frontend developer from Taiwan experienced in React, Next.js, TypeScript, Angular, Vue.js, and enterprise-level financial system development.",
     "heroTitle": "About Me",
     "heroSubtitle": "A passionate frontend developer",
-    "name": "Charmy",
+    "name": "Charmy Tseng",
     "role": "Frontend Developer",
     "location": "📍 Taiwan",
     "greeting": "👋 Hi, I'm Charmy",
@@ -82,7 +83,8 @@
   },
   "ArticlesPage": {
     "title": "Articles",
-    "description": "Charmy's frontend blog — technical articles on frontend development, web protocols, React, Next.js, TypeScript, network engineering, and modern web technologies.",
+    "metaTitle": "Frontend Articles & Study Notes",
+    "description": "Frontend articles and study notes by Charmy Tseng: JavaScript, Angular, design patterns, networking, security and web performance, in English and Chinese.",
     "heroTitle": "Articles",
     "heroSubtitle": "Exploring the world of programming and development",
     "all": "All",
@@ -99,7 +101,6 @@
     "sortByTitle": "Sort by title",
     "sortByReadingTime": "Sort by reading time",
     "noArticles": "No articles found",
-    "loading": "Loading articles",
     "seriesFilter": "Series",
     "allSeries": "All",
     "comments": "Comments",

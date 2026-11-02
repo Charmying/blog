@@ -18,8 +18,8 @@
     "switchLocale": "切換語言至 {locale}"
   },
   "HomePage": {
-    "title": "首頁",
-    "description": "Charmy 前端部落格｜Charmy 的技術分享，涵蓋前端開發等技術文章與筆記。",
+    "title": "曾韋翰 (Charmy)｜前端工程師部落格 | Charmy's Lab",
+    "description": "曾韋翰 (Charmy Tseng，網路暱稱 Charmy、Charmying) 的前端工程師技術部落格。以繁體中文與英文分享 JavaScript、Angular、設計模式、網路與 Web 技術的學習筆記，適合學習前端與網站開發。",
     "heroTitle": "你好，我是 Charmy",
     "heroSubtitle": "Frontend Developer & Digital Creator",
     "introHeading": "打造精緻的",
@@ -33,7 +33,8 @@
   },
   "AboutPage": {
     "title": "關於我",
-    "description": "關於前端工程師 Charmy (曾韋翰)｜台灣前端開發者，擅長 React、Next.js、TypeScript、Angular、Vue.js，具備企業級金融系統前端開發與維運經驗。",
+    "metaTitle": "關於曾韋翰 (Charmy Tseng)｜台灣前端工程師",
+    "description": "曾韋翰 (Charmy Tseng，網路暱稱 Charmy、Charmying) 是來自台灣的前端工程師，擅長 React、Next.js、TypeScript、Angular、Vue.js，具備企業級金融系統前端開發與維運經驗。",
     "heroTitle": "About Me",
     "heroSubtitle": "熱愛技術的前端開發者",
     "name": "曾韋翰",
@@ -82,7 +83,8 @@
   },
   "ArticlesPage": {
     "title": "文章",
-    "description": "Charmy 前端部落格文章列表｜收錄前端開發、網路協定、Web 技術、React、Next.js、TypeScript 等技術筆記、教學文章與學習心得。",
+    "metaTitle": "前端技術文章與學習筆記",
+    "description": "曾韋翰 (Charmy) 的前端技術文章與學習筆記，涵蓋 JavaScript、Angular、設計模式與 SOLID、網路與資訊安全、瀏覽器原理與網頁效能，繁體中文與英文雙語。",
     "heroTitle": "技術文章",
     "heroSubtitle": "探索程式開發的世界",
     "all": "全部",
@@ -99,7 +101,6 @@
     "sortByTitle": "依標題排序",
     "sortByReadingTime": "依閱讀時間排序",
     "noArticles": "目前沒有文章",
-    "loading": "文章載入中",
     "seriesFilter": "系列",
     "allSeries": "全部",
     "comments": "留言區",

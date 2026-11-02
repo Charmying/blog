@@ -52,6 +52,7 @@ blog/
 - `structure.md` — Architecture and design decisions
 - `dependencies.md` — Package list and selection rationale
 - `development.md` — Development environment and guidelines
+- `seo.md` — SEO, AEO and GEO implementation
 
 **Why this design:**
 - Separates documentation from code, keeping README concise
@@ -122,9 +123,13 @@ app/
 │   │   │   └── page.tsx         # Article list
 │   │   ├── layout.tsx           # Site layout (nav, etc.)
 │   │   └── page.tsx             # Home page
-│   └── layout.tsx               # Language-level layout (i18n provider)
+│   └── layout.tsx               # Language-level layout (HTML, metadata, i18n provider)
+├── llms.txt/                    # Markdown index for LLMs
+│   └── route.ts
 ├── globals.css                  # Global styles
-└── layout.tsx                   # Root layout (HTML, body)
+├── layout.tsx                   # Root layout (site-wide metadata)
+├── not-found.tsx                # 404 page
+└── root-document.tsx            # HTML document shell (global styles, theme script, analytics)
 ```
 
 **Why this design:**
@@ -139,8 +144,8 @@ app/
     - Shares the same layout (nav, footer, etc.)
 
 3. **Nested Layouts**
-    - Root layout: HTML structure, fonts, theme provider
-    - Language layout: i18n provider
+    - Root layout: site-wide metadata (icons, manifest, robots)
+    - Language layout: HTML structure, metadata, theme script, i18n provider
     - Site layout: navigation, footer
 
 4. **File Naming**
@@ -168,6 +173,7 @@ components/
 │   ├── mobile-menu-context.tsx    # Menu state management
 │   ├── search-modal.tsx           # Search modal
 │   └── site-title.tsx             # Site title
+├── json-ld.tsx                    # JSON-LD structured data
 ├── locale-switcher.tsx            # Language switcher
 └── theme-toggle.tsx               # Theme toggle
 ```
@@ -197,6 +203,7 @@ components/
 **Structure:**
 ```
 config/
+├── profile.ts        # Author identity and name variants
 ├── site.ts           # Site config (nav items, metadata, etc.)
 └── theme.ts          # Theme config (storage key, default theme)
 ```
@@ -244,6 +251,8 @@ export const routing = defineRouting({
   locales: ["zh-TW", "en"],
   defaultLocale: "zh-TW",
   localePrefix: "as-needed",
+  localeDetection: false,
+  alternateLinks: false,
 });
 ```
 
@@ -256,7 +265,8 @@ export const routing = defineRouting({
 **Structure:**
 ```
 lib/
-└── posts.ts    # Article processing logic
+├── posts.ts    # Article processing logic
+└── schema.ts   # JSON-LD structured data graph
 ```
 
 **Why this design:**

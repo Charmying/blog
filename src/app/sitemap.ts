@@ -1,73 +1,29 @@
 import { MetadataRoute } from 'next';
-import { getAllPosts, getAllPostSlugs } from '@/lib/posts';
-import type { Locale } from '@/i18n/routing';
-import { getSEOConfig } from '@/lib/seo';
+import { getAllPosts } from '@/lib/posts';
+import { routing, type Locale } from '@/i18n/routing';
+import { getAlternateLanguages, getCanonicalUrl } from '@/lib/seo';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const { siteUrl } = getSEOConfig();
-
-  const staticPaths = ['', '/about', '/articles'];
-  const staticPageEntries: MetadataRoute.Sitemap = [];
-
-  for (const path of staticPaths) {
-    const zhUrl = `${siteUrl}${path}`;
-    const enUrl = `${siteUrl}/en${path}`;
-    const alternates = {
-      languages: {
-        'zh-TW': zhUrl,
-        'en': enUrl,
-        'x-default': zhUrl,
-      } as Record<string, string>,
-    };
-
-    staticPageEntries.push(
-      {
-        url: zhUrl,
-        lastModified: new Date(),
-        alternates,
-      },
-      {
-        url: enUrl,
-        lastModified: new Date(),
-        alternates,
-      },
-    );
-  }
-
-  const zhPosts = getAllPosts('zh-TW' as Locale);
-  const enSlugs = new Set(
-    getAllPostSlugs('en' as Locale).map((p) => p.slugParts.join('/')),
+  const posts = getAllPosts(routing.defaultLocale);
+  const slugs = Object.fromEntries(
+    routing.locales.map((locale) => [locale, new Set(getAllPosts(locale).map((post) => post.slug))]),
   );
 
-  const articleEntries: MetadataRoute.Sitemap = [];
-
-  for (const post of zhPosts) {
-    const zhUrl = `${siteUrl}/articles/${post.slug}`;
-    const hasEn = enSlugs.has(post.slug);
-    const enUrl = `${siteUrl}/en/articles/${post.slug}`;
-
-    const alternates = {
-      languages: {
-        'zh-TW': zhUrl,
-        ...(hasEn ? { 'en': enUrl } : {}),
-        'x-default': zhUrl,
-      } as Record<string, string>,
-    };
-
-    articleEntries.push({
-      url: zhUrl,
-      lastModified: new Date(post.date),
-      alternates,
-    });
-
-    if (hasEn) {
-      articleEntries.push({
-        url: enUrl,
-        lastModified: new Date(post.date),
-        alternates,
-      });
+  const entries: MetadataRoute.Sitemap = [];
+  const add = (path: string, locales: readonly Locale[], lastModified?: string) => {
+    const languages = getAlternateLanguages(path, locales);
+    for (const locale of locales) {
+      entries.push({ url: getCanonicalUrl(path, locale), lastModified, alternates: { languages } });
     }
+  };
+
+  add('/', routing.locales, posts[0].date);
+  add('/articles', routing.locales, posts[0].date);
+  add('/about', routing.locales);
+
+  for (const post of posts) {
+    add(`/articles/${post.slug}`, routing.locales.filter((locale) => slugs[locale].has(post.slug)), post.date);
   }
 
-  return [...staticPageEntries, ...articleEntries];
+  return entries;
 }

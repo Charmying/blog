@@ -3,7 +3,9 @@ import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getCanonicalUrl, getLocaleCode } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { generatePageMetadata } from "@/lib/seo";
+import { generateSchemaGraph } from "@/lib/schema";
 import { getAllPosts } from "@/lib/posts";
 import type { Locale } from "@/i18n/routing";
 
@@ -26,33 +28,14 @@ function ChevronRightIcon() {
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }>; }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "HomePage" });
-  const url = getCanonicalUrl("/", locale);
-  const isZh = locale === 'zh-TW';
 
-  return {
+  return generatePageMetadata({
+    locale,
+    path: "/",
     title: t("title"),
     description: t("description"),
-    keywords: isZh ? ['Charmy', 'charmying', '曾韋翰', 'Charmy 部落格', '前端', '前端開發', '前端工程師', '前端部落格', '部落格', '技術部落格', '網頁開發', '台灣前端工程師'] : ['Charmy', 'charmying', 'Charmy Tseng', 'Charmy blog', 'frontend', 'front-end', 'frontend developer', 'frontend blog', 'blog', 'tech blog', 'web development'],
-    alternates: {
-      canonical: url,
-      languages: {
-        'zh-TW': getCanonicalUrl("/", "zh-TW"),
-        'en': getCanonicalUrl("/", "en"),
-        'x-default': getCanonicalUrl("/", "zh-TW"),
-      },
-    },
-    openGraph: {
-      type: 'website',
-      locale: getLocaleCode(locale),
-      url,
-      title: t("title"),
-      description: t("description"),
-    },
-    twitter: {
-      title: t("title"),
-      description: t("description"),
-    },
-  };
+    isAbsoluteTitle: true,
+  });
 }
 
 export default function HomePage({ params }: { params: Promise<{ locale: string }>; }) {
@@ -60,9 +43,11 @@ export default function HomePage({ params }: { params: Promise<{ locale: string 
   setRequestLocale(locale);
   const t = useTranslations("HomePage");
   const recentPosts = getAllPosts(locale as Locale).slice(0, 4);
+  const graph = generateSchemaGraph({ locale, path: "/", name: t("title"), description: t("description") });
 
   return (
     <>
+      <JsonLd graph={graph} />
       {/* Hero */}
       <section className="px-4 pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-16 sm:pb-20 text-center">
         <div className="mx-auto max-w-4xl">

@@ -8,7 +8,9 @@ import { getSeriesName } from "@/lib/series-utils";
 import { routing, type Locale } from "@/i18n/routing";
 import { mdxComponents } from "@/components/article/mdx-components";
 import { Comments } from "@/components/article/comments";
-import { generateArticleMetadata, generateArticleSchema, generateBreadcrumbSchema, getCanonicalUrl, getLocaleCode, getSEOConfig } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
+import { generatePageMetadata, getCanonicalUrl } from "@/lib/seo";
+import { generateSchemaGraph } from "@/lib/schema";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeSlug from "rehype-slug";
@@ -34,31 +36,25 @@ export async function generateMetadata({ params }: {
 
   try {
     const post = getPostMetadata(locale as Locale, decodedSlug);
-    const { authorName } = getSEOConfig();
 
     const allLocales = routing.locales as readonly string[];
     const availableLocales = allLocales.filter((loc) => {
       try { getPostMetadata(loc as Locale, decodedSlug); return true; } catch { return false; }
     });
 
-    const metadata = generateArticleMetadata({
+    return generatePageMetadata({
+      locale,
+      path: `/articles/${decodedSlug}`,
       title: post.title,
       description: post.excerpt,
-      slug: decodedSlug,
-      date: post.date,
-      tags: post.tags,
-      readingTime: post.readingTime,
-      locale,
-      authorName,
+      type: "article",
       availableLocales,
-    });
-    return {
-      ...metadata,
-      openGraph: {
-        ...metadata.openGraph,
-        locale: getLocaleCode(locale),
+      article: {
+        publishedTime: new Date(post.date).toISOString(),
+        authors: [getCanonicalUrl("/about", locale)],
+        tags: post.tags,
       },
-    };
+    });
   } catch {
     const t = await getTranslations({ locale, namespace: "ArticlesPage" });
     return { title: t("notFound") };
@@ -99,47 +95,7 @@ export default async function ArticlePage({ params }: {
     notFound();
   }
 
-  const { authorName } = getSEOConfig();
-
-  const articleSchema = generateArticleSchema({
-    title: post.title,
-    description: post.excerpt,
-    slug: decodedSlug,
-    date: post.date,
-    tags: post.tags,
-    readingTime: post.readingTime,
-    locale,
-    authorName,
-  });
-
   const articlesLabel = t("title");
-  const articlesUrl = getCanonicalUrl("/articles", locale);
-  const breadcrumbItems: { name: string; url: string }[] = [
-    { name: locale === "zh-TW" ? "首頁" : "Home", url: getCanonicalUrl("/", locale) },
-    { name: articlesLabel, url: articlesUrl },
-  ];
-
-  if (post.series) {
-    breadcrumbItems.push({
-      name: getSeriesName(post.series, locale),
-      url: getCanonicalUrl(`/articles?series=${post.series}`, locale),
-    });
-  }
-
-  if (post.category) {
-    breadcrumbItems.push({
-      name: getSeriesName(post.category, locale),
-      // Point to the series-filtered list; category-level filtering is not yet implemented
-      url: getCanonicalUrl(`/articles?series=${post.series}`, locale),
-    });
-  }
-
-  breadcrumbItems.push({
-    name: post.title,
-    url: getCanonicalUrl(`/articles/${decodedSlug}`, locale),
-  });
-
-  const breadcrumbSchema = generateBreadcrumbSchema(breadcrumbItems);
 
   const seriesBreadcrumbs = post.series
     ? ([
@@ -159,10 +115,21 @@ export default async function ArticlePage({ params }: {
       ] as { label: string; href: string }[])
     : null;
 
+  const graph = generateSchemaGraph({
+    locale,
+    path: `/articles/${decodedSlug}`,
+    name: post.title,
+    description: post.excerpt,
+    breadcrumbs: [
+      ...(seriesBreadcrumbs ?? [{ label: articlesLabel, href: "/articles" }]).map(({ label, href }) => ({ name: label, path: href })),
+      { name: post.title, path: `/articles/${decodedSlug}` },
+    ],
+    article: { date: post.date, tags: post.tags, readingTime: post.readingTime },
+  });
+
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      <JsonLd graph={graph} />
 
       {/* ── Header ── */}
       <header className="pt-16 xs:pt-20 sm:pt-24 pb-12 xs:pb-14 sm:pb-16 px-4 text-center">

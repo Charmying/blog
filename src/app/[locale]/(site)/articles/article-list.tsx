@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { Suspense, useState, useMemo, useEffect, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -14,6 +14,17 @@ interface ArticleListProps {
   series: string[];
 }
 
+interface Filters {
+  activeTag: string | null;
+  activeSeries: string | null;
+}
+
+interface SearchParamsSyncProps {
+  tags: string[];
+  series: string[];
+  onChange: (filters: Filters) => void;
+}
+
 type ViewMode = "grid" | "list";
 type SortBy = "date" | "title" | "readingTime";
 
@@ -23,16 +34,26 @@ const SORT_OPTIONS = [
   { value: "readingTime" as const, icon: "⏱️", key: "sortByReadingTime" },
 ];
 
-export function ArticleList({ posts, tags, series }: ArticleListProps) {
-  const t = useTranslations("ArticlesPage");
-  const locale = useLocale();
+function SearchParamsSync({ tags, series, onChange }: SearchParamsSyncProps) {
   const searchParams = useSearchParams();
   const urlTag = searchParams.get("tag");
   const urlSeries = searchParams.get("series");
   const activeTag = urlTag && tags.includes(urlTag) ? urlTag : null;
   const activeSeries = urlSeries && series.includes(urlSeries) ? urlSeries : null;
-  const [viewMode, setViewMode, isViewLoaded] = useLocalStorage<ViewMode>("article-view-mode", "grid");
-  const [sortBy, setSortBy, isSortLoaded] = useLocalStorage<SortBy>("article-sort-by", "date");
+
+  useEffect(() => {
+    onChange({ activeTag, activeSeries });
+  }, [activeTag, activeSeries, onChange]);
+
+  return null;
+}
+
+export function ArticleList({ posts, tags, series }: ArticleListProps) {
+  const t = useTranslations("ArticlesPage");
+  const locale = useLocale();
+  const [{ activeTag, activeSeries }, setFilters] = useState<Filters>({ activeTag: null, activeSeries: null });
+  const [viewMode, setViewMode] = useLocalStorage<ViewMode>("article-view-mode", "grid");
+  const [sortBy, setSortBy] = useLocalStorage<SortBy>("article-sort-by", "date");
   const [isOpen, setIsOpen] = useState(false);
   const close = useCallback(() => setIsOpen(false), []);
   const dropdownRef = useClickOutside<HTMLDivElement>(close);
@@ -59,27 +80,11 @@ export function ArticleList({ posts, tags, series }: ArticleListProps) {
     close();
   }, [setSortBy, close]);
 
-  if (!isViewLoaded || !isSortLoaded) {
-    return (
-      <section className="px-4 py-12 xs:py-14 sm:py-16" aria-busy="true">
-        <div className="mx-auto max-w-5xl">
-          <div className="article-grid" role="status" aria-label={t("loading")}>
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="article-card article-card--skeleton" aria-hidden="true">
-                <div className="skeleton skeleton--tag" />
-                <div className="skeleton skeleton--title" />
-                <div className="skeleton skeleton--excerpt" />
-                <div className="skeleton skeleton--meta" />
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="px-4 py-12 xs:py-14 sm:py-16">
+      <Suspense fallback={null}>
+        <SearchParamsSync tags={tags} series={series} onChange={setFilters} />
+      </Suspense>
       <div className="mx-auto max-w-5xl">
 
         {/* ── Series filter (only shown when series exist) ── */}

@@ -61,7 +61,8 @@ blog/
 ├── docs/                             # Project documentation
 │   ├── STRUCTURE.md                  # Architecture and design decisions
 │   ├── DEPENDENCIES.md               # Package list and selection rationale
-│   └── DEVELOPMENT.md                # Development environment and guidelines
+│   ├── DEVELOPMENT.md                # Development environment and guidelines
+│   └── SEO.md                        # SEO, AEO and GEO implementation
 ├── messages/                         # i18n translation files
 │   ├── en.json                       # English translations
 │   └── zh-TW.json                    # Traditional Chinese translations
@@ -75,8 +76,11 @@ blog/
 │   │   │   │   ├── layout.tsx        # Site layout
 │   │   │   │   └── page.tsx          # Home page
 │   │   │   └── layout.tsx            # Language-level layout
+│   │   ├── llms.txt/                 # Markdown index for LLMs
 │   │   ├── globals.css               # Global styles and design tokens
-│   │   └── layout.tsx                # Root layout
+│   │   ├── layout.tsx                # Root layout
+│   │   ├── not-found.tsx             # 404 page
+│   │   └── root-document.tsx         # HTML document shell (global styles, theme script, analytics)
 │   ├── components/                   # React components
 │   │   ├── article/                  # Article-related components
 │   │   │   ├── code-block.tsx        # Code block component
@@ -88,9 +92,11 @@ blog/
 │   │   │   ├── mobile-menu.tsx       # Mobile menu
 │   │   │   ├── search-modal.tsx      # Search modal
 │   │   │   └── site-title.tsx        # Site title
+│   │   ├── json-ld.tsx               # JSON-LD structured data
 │   │   ├── locale-switcher.tsx       # Language switcher
 │   │   └── theme-toggle.tsx          # Theme toggle
 │   ├── config/                       # Configuration files
+│   │   ├── profile.ts                # Author identity and name variants
 │   │   ├── site.ts                   # Site config (nav items, etc.)
 │   │   └── theme.ts                  # Theme configuration
 │   ├── i18n/                         # Internationalization setup
@@ -98,7 +104,8 @@ blog/
 │   │   ├── request.ts                # Request-level i18n
 │   │   └── routing.ts                # Routing and language config
 │   ├── lib/                          # Utility functions
-│   │   └── posts.ts                  # Article processing logic
+│   │   ├── posts.ts                  # Article processing logic
+│   │   └── schema.ts                 # JSON-LD structured data graph
 │   ├── posts/                        # MDX article content
 │   │   ├── en/                       # English articles
 │   │   └── zh-TW/                    # Traditional Chinese articles
@@ -289,6 +296,7 @@ npm run lint
 - [**Architecture Guide**](./docs/STRUCTURE.md) — Folder structure and design decisions
 - [**Dependencies Reference**](./docs/DEPENDENCIES.md) — Package descriptions and selection rationale
 - [**Development Guide**](./docs/DEVELOPMENT.md) — Environment setup and development guidelines
+- [**SEO Guide**](./docs/SEO.md) — SEO, AEO and GEO implementation
 
 ### Technical Documentation
 - [Next.js Documentation](https://nextjs.org/docs)

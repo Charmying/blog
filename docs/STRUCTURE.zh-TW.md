@@ -52,6 +52,7 @@ blog/
 - `structure.md` — 架構說明與設計決策
 - `dependencies.md` — 套件清單與選擇理由
 - `development.md` — 開發環境與規範
+- `seo.md` — SEO、AEO 與 GEO 實作
 
 **為什麼這樣設計：**
 - 將文檔與程式碼分離，保持 README 簡潔
@@ -122,9 +123,13 @@ app/
 │   │   │   └── page.tsx         # 文章列表
 │   │   ├── layout.tsx           # 網站佈局 (導航列等)
 │   │   └── page.tsx             # 首頁
-│   └── layout.tsx               # 語言層級佈局 (i18n provider)
+│   └── layout.tsx               # 語言層級佈局 (HTML、metadata、i18n provider)
+├── llms.txt/                    # 給 LLM 的 Markdown 索引
+│   └── route.ts
 ├── globals.css                  # 全域樣式
-└── layout.tsx                   # 根佈局 (HTML, body)
+├── layout.tsx                   # 根佈局 (全站 metadata)
+├── not-found.tsx                # 404 頁面
+└── root-document.tsx            # HTML 文件外殼 (全域樣式、主題 script、analytics)
 ```
 
 **為什麼這樣設計：**
@@ -139,8 +144,8 @@ app/
     - 共用同一個 layout (導航列、footer 等)
 
 3. **巢狀 layout**
-    - 根 layout：HTML 結構、字體、theme provider
-    - 語言 layout：i18n provider
+    - 根 layout：全站 metadata (icons、manifest、robots)
+    - 語言 layout：HTML 結構、metadata、主題 script、i18n provider
     - 網站 layout：導航列、footer
 
 4. **檔案命名**
@@ -168,6 +173,7 @@ components/
 │   ├── mobile-menu-context.tsx    # 選單狀態管理
 │   ├── search-modal.tsx           # 搜尋彈窗
 │   └── site-title.tsx             # 網站標題
+├── json-ld.tsx                    # JSON-LD 結構化資料
 ├── locale-switcher.tsx            # 語言切換器
 └── theme-toggle.tsx               # 主題切換器
 ```
@@ -197,6 +203,7 @@ components/
 **結構：**
 ```
 config/
+├── profile.ts        # 作者身分與名稱變體
 ├── site.ts           # 網站設定 (導航項目、metadata 等)
 └── theme.ts          # 主題設定 (storage key、預設主題)
 ```
@@ -244,6 +251,8 @@ export const routing = defineRouting({
   locales: ["zh-TW", "en"],
   defaultLocale: "zh-TW",
   localePrefix: "as-needed",
+  localeDetection: false,
+  alternateLinks: false,
 });
 ```
 
@@ -256,7 +265,8 @@ export const routing = defineRouting({
 **結構：**
 ```
 lib/
-└── posts.ts    # 文章處理邏輯
+├── posts.ts    # 文章處理邏輯
+└── schema.ts   # JSON-LD 結構化資料圖
 ```
 
 **為什麼這樣設計：**

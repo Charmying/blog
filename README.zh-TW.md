@@ -61,7 +61,8 @@ blog/
 ├── docs/                             # 專案文檔
 │   ├── STRUCTURE.md                  # 架構說明與設計決策
 │   ├── DEPENDENCIES.md               # 套件清單與選擇理由
-│   └── DEVELOPMENT.md                # 開發環境與規範
+│   ├── DEVELOPMENT.md                # 開發環境與規範
+│   └── SEO.md                        # SEO、AEO 與 GEO 實作
 ├── messages/                         # i18n 翻譯檔案
 │   ├── en.json                       # 英文翻譯
 │   └── zh-TW.json                    # 繁體中文翻譯
@@ -75,8 +76,11 @@ blog/
 │   │   │   │   ├── layout.tsx        # 網站佈局
 │   │   │   │   └── page.tsx          # 首頁
 │   │   │   └── layout.tsx            # 語言層級佈局
+│   │   ├── llms.txt/                 # 給 LLM 的 Markdown 索引
 │   │   ├── globals.css               # 全域樣式與設計 tokens
-│   │   └── layout.tsx                # 根佈局
+│   │   ├── layout.tsx                # 根佈局
+│   │   ├── not-found.tsx             # 404 頁面
+│   │   └── root-document.tsx         # HTML 文件外殼 (全域樣式、主題 script、analytics)
 │   ├── components/                   # React 元件
 │   │   ├── article/                  # 文章相關元件
 │   │   │   ├── code-block.tsx        # 程式碼區塊
@@ -88,9 +92,11 @@ blog/
 │   │   │   ├── mobile-menu.tsx       # 行動版選單
 │   │   │   ├── search-modal.tsx      # 搜尋彈窗
 │   │   │   └── site-title.tsx        # 網站標題
+│   │   ├── json-ld.tsx               # JSON-LD 結構化資料
 │   │   ├── locale-switcher.tsx       # 語言切換器
 │   │   └── theme-toggle.tsx          # 主題切換器
 │   ├── config/                       # 設定檔
+│   │   ├── profile.ts                # 作者身分與名稱變體
 │   │   ├── site.ts                   # 網站設定 (導航項目等)
 │   │   └── theme.ts                  # 主題設定
 │   ├── i18n/                         # 國際化設定
@@ -98,7 +104,8 @@ blog/
 │   │   ├── request.ts                # 請求層級 i18n
 │   │   └── routing.ts                # 路由與語言設定
 │   ├── lib/                          # 工具函式
-│   │   └── posts.ts                  # 文章處理邏輯
+│   │   ├── posts.ts                  # 文章處理邏輯
+│   │   └── schema.ts                 # JSON-LD 結構化資料圖
 │   ├── posts/                        # MDX 文章內容
 │   │   ├── en/                       # 英文文章
 │   │   └── zh-TW/                    # 繁體中文文章
@@ -289,6 +296,7 @@ npm run lint
 - [**架構說明**](./docs/STRUCTURE.zh-TW.md) — 資料夾結構與設計決策
 - [**依賴清單**](./docs/DEPENDENCIES.zh-TW.md) — 套件說明與選擇理由
 - [**開發指南**](./docs/DEVELOPMENT.zh-TW.md) — 環境設定與開發規範
+- [**SEO 指南**](./docs/SEO.zh-TW.md) — SEO、AEO 與 GEO 實作
 
 ### 技術文檔
 - [Next.js Documentation](https://nextjs.org/docs)

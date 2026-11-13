@@ -11,6 +11,8 @@ A hash table stores key-value pairs and finds the value for a key in constant ti
 
 The idea is a small trick. An array gives you any element in O(1), as long as you know its index. A hash table works out that index from the key: a hash function turns the key into a number, and the number decides where the value lives. Everything else in the design (collisions, load factor, resizing) exists to keep the trick working when keys are messy and the data keeps growing.
 
+This article covers how a hash table is built, how to implement one, and what its O(1) really promises. Hash functions and collision strategies get a deeper treatment in [Hash Functions and Collision Handling](./hash-functions-and-collision-handling).
+
 ```mermaid
 mindmap
     root((Hash Table))

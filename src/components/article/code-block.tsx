@@ -55,7 +55,8 @@ function normalizeCode(raw: string): string {
   return lines
     .map((l) => l.slice(minIndent))
     .join("\n")
-    .trim();
+    .replace(/^\s*\n/, "")
+    .trimEnd();
 }
 
 function escapeHtml(text: string): string {
